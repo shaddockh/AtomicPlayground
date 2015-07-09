@@ -1,2 +1,4 @@
 # AtomicPlayground
-Various expirments with the Atomic Game Engine
+Various experiments with the Atomic Game Engine ( http://www.atomicgameengine.com )
+
+
