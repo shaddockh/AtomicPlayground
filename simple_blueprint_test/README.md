@@ -1,4 +1,4 @@
-This project contains an example of using a more declaritive way of generating your entities.  Instead of configuring each entity manually during 
+This project contains an example of using a more declarative way of generating your entities.  Instead of configuring each entity manually during 
 creation, attaching the correct components, etc, a blueprint is created that defines the entity.  This idea is not new, but the inspiration for it came from the way Dungeon Siege by Gas Powered Games constructed their game objects.
 
 The blueprint system allows you to define a simple JSON structure that defines which components should be attached to the entity of that name and also if that component
