@@ -137,3 +137,4 @@ exports.buildChildEntity = buildChildEntity;
 exports.createChild = createChild;
 exports.mixinBlueprint = mixinBlueprint;
 exports.createChildAtPosition = createChildAtPosition;
+exports.getBlueprint = getBlueprint;

@@ -79,7 +79,18 @@ var blueprints = {
 
 ```
 
+### Update
+It is possible to either specify the start position in the blueprint, or at runtime.  Some things that can be done at run time would be:
 
+```
+    // Specify a start position instead of relying on the blueprint
+    var spaceNode3 = blueprintLib.createChildAtPosition(game.scene, 'star2', [2, 2]);
+
+    // override the speed
+    var starOverride = blueprintLib.getBlueprint('star2');
+    starOverride.Star.speed = 1000;
+    var spaceNode4 = blueprintLib.createChildAtPosition(game.scene, starOverride, [1, 1]);
+```
 
 
 Take a look at the following files for how they are configured
