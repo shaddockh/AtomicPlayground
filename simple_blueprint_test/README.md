@@ -10,7 +10,7 @@ for example:
 ```
     // Add the star component
     var spaceNode = game.scene.createChild("Star");
-    node.createJSComponent("Star");
+    spaceNode.createJSComponent("Star");
 ```
 
 Turns into the following with the blueprint system:
@@ -22,6 +22,16 @@ Turns into the following with the blueprint system:
 #### Blueprint definition
 ```
     var blueprints = {
+        // This is the base star blueprint that defines the texture, etc.
+        star: {
+            Star: {},
+            Aspect: {
+                spriteTexture: 'Sprites/star.png',
+                blendMode: Atomic.BLEND_ALPHA,
+            }
+        },
+
+        // this descends from the base star and overrides the spawn position and speed
         star1: {
             inherits: 'star',
             Star: {
@@ -34,8 +44,41 @@ Turns into the following with the blueprint system:
     };
 ```
 
-In addition to being able to spawn an entity from a blueprint, blueprints can also inherit from each other.  This allows you to define some base parameters in say a *base_weapon* template and then
-fine tune additional parameters with child blueprints.  Use the *iherits* key to define the relationship.  Any blueprint properties that are not overridden in a child blueprint will still be available.
+In addition to being able to spawn an entity from a blueprint, blueprints can also inherit from each other.  This allows you to define some base parameters in say a **base_weapon** template and then
+fine tune additional parameters with child blueprints.  Use the **iherits** key to define the relationship.  Any blueprint properties that are not overridden in a child blueprint will still be available.
+
+For example, if you build out some custom components to handle things like status effects, attack damage, etc, you could create something like the following.
+```
+
+var blueprints = {
+
+    // have a base weapon that all weapons descend from
+    base_weapon: {
+        Attack: {
+            damage: 1
+        }
+    },
+
+    // customize it for the sword
+    sword: {
+        inherits: 'base_weapon',
+        Attack: {
+            damage: 5
+        }
+    },
+
+    // take the base sword, and just add a new StatusEffect component to it
+    magic_sword: {
+        inherits: 'sword',
+        StatusEffect: {
+            increaseHealth: 1
+        }
+    }
+};
+
+```
+
+
 
 
 Take a look at the following files for how they are configured
