@@ -45,7 +45,7 @@ Turns into the following with the blueprint system:
 ```
 
 In addition to being able to spawn an entity from a blueprint, blueprints can also inherit from each other.  This allows you to define some base parameters in say a **base_weapon** template and then
-fine tune additional parameters with child blueprints.  Use the **iherits** key to define the relationship.  Any blueprint properties that are not overridden in a child blueprint will still be available.
+fine tune additional parameters with child blueprints.  Use the **inherits** key to define the relationship.  Any blueprint properties that are not overridden in a child blueprint will still be available.
 
 For example, if you build out some custom components to handle things like status effects, attack damage, etc, you could create something like the following.
 ```
