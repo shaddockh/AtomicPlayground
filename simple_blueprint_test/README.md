@@ -1,5 +1,5 @@
 This project contains an example of using a more declaritive way of generating your entities.  Instead of configuring each entity manually during 
-creation, attaching the correct components, etc, a blueprint is created that defines the entity.
+creation, attaching the correct components, etc, a blueprint is created that defines the entity.  This idea is not new, but the inspiration for it came from the way Dungeon Siege by Gas Powered Games constructed their game objects.
 
 The blueprint system allows you to define a simple JSON structure that defines which components should be attached to the entity of that name and also if that component
 has any configurable parameters, what those should be.  
@@ -43,6 +43,7 @@ Turns into the following with the blueprint system:
         }
     };
 ```
+**Note:** Star, Aspect, and Position are all JSComponents.  Aspect instantiates a native Static2D component and configures it.
 
 In addition to being able to spawn an entity from a blueprint, blueprints can also inherit from each other.  This allows you to define some base parameters in say a **base_weapon** template and then
 fine tune additional parameters with child blueprints.  Use the **inherits** key to define the relationship.  Any blueprint properties that are not overridden in a child blueprint will still be available.
