@@ -28,4 +28,4 @@ There is an event system built into the Atomic Engine, but from what I can tell 
 * all of the blueprints are located under Modules/blueprints.es6
 * made the scarab spaceships have 2 health and louse spaceships have 1 health.  All components are the same between the two, it's just a matter of different settings in the blueprints.
 * made the spaceships reference the name of a blueprint for the bullet, allowing for more customizations of enemies by giving them different kinds of bullets with different effects if so desired.  
-* There is still a little too much boilerplate involved in creating components.  I'm currently looking into es7 decorators to help solve that problem which would make the code cleaner and more consistent if it works..not sure yet.
+* There is still a little too much boilerplate involved in creating blueprint based components.  I'm currently looking into es7 decorators to help solve that problem which would make the code cleaner and more consistent if it works..not sure yet.
