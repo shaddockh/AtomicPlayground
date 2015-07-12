@@ -31,6 +31,6 @@ Atomic.script(vendor);
 ```
 which caused ROT to be undefined.
 
-* When generating the map, I'm adding nodes to the parent map node.  It looks like AtomicNode.remove() and .removeAllChildren() don't actually destroy the nodes, they just remove them) don't actually destroy the nodes, they just remove them.  To get around it, I have the parent node keep track of it's children and then respond to an 'onClear' event to destroy the children.  TODO: need to determine a better way
+* When generating the map, I'm adding nodes to the parent map node.  It looks like AtomicNode.remove() and .removeAllChildren() don't actually destroy the nodes, they just remove them.  To get around it, I have the parent node keep track of it's children and then respond to an 'onClear' event to destroy the children.  TODO: need to determine a better way
 * Playing around with splitting out multiple blueprint files and then just requiring them in at runtime and assembling the blueprint library.  This blueprint library was only ever supposed to be a temporary cherry picking of the main JS blueprint library I've been developing. It may be time to start pulling in the main library because it has some additional features. (Or just fork it for Atomic use)
 
