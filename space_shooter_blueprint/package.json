@@ -1,0 +1,21 @@
+{
+  "name": "es6_browserify",
+  "version": "0.0.1",
+  "description": "Space shooter example redone with blueprints.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "AtomicGameEngine"
+  ],
+  "author": "Shaddock Heath",
+  "license": "ISC",
+  "devDependencies": {
+    "browserify": "^10.2.4",
+    "del": "^1.2.0",
+    "gulp-babel": "^5.1.0",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
+  }
+}
