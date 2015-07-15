@@ -9,52 +9,6 @@ var blueprintCatalog = new BlueprintCatalog({
 var DEBUG = false;
 
 /**
- * Will extend either a blueprint of a sub component of a blueprint.
- *
- * @method extend
- * @param {Object} orig the original object to extend
- * @param extendwith
- * @return {Object|Array} Returns a brand new object that contains the merged values.  This differs from
- *                  most implementations that actually manipulate the orig object.
- */
-function extend(orig) {
-    var result = {};
-    var i;
-
-    for (i in orig) {
-        if (orig.hasOwnProperty(i)) {
-            result[i] = orig[i];
-        }
-    }
-
-    // Taken from transpiled es6 sources
-    for (var _len = arguments.length, objectsToExtendWith = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-        objectsToExtendWith[_key - 1] = arguments[_key];
-    }
-
-    for (var x = 0; x < objectsToExtendWith.length; x++) {
-        var extendwith = objectsToExtendWith[x];
-        for (i in extendwith) {
-            if (extendwith.hasOwnProperty(i)) {
-                if (typeof extendwith[i] === 'object') {
-                    if (extendwith[i] === null) {
-                        result[i] = null;
-                    } else if (extendwith[i].length) {
-                        //handle array types
-                        result[i] = extendwith[i];
-                    } else {
-                        result[i] = extend(result[i], extendwith[i]);
-                    }
-                } else {
-                    result[i] = extendwith[i];
-                }
-            }
-        }
-    }
-    return result;
-}
-
-/**
  * Augments the base node object with a trigger function.  Calling this will
  * walk the components in the associated blueprint and if the component has the eventName as function
  * on it, will call it.
@@ -77,25 +31,14 @@ function trigger(eventName) {
 
 /**
  * Gets the fragment of the blueprint for a component, automatically extended with the
- * components defaults
+ * components defaults.  Note that this is mixed into the node on creation
  * @method
+ * @mixin
  * @param {JSComponent} componentRef The component to get the blueprint fragment fo
  * @param {Object} defaultBlueprint The default blueprint for this component.  This will be the base blueprint settings that get augmented by the custom component settings.
  */
 function getComponentBlueprint(componentRef, defaultBlueprint) {
-    return extend(defaultBlueprint, this.blueprint[componentRef.className]);
-}
-
-/**
- * Returns a blueprint from the library with the specified name.  If the blueprint has
- * an 'inherits' property, it will walk up the inheritance and fill in the values of the blueprint
- * appropriately from it's ancestors
- * @method
- * @param {string} name the name of the blueprint to retrieve
- * @param {blueprint} [extendWith] Optionally extend the blueprint returned with the passed in blueprint
- */
-function getBlueprint(name, extendWith) {
-    return blueprintCatalog.getBlueprint(name, extendWith);
+    return blueprintCatalog.extendBlueprint(defaultBlueprint, this.blueprint[componentRef.className]);
 }
 
 /**
@@ -103,7 +46,7 @@ function getBlueprint(name, extendWith) {
  */
 function buildEntity(node, blueprint) {
     if (typeof (blueprint) === 'string') {
-        blueprint = getBlueprint(blueprint);
+        blueprint = blueprintCatalog.getBlueprint(blueprint);
     }
     if (DEBUG) {
         print('Building entity: ' + blueprint.name);
@@ -135,7 +78,7 @@ function buildEntity(node, blueprint) {
  */
 function createChild(parent, blueprint) {
     if (typeof (blueprint) === 'string') {
-        blueprint = getBlueprint(blueprint);
+        blueprint = blueprintCatalog.getBlueprint(blueprint);
     }
 
     var node = parent.createChild(blueprint.name);
@@ -148,19 +91,18 @@ function createChild(parent, blueprint) {
  */
 function createChildAtPosition(parent, blueprint, spawnPosition) {
     var node = createChild(parent, blueprint);
-    if (node.Position) {
-        // Note, we need to make a copy of the world position here because many times it's being passed in as a reference
-        // to a component's worldPosition2D which could be updated and cause this entity to behave incorrectly.
-        // ie. an explosion should happen at the point of impact, not where the element is in the future.
-        node.Position.spawnPosition = [spawnPosition[0], spawnPosition[1]];
+    if (spawnPosition.length === 2) {
+        node.position2D = [spawnPosition[0], spawnPosition[1]];
+    } else if (spawnPosition.length === 3) {
+        node.position3D = [spawnPosition[0], spawnPosition[1], spawnPosition[3]];
     } else {
-        throw new Error('Cannot spawn an entity at a postion without a Position component');
+        throw new Error('Unknown spawnPosition format.  Can not determine if it\'s 2D or 3D');
     }
     return node;
 }
 
 exports.blueprintCatalog = blueprintCatalog;
-exports.builder = {
+exports.nodeBuilder = {
     setDebugMode: function(val) {
         DEBUG = val ? true : false;
     },

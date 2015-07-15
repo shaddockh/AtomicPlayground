@@ -1,4 +1,4 @@
-# atomic-blueprintLib
+# atomic-blueprintlib
 
 This library is an effort to make the blueprint framework reusable with atomic game engine projects.  It contains routines for constructing
 atomic game objects from blueprints that are defined as JavaScript object literals.  The blueprint library management is handled by a more generic
@@ -8,7 +8,7 @@ blueprint sytstem pulled in from https://github.com/shaddockh/entity-blueprint-m
 ## Requiring in the library
 ```
 var blueprintCatalog = require('atomic-blueprintLib').blueprintCatalog;
-var nodeBuilder = require('atomic-blueprintLib').builder;
+var nodeBuilder = require('atomic-blueprintLib').nodeBuilder;
 ```
 or ES6
 ```
@@ -18,7 +18,7 @@ import {blueprintCatalog, nodeBuilder} from 'atomic-blueprintLib';
 ## Simple example
 ```
 var blueprintCatalog = require('atomic-blueprintLib').blueprintCatalog,
-    nodeBuilder = require('atomic-blueprintLib').builder;
+    nodeBuilder = require('atomic-blueprintLib').nodeBuilder;
 
 // Define some blueprints
 var blueprints = {
@@ -47,31 +47,32 @@ nodeBuilder.createChildAtLocation(game.scend, 'testBlueprint', [1,1]);
 ```
 # Api
 
-## builder.createChild(parent, blueprintName)
-## builder.createChild(parent, blueprintObject)
+## nodeBuilder.createChild(parent, blueprintName)
+## nodeBuilder.createChild(parent, blueprintObject)
 Creates a child node attached to specific parent.  That parent could be the scene or another Atomic Game Engine node.  Passing in
 blueprint name will cause a lookup of that name in the blueprint catalog.  Passing in an object will just instantiate that object
 without a lookup.
 
-## builder.createChildAtLocation(parent, blueprintName, location)
-## builder.createChildAtLocation(parent, blueprintObject, location)
+## nodeBuilder.createChildAtLocation(parent, blueprintName, location)
+## nodeBuilder.createChildAtLocation(parent, blueprintObject, location)
 Creates a child node attached to specific parent.  That parent could be the scene or another Atomic Game Engine node.  Passing in
 blueprint name will cause a lookup of that name in the blueprint catalog.  Passing in an object will just instantiate that object
 without a lookup.  Once created, it will have it's initial spawn point set to the location.  Note! The blueprint must contain a
 Position component.
 
-## builder.setDebugMode(val)
+## nodeBuilder.setDebugMode(val)
 turns on or off debug output.
 
 # BlueprintCatalog api (copied from the entity-blueprint-manager)
-* blueprintCatalog.clear()
-* blueprintCatalog.loadSingleBlueprint(blueprint, blueprintName, [progressCallback])
-* blueprintCatalog.loadBlueprints(block, [progressCallback])
-* blueprintCatalog.getBlueprint(name, [extendWith])
-* blueprintCatalog.getBlueprintFromInstance
-* blueprintCatalog.getBlueprintsDescendingFrom(blueprintName, [recurse])
-* blueprintCatalog.hydrateAllBlueprints()
-* blueprintCatalog.find(filterCallback, [limit])
-* blueprintCatalog.getAllBlueprintNames()
-* blueprintCatalog.getOriginalBlueprint(blueprintName)
-* blueprintCatalog.hasBlueprint(blueprintName)
+* blueprintCatalog.clear() - Clear the catalog and reset the hydrated blueprint cache
+* blueprintCatalog.loadSingleBlueprint(blueprint, blueprintName, [progressCallback]) - Loads a single blueprint with optional callback
+* blueprintCatalog.loadBlueprints(block, [progressCallback]) - loads a list of blueprints contained in an object literal with the keys being the names.
+* blueprintCatalog.getBlueprint(name, [extendWith]) - returns a hydrated blueprint of 'name' and optionally extends it with extendWith
+* blueprintCatalog.getBlueprintFromInstance - WIP
+* blueprintCatalog.getBlueprintsDescendingFrom(blueprintName, [recurse]) - returns all blueprints descending from blueprint name (optionally recursing down to all grandchildren)
+* blueprintCatalog.hydrateAllBlueprints() - runs through all blueprints and builds up the blueprint cache of complete blueprints (ensuring that children are fleshed out with lineage elements)
+* blueprintCatalog.find(filterCallback, [limit]) - searches for a blueprint.  Calls callback for every blueprint.  Optionally set limit to stop at # matches.
+* blueprintCatalog.getAllBlueprintNames() - gets an array of blueprint names in the catalog
+* blueprintCatalog.getOriginalBlueprint(blueprintName) - gets a copy of the unhydrated blueprint.
+* blueprintCatalog.hasBlueprint(blueprintName) - returns whether blueprint exists in the catalog
+* blueprintCatalog.extendBlueprint(origBlueprint, extendWith, [inPlaceExtend]) - utility function for extending one blueprint with another and returning the combination.

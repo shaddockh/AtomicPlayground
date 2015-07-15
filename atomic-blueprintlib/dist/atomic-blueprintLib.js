@@ -10,52 +10,6 @@ var blueprintCatalog = new BlueprintCatalog({
 var DEBUG = false;
 
 /**
- * Will extend either a blueprint of a sub component of a blueprint.
- *
- * @method extend
- * @param {Object} orig the original object to extend
- * @param extendwith
- * @return {Object|Array} Returns a brand new object that contains the merged values.  This differs from
- *                  most implementations that actually manipulate the orig object.
- */
-function extend(orig) {
-    var result = {};
-    var i;
-
-    for (i in orig) {
-        if (orig.hasOwnProperty(i)) {
-            result[i] = orig[i];
-        }
-    }
-
-    // Taken from transpiled es6 sources
-    for (var _len = arguments.length, objectsToExtendWith = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-        objectsToExtendWith[_key - 1] = arguments[_key];
-    }
-
-    for (var x = 0; x < objectsToExtendWith.length; x++) {
-        var extendwith = objectsToExtendWith[x];
-        for (i in extendwith) {
-            if (extendwith.hasOwnProperty(i)) {
-                if (typeof extendwith[i] === 'object') {
-                    if (extendwith[i] === null) {
-                        result[i] = null;
-                    } else if (extendwith[i].length) {
-                        //handle array types
-                        result[i] = extendwith[i];
-                    } else {
-                        result[i] = extend(result[i], extendwith[i]);
-                    }
-                } else {
-                    result[i] = extendwith[i];
-                }
-            }
-        }
-    }
-    return result;
-}
-
-/**
  * Augments the base node object with a trigger function.  Calling this will
  * walk the components in the associated blueprint and if the component has the eventName as function
  * on it, will call it.
@@ -78,25 +32,14 @@ function trigger(eventName) {
 
 /**
  * Gets the fragment of the blueprint for a component, automatically extended with the
- * components defaults
+ * components defaults.  Note that this is mixed into the node on creation
  * @method
+ * @mixin
  * @param {JSComponent} componentRef The component to get the blueprint fragment fo
  * @param {Object} defaultBlueprint The default blueprint for this component.  This will be the base blueprint settings that get augmented by the custom component settings.
  */
 function getComponentBlueprint(componentRef, defaultBlueprint) {
-    return extend(defaultBlueprint, this.blueprint[componentRef.className]);
-}
-
-/**
- * Returns a blueprint from the library with the specified name.  If the blueprint has
- * an 'inherits' property, it will walk up the inheritance and fill in the values of the blueprint
- * appropriately from it's ancestors
- * @method
- * @param {string} name the name of the blueprint to retrieve
- * @param {blueprint} [extendWith] Optionally extend the blueprint returned with the passed in blueprint
- */
-function getBlueprint(name, extendWith) {
-    return blueprintCatalog.getBlueprint(name, extendWith);
+    return blueprintCatalog.extendBlueprint(defaultBlueprint, this.blueprint[componentRef.className]);
 }
 
 /**
@@ -104,7 +47,7 @@ function getBlueprint(name, extendWith) {
  */
 function buildEntity(node, blueprint) {
     if (typeof (blueprint) === 'string') {
-        blueprint = getBlueprint(blueprint);
+        blueprint = blueprintCatalog.getBlueprint(blueprint);
     }
     if (DEBUG) {
         print('Building entity: ' + blueprint.name);
@@ -136,7 +79,7 @@ function buildEntity(node, blueprint) {
  */
 function createChild(parent, blueprint) {
     if (typeof (blueprint) === 'string') {
-        blueprint = getBlueprint(blueprint);
+        blueprint = blueprintCatalog.getBlueprint(blueprint);
     }
 
     var node = parent.createChild(blueprint.name);
@@ -149,19 +92,18 @@ function createChild(parent, blueprint) {
  */
 function createChildAtPosition(parent, blueprint, spawnPosition) {
     var node = createChild(parent, blueprint);
-    if (node.Position) {
-        // Note, we need to make a copy of the world position here because many times it's being passed in as a reference
-        // to a component's worldPosition2D which could be updated and cause this entity to behave incorrectly.
-        // ie. an explosion should happen at the point of impact, not where the element is in the future.
-        node.Position.spawnPosition = [spawnPosition[0], spawnPosition[1]];
+    if (spawnPosition.length === 2) {
+        node.position2D = [spawnPosition[0], spawnPosition[1]];
+    } else if (spawnPosition.length === 3) {
+        node.position3D = [spawnPosition[0], spawnPosition[1], spawnPosition[3]];
     } else {
-        throw new Error('Cannot spawn an entity at a postion without a Position component');
+        throw new Error('Unknown spawnPosition format.  Can not determine if it\'s 2D or 3D');
     }
     return node;
 }
 
 exports.blueprintCatalog = blueprintCatalog;
-exports.builder = {
+exports.nodeBuilder = {
     setDebugMode: function(val) {
         DEBUG = val ? true : false;
     },
@@ -230,7 +172,7 @@ var BlueprintCatalog = function (opts) {
         requireInherits: true
     };
 
-    var options = extend(defaults, opts || {});
+    var options = extendBlueprint(defaults, opts || {});
 
     var blueprintDictionary = new Dictionary({
         ignoreCase: options.ignoreCase
@@ -263,7 +205,7 @@ var BlueprintCatalog = function (opts) {
      * @method loadSingleBlueprint
      * @param {object} blueprint
      * @param {string} [blueprintName]
-     * @param {function} progressCallback Callback with the signature  function(blueprintName, loaded (boolean), message)
+     * @param {function} [progressCallback] Callback with the signature  function(blueprintName, loaded (boolean), message, blueprint)
      */
     function loadSingleBlueprint(blueprint, blueprintName, progressCallback) {
         blueprint.name = blueprint.name || blueprintName;
@@ -276,11 +218,11 @@ var BlueprintCatalog = function (opts) {
         try {
             blueprintDictionary.add(blueprint.name, blueprint);
             if (progressCallback) {
-                progressCallback(blueprint.name, true, 'Loaded blueprint: ' + blueprint.name);
+                progressCallback(blueprint.name, true, 'Loaded blueprint: ' + blueprint.name, blueprint);
             }
         } catch (e) {
             if (progressCallback) {
-                progressCallback(blueprint.name, false, e.message);
+                progressCallback(blueprint.name, false, e.message, blueprint);
             }
         }
     }
@@ -296,7 +238,7 @@ var BlueprintCatalog = function (opts) {
      *
      * @method loadBlueprints
      * @param {object} block a block of blueprints to load with keys as the name of each blueprint
-     * @param {function} [progressCallback] optional callback of the form  function(blueprintName, loaded (boolean), message)
+     * @param {function} [progressCallback] Callback with the signature  function(blueprintName, loaded (boolean), message, blueprint)
      */
     function loadBlueprints(block, progressCallback) {
         for (var blueprintName in block) {
@@ -307,16 +249,17 @@ var BlueprintCatalog = function (opts) {
     }
 
     /**
-     * Will extend either a blueprint of a sub component of a blueprint.
+     * Will extend either a blueprint of a sub component of a blueprint, returning a new blueprint containing the combination.
+     * The original blueprint will not be modified unless inPlaceExtend is set.
      *
-     * @method extend
-     * @private
-     * @param orig
-     * @param extendwith
+     * @method extendBlueprint
+     * @param orig original blueprint to extend
+     * @param extendwith object to extend original blueprint with
+     * @param {bool} [inPlaceExtend] if true, will modify the orig blueprint.  Defaults to false
      * @return {Object} New object that contains the merged values
      */
-    function extend(orig, extendwith) {
-        var result = {};
+    function extendBlueprint(orig, extendwith, inPlaceExtend) {
+        var result = inPlaceExtend ? orig : {};
         var i;
 
         for (i in orig) {
@@ -334,7 +277,7 @@ var BlueprintCatalog = function (opts) {
                         //handle array types
                         result[i] = extendwith[i];
                     } else {
-                        result[i] = extend(result[i], extendwith[i]);
+                        result[i] = extendBlueprint(result[i], extendwith[i]);
                     }
                 } else {
                     result[i] = extendwith[i];
@@ -378,7 +321,7 @@ var BlueprintCatalog = function (opts) {
         }
 
         if (extendWith) {
-            result = extend(result, extendWith);
+            result = extendBlueprint(result, extendWith);
         }
         return result;
     }
@@ -427,17 +370,13 @@ var BlueprintCatalog = function (opts) {
      *
      * @method getBlueprintDescendingFrom
      * @param {string} baseBlueprintName
-     * @param {boolean} recurse
+     * @param {boolean} [recurse]
      * @return {Array} a list of all blueprints that descend from baseBlueprintName
      */
     function getBlueprintsDescendingFrom(baseBlueprintName, recurse) {
         var results = blueprintDictionary.find(function (item) {
             if (item.inherits === baseBlueprintName) {
                 return true;
-                //r.push(item);
-                //if (recurse) {
-                // results = results.concat(getBlueprintsDescendingFrom(r.name, recurse));
-                //}
             }
         });
 
@@ -469,8 +408,8 @@ var BlueprintCatalog = function (opts) {
      * if limit is provided, it will stop iterating once the limit of found blueprints is met.
      *
      * @method find
-     * @param {function} filt
-     * @param {int} limit
+     * @param {function} filt function to call with each blueprint to determine if it matches
+     * @param {int} limit if provided, then limit the results to this amount
      * @return {Array} matches
      */
     function find(filt, limit) {
@@ -481,6 +420,11 @@ var BlueprintCatalog = function (opts) {
         return hydratedBlueprints.find(filt, limit);
     }
 
+    /**
+     * @method hasBlueprint
+     * @param {string} blueprintName Name of blueprint to check fo
+     * @return {bool} true if the blueprint exists in the library
+     */
     function hasBlueprint(blueprintName) {
         return blueprintDictionary.containsKey(blueprintName);
     }
@@ -496,7 +440,8 @@ var BlueprintCatalog = function (opts) {
         find: find,
         getAllBlueprintNames: getAllBlueprintNames,
         getOriginalBlueprint: getOriginalBlueprint,
-        hasBlueprint: hasBlueprint
+        hasBlueprint: hasBlueprint,
+        extendBlueprint: extendBlueprint
 
     };
 
