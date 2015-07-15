@@ -1,7 +1,7 @@
 'use strict';
 
-import * as utils from 'utils';
-import * as blueprintLib from 'blueprintLib';
+import 'blueprints';
+import {builder} from 'atomic-blueprintLib';
 
 // Add the vendor scripts to the global namespace
 
@@ -16,7 +16,7 @@ function start() {
     // create a 2D scene
     game.createScene2D();
 
-    blueprintLib.createChild(game.scene, 'uiLevelGenerationChooser');
+    builder.createChild(game.scene, 'uiLevelGenerationChooser');
 }
 
 // called per frame

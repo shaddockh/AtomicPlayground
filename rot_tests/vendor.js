@@ -6,11 +6,10 @@
 // we don't know about is requested.
 Duktape.modSearch = (function (origModSearch, vendorMap) {
     return function (id, require, exports, module) {
-        print('Searching for required module: ' + id);
         if (vendorMap[id]) {
             var result = vendorMap[id];
 
-            print('found it');
+            print('Loading vendor module: ' + id);
             // Let's map the exports from the module to the exports 
             for (var exp in result) {
                 exports[exp] = result[exp];
@@ -20,5 +19,6 @@ Duktape.modSearch = (function (origModSearch, vendorMap) {
         }
     };
 })(Duktape.modSearch, {
-    'rot-js': require('./vendor_overrides/rot')
+    'rot-js': require('./vendor_overrides/rot'),
+    'atomic-blueprintLib': require('atomic-blueprintLib')
 });
