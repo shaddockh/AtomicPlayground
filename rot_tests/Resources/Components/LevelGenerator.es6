@@ -1,6 +1,6 @@
 'use strict';
 import ROT from 'rot-js';
-import {builder as blueprintBuilder} from 'atomic-blueprintLib';
+import {nodeBuilder} from 'atomic-blueprintLib';
 
 var game = Atomic.game;
 var node = self.node;
@@ -41,7 +41,7 @@ function start() {
 
     for (let floorCoord in map) {
         let [x, y] = floorCoord.split(',');
-        children.push(blueprintBuilder.createChildAtPosition(node, 'tile_floor_overview', [parseInt(x) / scale + translationX, parseInt(y) / scale + translationY]));
+        children.push(nodeBuilder.createChildAtPosition(node, 'tile_floor_overview', [parseInt(x) / scale + translationX, parseInt(y) / scale + translationY]));
     }
 }
 

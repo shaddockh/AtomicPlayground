@@ -2,7 +2,7 @@ var game = Atomic.game;
 var ui = game.ui;
 var root = ui.getRoot();
 
-import {builder} from 'atomic-blueprintLib';
+import {nodeBuilder} from 'atomic-blueprintLib';
 
 var buttonDef = {
     btn1: {
@@ -66,7 +66,7 @@ function loadScene(element, buttonDef) {
         generatorNode.remove();
         generatorNode = null;
     }
-    generatorNode =  builder.createChild(game.scene, buttonDef.builderBlueprint);
+    generatorNode =  nodeBuilder.createChild(game.scene, buttonDef.builderBlueprint);
 }
 
 self.onMouseClick = function (element) {

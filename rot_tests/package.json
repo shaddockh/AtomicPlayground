@@ -12,7 +12,7 @@
   "author": "Shaddock Heath",
   "license": "ISC",
   "devDependencies": {
-    "atomic-blueprintlib": "file:../atomic-blueprintLib",
+    "atomic-blueprintlib": "file:../atomic-blueprintlib",
     "babelify": "^6.1.2",
     "browserify": "^10.2.4",
     "del": "^1.2.0",
