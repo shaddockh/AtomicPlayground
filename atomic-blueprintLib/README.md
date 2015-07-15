@@ -8,17 +8,17 @@ blueprint sytstem pulled in from https://github.com/shaddockh/entity-blueprint-m
 ## Requiring in the library
 ```
 var blueprintCatalog = require('atomic-blueprintLib').blueprintCatalog;
-var goBuilder = require('atomic-blueprintLib').builder;
+var nodeBuilder = require('atomic-blueprintLib').builder;
 ```
 or ES6
 ```
-import {blueprintCatalog, goBuilder} from 'atomic-blueprintLib';
+import {blueprintCatalog, nodeBuilder} from 'atomic-blueprintLib';
 ```
 
 ## Simple example
 ```
 var blueprintCatalog = require('atomic-blueprintLib').blueprintCatalog,
-    goBuilder = require('atomic-blueprintLib').builder;
+    nodeBuilder = require('atomic-blueprintLib').builder;
 
 // Define some blueprints
 var blueprints = {
@@ -40,7 +40,7 @@ blueprintCatalog.loadBlueprints(blueprints, function(bpName) { print('Loading ' 
 blueprintCatalog.hydrateAllBlueprints();
 
 // Construct a game object
-goBuilder.createChildAtLocation(game.scend, 'testBlueprint', [1,1]);
+nodeBuilder.createChildAtLocation(game.scend, 'testBlueprint', [1,1]);
 
 
 
