@@ -7,18 +7,18 @@ blueprint sytstem pulled in from https://github.com/shaddockh/entity-blueprint-m
 # Usage
 ## Requiring in the library
 ```
-var blueprintCatalog = require('atomic-blueprintLib').blueprintCatalog;
-var nodeBuilder = require('atomic-blueprintLib').nodeBuilder;
+var blueprintCatalog = require('atomic-blueprintlib').blueprintCatalog;
+var nodeBuilder = require('atomic-blueprintlib').nodeBuilder;
 ```
 or ES6
 ```
-import {blueprintCatalog, nodeBuilder} from 'atomic-blueprintLib';
+import {blueprintCatalog, nodeBuilder} from 'atomic-blueprintlib';
 ```
 
 ## Simple example
 ```
-var blueprintCatalog = require('atomic-blueprintLib').blueprintCatalog,
-    nodeBuilder = require('atomic-blueprintLib').nodeBuilder;
+var blueprintCatalog = require('atomic-blueprintlib').blueprintCatalog,
+    nodeBuilder = require('atomic-blueprintlib').nodeBuilder;
 
 // Define some blueprints
 var blueprints = {
