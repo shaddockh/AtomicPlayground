@@ -5,22 +5,14 @@ atomic game objects from blueprints that are defined as JavaScript object litera
 blueprint sytstem pulled in from https://github.com/shaddockh/entity-blueprint-manager.
 
 # Usage
-## Access to the blueprint catalog
+## Requiring in the library
 ```
 var blueprintCatalog = require('atomic-blueprintLib').blueprintCatalog;
-```
-or ES6
-```
-import {blueprintCatalog} from 'atomic-blueprintLib';
-```
-
-## Access to the Game object builder
-```
 var goBuilder = require('atomic-blueprintLib').builder;
 ```
 or ES6
 ```
-import {goBuilder} from ('atomic-blueprintLib');
+import {blueprintCatalog, goBuilder} from 'atomic-blueprintLib';
 ```
 
 ## Simple example
@@ -68,19 +60,18 @@ blueprint name will cause a lookup of that name in the blueprint catalog.  Passi
 without a lookup.  Once created, it will have it's initial spawn point set to the location.  Note! The blueprint must contain a
 Position component.
 
-
 ## builder.setDebugMode(val)
 turns on or off debug output.
 
 # BlueprintCatalog api (copied from the entity-blueprint-manager)
-* clear
-* loadSingleBlueprint
-* loadBlueprints
-* getBlueprint
-* getBlueprintFromInstance
-* getBlueprintsDescendingFrom
-* hydrateAllBlueprints
-* find: find
-* getAllBlueprintNames
-* getOriginalBlueprint
-* hasBlueprint
+* blueprintCatalog.clear()
+* blueprintCatalog.loadSingleBlueprint(blueprint, blueprintName, [progressCallback])
+* blueprintCatalog.loadBlueprints(block, [progressCallback])
+* blueprintCatalog.getBlueprint(name, [extendWith])
+* blueprintCatalog.getBlueprintFromInstance
+* blueprintCatalog.getBlueprintsDescendingFrom(blueprintName, [recurse])
+* blueprintCatalog.hydrateAllBlueprints()
+* blueprintCatalog.find(filterCallback, [limit])
+* blueprintCatalog.getAllBlueprintNames()
+* blueprintCatalog.getOriginalBlueprint(blueprintName)
+* blueprintCatalog.hasBlueprint(blueprintName)
