@@ -9,7 +9,8 @@ var defaultBlueprint = {
     spriteTexture: null,
     blendMode: Atomic.BLEND_ALPHA,
     orderInLayer: 0,
-    scale: [1,1]
+    scale: [1,1],
+    color: [1,1,1,1]
 };
 
 // Initialize the blueprint here for elements that need to happen prior to start
@@ -34,6 +35,8 @@ var blueprint = node.getComponentBlueprint(self, defaultBlueprint);
     if (blueprint.spriteTexture) {
         sprite2D.sprite = game.getSprite2D(blueprint.spriteTexture);
     }
+
+    sprite2D.setColor(blueprint.color);
 
     node.scale2D = blueprint.scale;
 
