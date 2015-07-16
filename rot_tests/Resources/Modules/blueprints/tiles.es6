@@ -1,7 +1,7 @@
 export const tiles = {
 
     tile_base: {
-        Aspect: {},
+        Sprite: {},
         Position: {
             debug: false
         }
@@ -9,9 +9,18 @@ export const tiles = {
 
     tile_floor_overview: {
         inherits: 'tile_base',
-        Aspect: {
-            spriteTexture: 'Sprites/tile_floor_overview.png'
+        Sprite: {
+            spriteTexture: 'Sprites/tile_floor_overview.png',
+            color: [1,1,1,1]
         }
-    }
+    },
+    tile_door_overview: {
+        inherits: 'tile_base',
+        Sprite: {
+            spriteTexture: 'Sprites/tile_floor_overview.png',
+            color: [0,1,0,1]
+        }
+    },
+
 
 };

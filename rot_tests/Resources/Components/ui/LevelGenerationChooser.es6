@@ -2,25 +2,31 @@ var game = Atomic.game;
 var ui = game.ui;
 var root = ui.getRoot();
 
-import {nodeBuilder} from 'atomic-blueprintLib';
-
-var buttonDef = {
-    btn1: {
-        text: 'Digger',
-        builderBlueprint: 'levelGeneratorDigger'
-    },
-    btn2: {
-        text: 'Maze',
-        builderBlueprint: 'levelGeneratorMaze'
-    }
-};
+import {
+    nodeBuilder, blueprintCatalog
+}
+from 'atomic-blueprintLib';
 
 var dialog;
 var generatorNode;
+var buttonDef;
 
 build();
 
 function build() {
+
+    let btnId = 0;
+    buttonDef = {};
+    blueprintCatalog.find(blueprint => {
+        if (blueprint.inherits === 'baseLevelGenerator') {
+            buttonDef['btn' + blueprint.name] = {
+                text: blueprint.LevelGenerator.strategy,
+                builderBlueprint: blueprint.name
+            };
+            return true;
+        }
+    });
+
     var uiStyle = game.cache.getResource("XMLFile", "UI/DefaultStyle.xml");
     root.defaultStyle = uiStyle;
 
@@ -63,10 +69,10 @@ function loadScene(element, buttonDef) {
     if (generatorNode) {
         generatorNode.trigger('onClear');
 
-        generatorNode.remove();
+        Atomic.destroy(generatorNode);
         generatorNode = null;
     }
-    generatorNode =  nodeBuilder.createChild(game.scene, buttonDef.builderBlueprint);
+    generatorNode = nodeBuilder.createChild(game.scene, buttonDef.builderBlueprint);
 }
 
 self.onMouseClick = function (element) {
@@ -88,16 +94,17 @@ function update(timeStep) {
  * Create a button with the provided text and id
  */
 function createButton(text, id) {
+    print(`Creating button ${id}`);
     var button = new Atomic.Button();
     button.setName(id);
-    button.setMinHeight(48);
+    button.setMinHeight(38);
 
     var buttonText = new Atomic.Text();
 
     buttonText.text = text;
     var font = game.cache.getResource("Font", "Fonts/Anonymous Pro.ttf");
 
-    buttonText.setFont(font, 12);
+    buttonText.setFont(font, 10);
     buttonText.color = [1, 1, 0, 1];
 
     buttonText.horizontalAlignment = Atomic.HA_CENTER;
