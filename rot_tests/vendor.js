@@ -19,6 +19,6 @@ Duktape.modSearch = (function (origModSearch, vendorMap) {
         }
     };
 })(Duktape.modSearch, {
-    'rot-js': require('./vendor_overrides/rot'),
+    'rot-js': require('rot-js'),
     'atomic-blueprintLib': require('atomic-blueprintLib')
 });
