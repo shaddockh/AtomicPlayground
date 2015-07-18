@@ -2,16 +2,58 @@ var game = Atomic.game;
 var ui = game.ui;
 var root = ui.getRoot();
 
-import {
-    nodeBuilder, blueprintCatalog
-}
-from 'atomic-blueprintLib';
+import {nodeBuilder, blueprintCatalog} from 'atomic-blueprintLib';
 
 var dialog;
 var generatorNode;
 var buttonDef;
 
-build();
+function loadScene(element, buttonDef) {
+    if (generatorNode) {
+        generatorNode.trigger('onClear');
+
+        Atomic.destroy(generatorNode);
+        generatorNode = null;
+    }
+    generatorNode = nodeBuilder.createChild(game.scene, buttonDef.builderBlueprint);
+}
+
+self.onMouseClick = function (element) {
+    var handler = buttonDef[element.name];
+    if (handler.builderBlueprint) {
+        loadScene(element, handler);
+    }
+};
+
+function start() {
+    build();
+    self.listenToEvent(null, "UIMouseClick", self.onMouseClick);
+}
+
+/**
+ * Create a button with the provided text and id
+ */
+function createButton(text, id) {
+    print(`Creating button ${id}`);
+    var button = new Atomic.Button();
+    button.setName(id);
+    button.setMinHeight(38);
+
+    var buttonText = new Atomic.Text();
+
+    buttonText.text = text;
+    var font = game.cache.getResource("Font", "Fonts/Anonymous Pro.ttf");
+
+    buttonText.setFont(font, 10);
+    buttonText.color = [1, 1, 0, 1];
+
+    buttonText.horizontalAlignment = Atomic.HA_CENTER;
+    buttonText.verticalAlignment = Atomic.VA_CENTER;
+    button.addChild(buttonText);
+
+    button.setStyleAuto();
+    return button;
+}
 
 function build() {
 
@@ -63,54 +105,4 @@ function build() {
     for (let btnId in buttonDef) {
         dialog.addChild(createButton(buttonDef[btnId].text, btnId));
     }
-}
-
-function loadScene(element, buttonDef) {
-    if (generatorNode) {
-        generatorNode.trigger('onClear');
-
-        Atomic.destroy(generatorNode);
-        generatorNode = null;
-    }
-    generatorNode = nodeBuilder.createChild(game.scene, buttonDef.builderBlueprint);
-}
-
-self.onMouseClick = function (element) {
-    var handler = buttonDef[element.name];
-    if (handler.builderBlueprint) {
-        loadScene(element, handler);
-    }
-};
-
-function start() {
-    self.listenToEvent(null, "UIMouseClick", self.onMouseClick);
-}
-
-function update(timeStep) {
-
-}
-
-/**
- * Create a button with the provided text and id
- */
-function createButton(text, id) {
-    print(`Creating button ${id}`);
-    var button = new Atomic.Button();
-    button.setName(id);
-    button.setMinHeight(38);
-
-    var buttonText = new Atomic.Text();
-
-    buttonText.text = text;
-    var font = game.cache.getResource("Font", "Fonts/Anonymous Pro.ttf");
-
-    buttonText.setFont(font, 10);
-    buttonText.color = [1, 1, 0, 1];
-
-    buttonText.horizontalAlignment = Atomic.HA_CENTER;
-    buttonText.verticalAlignment = Atomic.VA_CENTER;
-    button.addChild(buttonText);
-
-    button.setStyleAuto();
-    return button;
 }

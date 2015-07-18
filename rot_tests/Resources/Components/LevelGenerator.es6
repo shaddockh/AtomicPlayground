@@ -1,8 +1,6 @@
 'use strict';
 import ROT from 'rot-js';
-import {
-    nodeBuilder
-}
+import { nodeBuilder }
 from 'atomic-blueprintLib';
 
 var game = Atomic.game;
@@ -13,7 +11,8 @@ var defaultBlueprint = {
     strategyOptions: {},
     iterations: 1,
     width: 80,
-    height: 25
+    height: 25,
+    cellPixelSize: 16
 };
 
 var children = [];
@@ -30,14 +29,17 @@ var blueprint = node.getComponentBlueprint(self, defaultBlueprint);
 function start() {
     var map = buildMap(blueprint.strategy);
 
-    let scale = 8,
-        translationX = -5,
-        translationY = -1;
+    let scale = blueprint.cellPixelSize * Atomic.PIXEL_SIZE,
+        offsetX = blueprint.width / 2 * scale * -1,
+        offsetY = blueprint.height / 2 * scale * -1;
 
     for (let floorCoord in map) {
         let [x, y] = floorCoord.split(',');
-        children.push(nodeBuilder.createChildAtPosition(node, map[floorCoord], [parseInt(x) / scale + translationX, parseInt(y) / scale + translationY]));
+        //children.push(nodeBuilder.createChildAtPosition(node, map[floorCoord], [parseInt(x) * scale + offsetX, parseInt(y) * scale + offsetY]));
+        children.push(nodeBuilder.createChildAtPosition(node, map[floorCoord], [parseInt(x) * scale, parseInt(y) * scale]));
     }
+
+    node.position2D = [offsetX, offsetY];
 }
 
 self.onClear = function () {
@@ -108,4 +110,13 @@ function buildMap(strategy) {
     }
 
     return map;
+}
+
+function update() {
+    var camera = game.camera;
+    //var pos = game.cameraNode.position2D;
+    //pos[1] -= 4;
+    //node.position2D = pos;
+    //var zoom = camera.zoom;
+    //node.scale2D = [zoom, zoom];
 }

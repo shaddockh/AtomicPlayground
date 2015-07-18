@@ -1,5 +1,8 @@
 export const ui = {
     uiLevelGenerationChooser: {
-        LevelGenerationChooser: {}
+        LevelGenerationChooser: {},
+        OverviewCameraController: {
+            allowZoom: true
+        }
     }
 };
