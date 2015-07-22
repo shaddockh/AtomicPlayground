@@ -6,6 +6,7 @@ var babel = require("gulp-babel");
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var del = require('del');
+var replace = require('gulp-replace');
 
 var paths = {
     babel: 'Resources/**/*.es6',
@@ -29,12 +30,24 @@ gulp.task('copy-files', ['clean'], function () {
         .pipe(gulp.dest('./build'));
 });
 
+gulp.task('transform-spritesheets', ['copy-files'], function () {
+    // This is necessary because the spritesheets exported from Leshy Spritesheet Tool (http://www.leshylabs.com/apps/sstool/) are not formatted in a way that
+    // Atomic Game Engine can read... the casing is wrong.
+    return gulp.src(['./Resources/Sprites/*.xml'], {
+            base: './'
+        })
+        .pipe(replace(/textureatlas/ig, 'TextureAtlas'))
+        .pipe(replace(/subtexture/ig, 'SubTexture'))
+        .pipe(replace(/imagepath/ig, 'imagePath'))
+        .pipe(gulp.dest('./build'));
+});
+
 gulp.task('watch', ['default'], function () {
     gulp.watch(paths.babel, ['babel-watch']);
     gulp.watch(paths.atomify, ['atomify-watch']);
 });
 
-gulp.task('default', ['babel', 'atomify']);
+gulp.task('default', ['babel', 'atomify', 'transform-spritesheets']);
 
 // --------------------------------------------------------------------
 function doAtomify() {
