@@ -62,7 +62,7 @@ function build() {
     blueprintCatalog.find(blueprint => {
         if (blueprint.inherits === 'baseLevelGenerator') {
             buttonDef['btn' + blueprint.name] = {
-                text: blueprint.LevelGenerator.strategy,
+                text: blueprint.name,
                 builderBlueprint: blueprint.name
             };
             return true;
