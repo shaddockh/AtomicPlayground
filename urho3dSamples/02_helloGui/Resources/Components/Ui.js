@@ -142,7 +142,7 @@ function createDraggableFish() {
 
     // Create a draggable Fish button
     var draggableFish = new Atomic.Button();
-    draggableFish.setTexture(cache.getResource("Texture2D", "../resources/textures/UrhoDecal.dds")); // Set texture
+    draggableFish.setTexture(cache.getResource("Texture2D", "../Resources/Textures/UrhoDecal.dds")); // Set texture
     draggableFish.setBlendMode(Atomic.BLEND_ADD);
     draggableFish.setSize(128, 128);
     draggableFish.setPosition([(graphics.getWidth() - draggableFish.getWidth()) / 2, 200]);
