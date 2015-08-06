@@ -66,7 +66,7 @@ function createSprites() {
     var height = graphics.getHeight();
 
     // Get the Urho3D fish texture
-    var decalTex = cache.getResource("Texture2D", "../Resources/Textures/UrhoDecal.dds");
+    var decalTex = cache.getResource("Texture2D", "Textures/UrhoDecal.dds");
 
     for (var i = 0; i < NUM_SPRITES; ++i) {
         // Create a new sprite, set it to use the texture
@@ -84,11 +84,11 @@ function createSprites() {
         // Set random rotation in degrees and random scale
         sprite.setRotation(Math.random() * 360.0);
         //sprite.setScale(Math.random(1.0) + 0.5);
-        sprite.scale = Math.random(1.0) + 0.5;
+        sprite.scale = Math.random() + 0.5;
 
         // Set random color and additive blending mode
         //sprite.setColor([Math.random(0.5) + 0.5, Math.random(0.5) + 0.5, Math.random(0.5) + 0.5]);
-        sprite.color = [Math.random(0.5) + 0.5, Math.random(0.5) + 0.5, Math.random(0.5) + 0.5, 1];
+        sprite.color = [(Math.random() * 0.5) + 0.5, (Math.random() * 0.5) + 0.5, (Math.random() * 0.5) + 0.5, 1];
         sprite.setBlendMode(Atomic.BLEND_ADD);
 
         // Add as a child of the root UI element
@@ -96,7 +96,7 @@ function createSprites() {
 
         // Store sprite's velocity as a custom variable
         //sprite.setVar(VAR_VELOCITY, [ Math.random(200.0) - 100.0, Math.random(200.0) - 100.0]);
-        sprite[VAR_VELOCITY] = [Math.random(200.0) - 100.0, Math.random(200.0) - 100.0];
+        sprite[VAR_VELOCITY] = [(Math.random() * 200) - 100.0, (Math.random() * 200) - 100.0];
 
         // Store sprites to our own container for easy movement update iteration
         sprites_.push(sprite);
