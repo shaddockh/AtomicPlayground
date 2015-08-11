@@ -5,6 +5,7 @@ exports.blueprints = {
     star: {
         Star: {},
         Aspect: {
+            debug: true,
             spriteTexture: 'Sprites/star.png',
             blendMode: Atomic.BLEND_ALPHA,
         }

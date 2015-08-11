@@ -100,4 +100,10 @@ Take a look at the following files for how they are configured
 * Components/core/Aspect.js - a more complex blueprint that handles assigning the appropriate sprite to the entity
 
     
-    
+   
+### Update - Converting to source version of Atomic
+Some things have broken with the new version and I'm currently looking at ways to improve the system and work with the new features.  Some issues that I ran across
+* When creating a new JSComponent, previously the path didn't matter.  If the file existed anywhere under Resources/Components, it found it.  Now it needs a proper path
+* Due to this, the blueprints need to either specify a full path to the component, or use an entry in Resources/Components/componentCrossref.js which maps a component name to a full path
+* Ideally, either I find another way to generate blueprints, or componentCrossref.js will be auto-generated during build.
+* Note this is hacked together at this point to work...more work forthcoming.

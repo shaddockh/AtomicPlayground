@@ -1,21 +1,28 @@
-var game = Atomic.game;
-var node = self.node;
+"atomic component";
 
-var defaultBlueprint = {
+var inspectorFields = {
     speed: 100
 };
 
-// Initialize the blueprint here for elements that need to happen prior to start
-var blueprint = node.getComponentBlueprint(self, defaultBlueprint);
-/**
- * Perform any setup required before the first start iteration
- */
-(function () {
-    // no setup here
-}());
+module.exports = function (self) {
 
-function start() {}
+    var game = Atomic.game;
+    var node = self.node;
 
-function update(timeStep) {
-    node.roll(timeStep * blueprint.speed);
-}
+    // Initialize the blueprint here for elements that need to happen prior to start
+    var blueprint = node.getComponentBlueprint(self, inspectorFields);
+    /**
+     * Perform any setup required before the first start iteration
+     */
+    (function () {
+        // no setup here
+    }());
+
+    self.start = function () {
+
+    };
+
+    self.update = function (timeStep) {
+        node.roll(timeStep * blueprint.speed);
+    };
+};

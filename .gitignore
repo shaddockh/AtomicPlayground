@@ -28,3 +28,6 @@ node_modules
 
 # Any Build folder
 build
+ 
+# Cache folder
+Cache

@@ -1,6 +1,7 @@
 // Routines for generating an entity from a blueprint -- very basic implementation here
 var cache = {};
 var blueprintLibrary = require('blueprints').blueprints;
+var componentCrossref = require('Resources/Components/componentCrossref');
 
 /**
  * Will extend either a blueprint of a sub component of a blueprint.
@@ -70,7 +71,30 @@ function getBlueprint(name) {
  * @param {Object} defaultBlueprint The default blueprint for this component.  This will be the base blueprint settings that get augmented by the custom component settings.
  */
 function getComponentBlueprint(componentRef, defaultBlueprint) {
-    return extend(defaultBlueprint, this.blueprint[componentRef.className]);
+    // TODO: This is somewhat hacky .. need to figure out a better way
+    var componentName = componentRef.getComponentFile().getName();
+    componentName = componentName.replace('.js','');
+    componentName = componentName.split('/').pop();
+    console.log(componentName);
+    return extend(defaultBlueprint, this.blueprint[componentName]);
+}
+
+/**
+ * Resolve the component name to the actual path of the component
+ * @method
+ * @param {string} componentName the name of the component.  If the component contains slashes, it will be assumed that the component is referenced by absolute path.  Otherwise, the component will be looked up in componentCrossref.js.json
+ * @returns {string} the absolute path to the component
+ */
+function resolveComponent(componentName) {
+    var comp;
+    if (new RegExp('\\ | \/', 'g').test(componentName)) {
+        // We have an absolute path to the component
+        comp = componentName;
+    } else {
+        // We need to look up the component in the component cross-ref
+        comp = componentCrossref[componentName] || componentName;
+    }
+    return comp;
 }
 
 function buildEntity(node, blueprint) {
@@ -84,7 +108,7 @@ function buildEntity(node, blueprint) {
     for (var componentName in blueprint) {
         if (typeof (blueprint[componentName]) === 'object') {
             try {
-                var comp = node.createJSComponent(componentName);
+                var comp = node.createJSComponent(resolveComponent(componentName));
                 comp.blueprint = blueprint[componentName];
                 if (comp.constructFromBlueprint) {
                     comp.constructFromBlueprint(blueprint[componentName]);
@@ -117,7 +141,7 @@ function createChildAtPosition(parent, blueprint, spawnPosition) {
         // ie. an explosion should happen at the point of impact, not where the element is in the future.
         node.Position.spawnPosition = [spawnPosition[0], spawnPosition[1]];
     } else {
-        throw new Error('Cannot spawn an entity at a postion without a Position component');
+        throw new Error('Cannot spawn an entity at a position without a Position component');
     }
     return node;
 }

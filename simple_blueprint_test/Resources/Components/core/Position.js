@@ -1,28 +1,30 @@
 // Position component
 'use strict';
+"atomic component";
 
-var game = Atomic.game;
-var node = self.node;
-
-var defaultBlueprint = {
+var inspectorFields = {
     spawnPosition: null
 };
 
-// Initialize the blueprint here for elements that need to happen prior to start
-var blueprint = node.getComponentBlueprint(self, defaultBlueprint);
-/**
- * Perform any setup required before the first start iteration
- */
-(function () {
-    self.spawnPosition = blueprint.spawnPosition;
-}());
+module.exports = function (self) {
+    var game = Atomic.game;
+    var node = self.node;
+    // Initialize the blueprint here for elements that need to happen prior to start
+    var blueprint = node.getComponentBlueprint(self, inspectorFields);
+    /**
+     * Perform any setup required before the first start iteration
+     */
+    (function () {
+        self.spawnPosition = blueprint.spawnPosition;
+    }());
 
-function start() {
-    if (self.spawnPosition) {
-        self.setPosition(self.spawnPosition);
-    }
-}
+    self.start = function () {
+        if (self.spawnPosition) {
+            self.setPosition(self.spawnPosition);
+        }
+    };
 
-self.setPosition = function (pos) {
-    node.position2D = pos;
+    self.setPosition = function (pos) {
+        node.position2D = pos;
+    };
 };
