@@ -71,11 +71,25 @@ function getBlueprint(name) {
  * @param {Object} defaultBlueprint The default blueprint for this component.  This will be the base blueprint settings that get augmented by the custom component settings.
  */
 function getComponentBlueprint(componentRef, defaultBlueprint) {
-    // TODO: This is somewhat hacky .. need to figure out a better way
-    var componentName = componentRef.getComponentFile().getName();
-    componentName = componentName.replace('.js','');
-    componentName = componentName.split('/').pop();
-    console.log(componentName);
+    // Look up the component name in the cross ref
+    var componentName;
+    var fullComponentName = componentRef.getComponentFile().getName();
+    for (var name in componentCrossref) {
+        if (fullComponentName === componentCrossref[name]) {
+            componentName = name;
+            break;
+        }
+    }
+
+    // If it's not in the cross-ref, see if the full component name is in the blueprint
+    if (!componentName) {
+        if (!this.blueprint[fullComponentName]) {
+            componentName = fullComponentName;
+        } else {
+            throw new Error('Could not find component in blueprint: ' + fullComponentName);
+        }
+    }
+
     return extend(defaultBlueprint, this.blueprint[componentName]);
 }
 
