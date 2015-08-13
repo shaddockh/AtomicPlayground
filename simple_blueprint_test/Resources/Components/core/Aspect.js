@@ -1,5 +1,5 @@
 'use strict';
-"atomic component";
+'atomic component';
 
 var inspectorFields = {
     spriteSheet: null,

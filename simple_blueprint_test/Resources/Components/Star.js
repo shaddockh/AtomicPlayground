@@ -1,4 +1,4 @@
-"atomic component";
+'atomic component';
 
 var inspectorFields = {
     speed: 100

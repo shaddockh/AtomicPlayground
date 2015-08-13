@@ -1,7 +1,56 @@
 // Routines for generating an entity from a blueprint -- very basic implementation here
 var cache = {};
 var blueprintLibrary = require('blueprints').blueprints;
-var componentCrossref = require('Resources/Components/componentCrossref');
+var componentCrossref = null;
+var COMPONENTS_DIR = 'Components';
+var RESOURCES_DIR = 'Resources';
+var COMPONENTS_PATH = Atomic.addTrailingSlash(RESOURCES_DIR) + COMPONENTS_DIR;
+
+/**
+ * Utiliity function that will scan the Components directory for components and build a cross reference so that
+ * when the blueprint system tries to attach a component, it knows where the component file is.
+ * Note, that this will be cached so that it only builds the cross reference on game startup.
+ * @method
+ * @returns object Component cross reference file.
+ */
+function buildComponentCrossref() {
+
+    // Cached
+    if (componentCrossref) {
+        return componentCrossref;
+    }
+
+    componentCrossref = {};
+
+    var fs = Atomic.fileSystem;
+    var cl = Atomic.getArguments().join(',').split(',');
+    var pth = '';
+    for (var i = 0; i < cl.length; i++) {
+
+        if (cl[i] === '--project') {
+            pth = cl[i + 1];
+            break;
+        }
+    }
+    console.log(COMPONENTS_PATH);
+    var componentFiles = fs.scanDir(pth + COMPONENTS_PATH, '*.js', Atomic.SCAN_FILES, true);
+    for (var f = 0; f < componentFiles.length; f++) {
+        var fn = componentFiles[f].replace('.js', '');
+        var componentName = fn;
+        if (fn.search('/')) {
+            componentName = fn.split('/').pop();
+        } else if (fn.search('\\')) {
+            componentName = fn.split('\\').pop();
+        }
+        if (componentCrossref[componentName]) {
+            throw new Error('Component names must be unique.  Component: ' + componentName + ' already registered.');
+        }
+        componentCrossref[componentName] = Atomic.addTrailingSlash(COMPONENTS_DIR) + fn + '.js';
+        console.log('Registering component: ' + componentName + ': ' + componentCrossref[componentName]);
+    }
+
+    return componentCrossref;
+}
 
 /**
  * Will extend either a blueprint of a sub component of a blueprint.
@@ -74,6 +123,7 @@ function getComponentBlueprint(componentRef, defaultBlueprint) {
     // Look up the component name in the cross ref
     var componentName;
     var fullComponentName = componentRef.getComponentFile().getName();
+    buildComponentCrossref();
     for (var name in componentCrossref) {
         if (fullComponentName === componentCrossref[name]) {
             componentName = name;
@@ -100,6 +150,7 @@ function getComponentBlueprint(componentRef, defaultBlueprint) {
  * @returns {string} the absolute path to the component
  */
 function resolveComponent(componentName) {
+    buildComponentCrossref();
     var comp;
     if (new RegExp('\\ | \/', 'g').test(componentName)) {
         // We have an absolute path to the component

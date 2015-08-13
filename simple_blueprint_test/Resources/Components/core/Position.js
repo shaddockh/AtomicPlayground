@@ -1,6 +1,6 @@
 // Position component
 'use strict';
-"atomic component";
+'atomic component';
 
 var inspectorFields = {
     spawnPosition: null
