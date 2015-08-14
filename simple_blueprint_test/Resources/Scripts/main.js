@@ -13,6 +13,9 @@ function start() {
     // create a 2D scene
     game.createScene2D();
 
+    // Generate prefabs from any blueprints that specify isPrefab=true
+    blueprintLib.generatePrefabs();
+    
     // Use the blueprint system to spawn the blueprints named star1 and star2.  All components that
     // these need are defined in the blueprint and the blueprint system handles attaching the components.
     // Each component, in turn is in charge of initializing itself based upon it's section of the blueprint

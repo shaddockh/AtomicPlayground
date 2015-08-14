@@ -1,6 +1,5 @@
 // all blueprints should be defined here
-exports.blueprints = {
-
+module.exports = {
     // This is the base star blueprint that defines the texture, etc.
     star: {
         Star: {},
@@ -10,10 +9,10 @@ exports.blueprints = {
             blendMode: Atomic.BLEND_ALPHA,
         }
     },
-
     // this descends from the base star and overrides the spawn position and speed
     star1: {
         inherits: 'star',
+        isPrefab: true,
         Star: {
             speed: -50
         },
@@ -21,10 +20,10 @@ exports.blueprints = {
             spawnPosition: [-3, 0]
         }
     },
-
     // this descends from the base star and overrides the spawn position and speed
     star2: {
         inherits: 'star',
+        isPrefab: true,
         Star: {
             speed: 100
         },

@@ -3,28 +3,27 @@
 'atomic component';
 
 var inspectorFields = {
-    spawnPosition: null
+    spawnPosition: [Atomic.VAR_VECTOR3, [0, 0, 0]],
+    debug: false
 };
 
 module.exports = function (self) {
     var game = Atomic.game;
     var node = self.node;
-    // Initialize the blueprint here for elements that need to happen prior to start
-    var blueprint = node.getComponentBlueprint(self, inspectorFields);
-    /**
-     * Perform any setup required before the first start iteration
-     */
-    (function () {
-        self.spawnPosition = blueprint.spawnPosition;
-    }());
 
     self.start = function () {
         if (self.spawnPosition) {
+            if (self.debug) {
+                console.log('Position.SpawnPosition: ' + self.spawnPosition.join(','));
+            }
             self.setPosition(self.spawnPosition);
         }
     };
 
     self.setPosition = function (pos) {
+        if (self.debug) {
+            console.log('Position.SetPosition: ' + pos.join(','));
+        }
         node.position2D = pos;
     };
 };

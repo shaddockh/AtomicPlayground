@@ -1,11 +1,82 @@
 // Routines for generating an entity from a blueprint -- very basic implementation here
 var cache = {};
-var blueprintLibrary = require('blueprints').blueprints;
+var blueprintLibrary = require('blueprints');
 var componentCrossref = null;
 var COMPONENTS_DIR = 'Components';
 var RESOURCES_DIR = 'Resources';
+var PREFABS_DIR = 'Prefabs';
+var GENERATED_PREFABS_DIR = Atomic.addTrailingSlash(PREFABS_DIR) + 'Generated';
 var COMPONENTS_PATH = Atomic.addTrailingSlash(RESOURCES_DIR) + COMPONENTS_DIR;
 
+function getProjectRoot() {
+
+    var pth = '';
+    var cl = Atomic.getArguments().join(',').split(',');
+    for (var i = 0; i < cl.length; i++) {
+        if (cl[i] === '--project') {
+            pth = cl[i + 1];
+            break;
+        }
+    }
+    return pth;
+}
+
+/**
+ * Augments the base node object with a trigger function.  Calling this will
+ * walk the components in the associated blueprint and if the component has the eventName as function
+ * on it, will call it.
+ * @method
+ * @param {string} eventName the name of the event to call
+ * @param {Any} args arguments to pass on through to the event handler
+ */
+function trigger(eventName) {
+    // taken from es6 transpiled version
+    for (var componentName in this.blueprint) {
+        var component = this[componentName];
+        if (component && typeof component[eventName] === 'function') {
+            for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+                args[_key - 1] = arguments[_key];
+            }
+            component[eventName].apply(component, args);
+        }
+    }
+}
+
+function generatePrefab(scene, blueprint, path) {
+    console.log('Generating prefab: ' + blueprint.name + ' at ' + path);
+
+    // build the prefab
+    // TODO: Need to figure out how update an existing prefab if it exists
+    var node = createChild(scene, blueprint);
+    var file = new Atomic.File(path, Atomic.FILE_WRITE);
+    node.saveXML(file);
+    file.close();
+
+    // Delete the node
+    node.removeAllComponents();
+    node.remove();
+}
+
+function generatePrefabs() {
+    // Let's create an edit-time scene..one that doesn't update or start the component
+    var scene = new Atomic.Scene();
+    scene.setUpdateEnabled(false);
+    
+    
+    // Build the directory that our generated prefabs will go into  
+    var fs = Atomic.fileSystem;
+    var prefabPath = Atomic.addTrailingSlash(getProjectRoot() + RESOURCES_DIR) + PREFABS_DIR;
+    fs.createDir(prefabPath);
+    var path = Atomic.addTrailingSlash(getProjectRoot() + RESOURCES_DIR) + GENERATED_PREFABS_DIR;
+    fs.createDir(path);
+
+    for (var bp in blueprintLibrary) {
+        var blueprint = getBlueprint(bp);
+        if (blueprint.isPrefab) {
+            generatePrefab(scene, blueprint, Atomic.addTrailingSlash(path) + bp + '.prefab');
+        }
+    }
+}
 /**
  * Utiliity function that will scan the Components directory for components and build a cross reference so that
  * when the blueprint system tries to attach a component, it knows where the component file is.
@@ -14,7 +85,6 @@ var COMPONENTS_PATH = Atomic.addTrailingSlash(RESOURCES_DIR) + COMPONENTS_DIR;
  * @returns object Component cross reference file.
  */
 function buildComponentCrossref() {
-
     // Cached
     if (componentCrossref) {
         return componentCrossref;
@@ -23,16 +93,7 @@ function buildComponentCrossref() {
     componentCrossref = {};
 
     var fs = Atomic.fileSystem;
-    var cl = Atomic.getArguments().join(',').split(',');
-    var pth = '';
-    for (var i = 0; i < cl.length; i++) {
-
-        if (cl[i] === '--project') {
-            pth = cl[i + 1];
-            break;
-        }
-    }
-    console.log(COMPONENTS_PATH);
+    var pth = getProjectRoot();
     var componentFiles = fs.scanDir(pth + COMPONENTS_PATH, '*.js', Atomic.SCAN_FILES, true);
     for (var f = 0; f < componentFiles.length; f++) {
         var fn = componentFiles[f].replace('.js', '');
@@ -112,36 +173,6 @@ function getBlueprint(name) {
     }
     return blueprint;
 }
-/**
- * Gets the fragment of the blueprint for a component, automatically extended with the
- * components defaults
- * @method
- * @param {JSComponent} componentRef The component to get the blueprint fragment fo
- * @param {Object} defaultBlueprint The default blueprint for this component.  This will be the base blueprint settings that get augmented by the custom component settings.
- */
-function getComponentBlueprint(componentRef, defaultBlueprint) {
-    // Look up the component name in the cross ref
-    var componentName;
-    var fullComponentName = componentRef.getComponentFile().getName();
-    buildComponentCrossref();
-    for (var name in componentCrossref) {
-        if (fullComponentName === componentCrossref[name]) {
-            componentName = name;
-            break;
-        }
-    }
-
-    // If it's not in the cross-ref, see if the full component name is in the blueprint
-    if (!componentName) {
-        if (!this.blueprint[fullComponentName]) {
-            componentName = fullComponentName;
-        } else {
-            throw new Error('Could not find component in blueprint: ' + fullComponentName);
-        }
-    }
-
-    return extend(defaultBlueprint, this.blueprint[componentName]);
-}
 
 /**
  * Resolve the component name to the actual path of the component
@@ -167,16 +198,16 @@ function buildEntity(node, blueprint) {
         blueprint = getBlueprint(blueprint);
     }
     print('Building entity: ' + blueprint.name);
-    node.getComponentBlueprint = getComponentBlueprint.bind(node);
-    node.blueprint = blueprint;
 
     for (var componentName in blueprint) {
         if (typeof (blueprint[componentName]) === 'object') {
             try {
                 var comp = node.createJSComponent(resolveComponent(componentName));
-                comp.blueprint = blueprint[componentName];
-                if (comp.constructFromBlueprint) {
-                    comp.constructFromBlueprint(blueprint[componentName]);
+                var componentBlueprint = blueprint[componentName];
+                for (var prop in componentBlueprint) {
+                    comp.setAttribute(prop, componentBlueprint[prop]); // for generating the prefab
+                    comp[prop] = componentBlueprint[prop]; // for setting the value
+                    console.log(blueprint.name + ' - ' + componentName + '.' + prop + ' = ' + componentBlueprint[prop]);
                 }
                 node[componentName] = comp;
             } catch (e) {
@@ -221,9 +252,12 @@ function mixinBlueprint(owner, defaults, blueprintSection) {
     }
 }
 
-exports.buildEntity = buildEntity;
-exports.buildChildEntity = buildChildEntity;
-exports.createChild = createChild;
-exports.mixinBlueprint = mixinBlueprint;
-exports.createChildAtPosition = createChildAtPosition;
-exports.getBlueprint = getBlueprint;
+module.exports = {
+    buildEntity: buildEntity,
+    buildChildEntity: buildChildEntity,
+    createChild: createChild,
+    mixinBlueprint: mixinBlueprint,
+    createChildAtPosition: createChildAtPosition,
+    getBlueprint: getBlueprint,
+    generatePrefabs: generatePrefabs
+};
