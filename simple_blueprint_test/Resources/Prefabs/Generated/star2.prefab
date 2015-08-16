@@ -2,28 +2,17 @@
 <node id="3">
 	<attribute name="Is Enabled" value="true" />
 	<attribute name="Name" value="star2" />
-	<attribute name="Position" value="0 0 0" />
+	<attribute name="Position" value="3 0 0" />
 	<attribute name="Rotation" value="1 0 0 0" />
 	<attribute name="Scale" value="1 1 1" />
 	<attribute name="Variables" />
-	<component type="JSComponent" id="16777219">
+	<component type="JSComponent" id="16777217">
 		<attribute name="FieldValues">
 			<variant hash="273365031" type="Float" value="100" />
 		</attribute>
 		<attribute name="ComponentFile" value="JSComponentFile;Components/Star.js" />
 	</component>
-	<component type="JSComponent" id="16777220">
-		<attribute name="FieldValues">
-			<variant hash="339510355" type="Bool" value="false" />
-			<variant hash="4167328982" type="String" value="Sprites/star.png" />
-			<variant hash="807168660" type="Float" value="3" />
-		</attribute>
-		<attribute name="ComponentFile" value="JSComponentFile;Components/core/Aspect.js" />
-	</component>
-	<component type="JSComponent" id="16777221">
-		<attribute name="FieldValues">
-			<variant hash="4042713860" type="Vector2" value="3 0" />
-		</attribute>
-		<attribute name="ComponentFile" value="JSComponentFile;Components/core/Position.js" />
+	<component type="StaticSprite2D" id="3">
+		<attribute name="Sprite" value="Sprite2D;Sprites/star.png" />
 	</component>
 </node>

@@ -1,6 +1,7 @@
 // Routines for generating an entity from a blueprint -- very basic implementation here
 var blueprints = require('blueprints').blueprints;
 var utils = require('utils');
+var componentCrossref = require('Resources/Components/__componentCrossref');
 
 var cache = {};
 
@@ -20,11 +21,57 @@ function trigger(eventName) {
             for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
                 args[_key - 1] = arguments[_key];
             }
-
             component[eventName].apply(component, args);
         }
     }
 }
+
+/**
+ * Will extend either a blueprint of a sub component of a blueprint.
+ *
+ * @method extend
+ * @param {Object} orig the original object to extend
+ * @param extendwith
+ * @return {Object|Array} Returns a brand new object that contains the merged values.  This differs from
+ *                  most implementations that actually manipulate the orig object.
+ */
+function extend(orig) {
+    var result = {};
+    var i;
+
+    for (i in orig) {
+        if (orig.hasOwnProperty(i)) {
+            result[i] = orig[i];
+        }
+    }
+
+    // Taken from transpiled es6 sources
+    for (var _len = arguments.length, objectsToExtendWith = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        objectsToExtendWith[_key - 1] = arguments[_key];
+    }
+
+    for (var x = 0; x < objectsToExtendWith.length; x++) {
+        var extendwith = objectsToExtendWith[x];
+        for (i in extendwith) {
+            if (extendwith.hasOwnProperty(i)) {
+                if (typeof extendwith[i] === 'object') {
+                    if (extendwith[i] === null) {
+                        result[i] = null;
+                    } else if (extendwith[i].length) {
+                        //handle array types
+                        result[i] = extendwith[i];
+                    } else {
+                        result[i] = extend(result[i], extendwith[i]);
+                    }
+                } else {
+                    result[i] = extendwith[i];
+                }
+            }
+        }
+    }
+    return result;
+}
+
 
 /**
  * Gets the fragment of the blueprint for a component, automatically extended with the
@@ -34,7 +81,26 @@ function trigger(eventName) {
  * @param {Object} defaultBlueprint The default blueprint for this component.  This will be the base blueprint settings that get augmented by the custom component settings.
  */
 function getComponentBlueprint(componentRef, defaultBlueprint) {
-    return utils.extend(defaultBlueprint, this.blueprint[componentRef.className]);
+    // Look up the component name in the cross ref
+    var componentName;
+    var fullComponentName = componentRef.getComponentFile().getName();
+    for (var name in componentCrossref) {
+        if (fullComponentName === componentCrossref[name]) {
+            componentName = name;
+            break;
+        }
+    }
+
+    // If it's not in the cross-ref, see if the full component name is in the blueprint
+    if (!componentName) {
+        if (!this.blueprint[fullComponentName]) {
+            componentName = fullComponentName;
+        } else {
+            throw new Error('Could not find component in blueprint: ' + fullComponentName);
+        }
+    }
+
+    return extend(defaultBlueprint, this.blueprint[componentName]);
 }
 
 /**
@@ -53,22 +119,37 @@ function getBlueprint(name, extendWith) {
         if (blueprint) {
             blueprint.name = blueprint.name || name; // just in case we didn't specify it in the blueprint itself, but just by the key
             if (blueprint.inherits) {
-                blueprint = utils.extend(getBlueprint(blueprint.inherits), blueprint);
+                blueprint = extend(getBlueprint(blueprint.inherits), blueprint);
             }
             cache[name] = blueprint;
         }
     }
 
     if (extendWith) {
-        return utils.extend(blueprint, extendWith);
+        return extend(blueprint, extendWith);
     } else {
         return blueprint;
     }
 }
 
 /**
- * Constructs an entity on the specified node from a blueprint
+ * Resolve the component name to the actual path of the component
+ * @method
+ * @param {string} componentName the name of the component.  If the component contains slashes, it will be assumed that the component is referenced by absolute path.  Otherwise, the component will be looked up in componentCrossref.js.json
+ * @returns {string} the absolute path to the component
  */
+function resolveComponent(componentName) {
+    var comp;
+    if (new RegExp('\\ | \/', 'g').test(componentName)) {
+        // We have an absolute path to the component
+        comp = componentName;
+    } else {
+        // We need to look up the component in the component cross-ref
+        comp = componentCrossref[componentName] || componentName;
+    }
+    return comp;
+}
+
 function buildEntity(node, blueprint) {
     if (typeof (blueprint) === 'string') {
         blueprint = getBlueprint(blueprint);
@@ -80,19 +161,18 @@ function buildEntity(node, blueprint) {
     for (var componentName in blueprint) {
         if (typeof (blueprint[componentName]) === 'object') {
             try {
-                var comp = node.createJSComponent(componentName);
+                var comp = node.createJSComponent(resolveComponent(componentName));
                 comp.blueprint = blueprint[componentName];
                 if (comp.constructFromBlueprint) {
                     comp.constructFromBlueprint(blueprint[componentName]);
                 }
                 node[componentName] = comp;
             } catch (e) {
-                throw new Error('Could not construct component ' +  componentName  + ' on ' + blueprint.name + '.');
+                throw new Error('Could not construct component ' + componentName + '  on  ' + blueprint.name + '.');
             }
         }
     }
 
-    node.trigger = trigger.bind(node);
     return node;
 }
 

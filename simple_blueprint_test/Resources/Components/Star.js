@@ -1,12 +1,11 @@
 'atomic component';
 
-module.exports = function (self) {
+module.exports.component = function (self) {
 
     var inspectorFields = {
         speed: 100
     };
 
-    var game = Atomic.game;
     var node = self.node;
 
     self.start = function () {

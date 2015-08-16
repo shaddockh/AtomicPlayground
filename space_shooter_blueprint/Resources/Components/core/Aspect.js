@@ -1,4 +1,5 @@
 'use strict';
+"atomic component";
 
 var game = Atomic.game;
 var node = self.node;

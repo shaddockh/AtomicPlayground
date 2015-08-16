@@ -1,9 +1,9 @@
 var blueprintLib = require('blueprintLib');
 
 // This script is the main entry point of the game
-require("AtomicGame");
+ require("AtomicGame");
 
-Atomic.game.init(start, update);
+// Atomic.game.init(start, update);
 
 // called at the start of play
 function start() {
@@ -15,7 +15,7 @@ function start() {
 
     // Generate prefabs from any blueprints that specify isPrefab=true
     blueprintLib.generatePrefabs();
-    
+  
     // Use the blueprint system to spawn the blueprints named star1 and star2.  All components that
     // these need are defined in the blueprint and the blueprint system handles attaching the components.
     // Each component, in turn is in charge of initializing itself based upon it's section of the blueprint
@@ -31,7 +31,10 @@ function start() {
     var spaceNode4 = blueprintLib.createChildAtPosition(game.scene, starOverride, [1, 1]);
 }
 
-// called per frame
-function update(timeStep) {
+start();
 
+// called per frame
+module.exports.update = function(timeStep) {
+    // console.log('update');
 }
+

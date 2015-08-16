@@ -1,6 +1,6 @@
 'use strict';
 'atomic component';
-
+// OBSOLETE - Need to migrate functionality to native blueprints and then remove this component
 var inspectorFields = {
     spriteSheet: "",
     spriteName: "",
@@ -11,7 +11,7 @@ var inspectorFields = {
     debug: false
 };
 
-module.exports = function (self) {
+module.exports.component = function (self) {
 
     var game = Atomic.game;
     var node = self.node;
