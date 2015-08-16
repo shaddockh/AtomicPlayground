@@ -5,10 +5,10 @@
 	<attribute name="Smoothing Constant" value="50" />
 	<attribute name="Snap Threshold" value="5" />
 	<attribute name="Elapsed Time" value="0" />
-	<attribute name="Next Replicated Node ID" value="383" />
-	<attribute name="Next Replicated Component ID" value="2003" />
+	<attribute name="Next Replicated Node ID" value="387" />
+	<attribute name="Next Replicated Component ID" value="2010" />
 	<attribute name="Next Local Node ID" value="16778496" />
-	<attribute name="Next Local Component ID" value="16777224" />
+	<attribute name="Next Local Component ID" value="16777225" />
 	<attribute name="Variables" />
 	<attribute name="Variable Names" value="" />
 	<component type="PhysicsWorld" id="1" />
@@ -53,16 +53,5 @@
 		<attribute name="Scale" value="1 1 1" />
 		<attribute name="Variables" />
 		<component type="Camera" id="1973" />
-	</node>
-	<node id="382">
-		<attribute name="Is Enabled" value="true" />
-		<attribute name="Name" value="star1" />
-		<attribute name="Position" value="-4.36636 1.47631 -0.999166" />
-		<attribute name="Rotation" value="1 0 0 0" />
-		<attribute name="Scale" value="1 1 1" />
-		<attribute name="Variables" />
-		<component type="PrefabComponent" id="2001">
-			<attribute name="PrefabGUID" value="1ce3d3fb959b878e1de7ec8d110c5f61" />
-		</component>
 	</node>
 </scene>

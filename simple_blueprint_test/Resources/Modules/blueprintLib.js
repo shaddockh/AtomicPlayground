@@ -28,17 +28,11 @@ var DEBUG = true;
  *  }
  */
 var componentBuilders = {
-    // Default used when a component cannot be resolved
-    missingComponentBuilder: {
-        build: function (node, componentBlueprint, componentName, blueprint) {
-            throw new Error('No component builder defined for component: ' + componentName);
-        }
-    },
-
     // Used for mapping the root attributes of a node from a blueprint
     rootNodeComponentBuilder: {
         build: function (node, componentBlueprint, componentName, blueprint) {
             // handling this as an object literal in case I want to add things to the right of the property
+            // TODO: see if we can use the native component builder
             var props = {
                 position2D: '',
                 position3D: '',
@@ -50,17 +44,6 @@ var componentBuilders = {
                     node[p] = blueprint[p];
                 }
             }
-        }
-    },
-
-    // Used to create and map a native component
-    nativeComponentBuilder: {
-        build: function (node, componentBlueprint, componentName, blueprint) {
-            var comp = node.createComponent(componentName);
-            for (var prop in componentBlueprint) {
-                comp[prop] = componentBlueprint[prop]; // for setting the value
-            }
-            return comp;
         }
     },
 
@@ -81,32 +64,59 @@ var componentBuilders = {
         }
     },
 
-    // Static Sprite 2D
-    StaticSprite2D: {
+    // used to create and map a native component
+    nativeComponentBuilder: {
         build: function (node, componentBlueprint, componentName, blueprint) {
-            var automapFields = [
-                'sprite'
-            ];
 
             var comp = node.createComponent(componentName);
-            for (var i in componentBlueprint) {
-                if (automapFields.indexOf(i) > -1) {
-                    switch (i) {
-                    case 'sprite':
-                        comp.sprite = Atomic.game.getSprite2D(componentBlueprint[i]);
-                        break;
-                    }
-                } else {
-                    comp[i] = componentBlueprint[i];
-                }
+
+            // let's build up a cross ref of all the exposed types on the component
+            // TODO: Optimize.. probably want to cache the component types so we don't have to continually reflect on them
+            var compPropertyXref = {};
+            var attributes = comp.getAttributes();
+            for (var i = 0; i < attributes.length; i++) {
+                var attr = attributes[i];
+                compPropertyXref[attr.name.toLowerCase().replace(' ', '')] = attr;
             }
 
+            for (var prop in componentBlueprint) {
+                var attribute = compPropertyXref[prop.toLowerCase()];
+                if (!attribute) {
+                    throw new Error('Unknown property name: ' + componentName + '.' + prop + ' in blueprint: ' + blueprint.name);
+                }
+
+                switch (attribute.type) {
+                case Atomic.VAR_BOOL: // true or false
+                case Atomic.VAR_INT: // 0
+                case Atomic.VAR_FLOAT: // 0.0
+                case Atomic.VAR_STRING: // "string"
+                case Atomic.VAR_VECTOR2: // [0,0]
+                case Atomic.VAR_VECTOR3: // [0,0,0]
+                case Atomic.VAR_QUATERNION: // [0,0,0]
+                case Atomic.VAR_COLOR: // [0,0,0,0]
+                    // blueprint already has the value in the right format, so let's just set it
+                    if (DEBUG) {
+                        console.log('setting attribute: ' + attribute.name + ' to value: ' + componentBlueprint[prop]);
+                    }
+                    comp.setAttribute(attribute.name, componentBlueprint[prop]);
+                    break;
+                case Atomic.VAR_RESOURCEREF:
+                    if (attribute.resourceTypeName) {
+                        if (DEBUG) {
+                            console.log('setting attribute: ' + attribute.name + ' to value: ' + componentBlueprint[prop] + ', resource type: ' + attribute.resourceTypeName);
+                        }
+                        comp.setAttribute(attribute.name, Atomic.cache.getResource(attribute.resourceTypeName, componentBlueprint[prop]));
+                    }
+                    break;
+                default:
+                    throw new Error('Unknown attribute type: ' + attribute.type + ' on component ' + componentName);
+                }
+            }
         }
     }
 };
 
 function getProjectRoot() {
-
     var pth = '';
     var cl = Atomic.getArguments().join(',').split(',');
     for (var i = 0; i < cl.length; i++) {
@@ -140,7 +150,9 @@ function trigger(eventName) {
 }
 
 function generatePrefab(scene, blueprint, path) {
-    console.log('Generating prefab: ' + blueprint.name + ' at ' + path);
+    if (DEBUG) {
+        console.log('Generating prefab: ' + blueprint.name + ' at ' + path);
+    }
 
     // build the prefab
     // TODO: Need to figure out how update an existing prefab if it exists
@@ -175,13 +187,15 @@ function generatePrefabs() {
     }
 }
 /**
- * Utiliity function that will scan the Components directory for components and build a cross reference so that
+ * Utility function that will scan the Components directory for components and build a cross reference so that
  * when the blueprint system tries to attach a component, it knows where the component file is.
  * Note, that this will be cached so that it only builds the cross reference on game startup.
  * @method
  * @returns object Component cross reference file.
  */
 function buildComponentCrossref() {
+    //TODO: look at having a way of registering js components.  There may be a scenario where these components don't live in the Components folder and may be supplied by a library.
+    
     // Cached
     if (componentCrossref) {
         return componentCrossref;
@@ -204,7 +218,9 @@ function buildComponentCrossref() {
             throw new Error('Component names must be unique.  Component: ' + componentName + ' already registered.');
         }
         componentCrossref[componentName] = Atomic.addTrailingSlash(COMPONENTS_DIR) + fn + '.js';
-        console.log('Registering component: ' + componentName + ': ' + componentCrossref[componentName]);
+        if (DEBUG) {
+            console.log('Registering component: ' + componentName + ': ' + componentCrossref[componentName]);
+        }
     }
 
     return componentCrossref;
@@ -305,21 +321,6 @@ function isRegisteredJSComponent(componentName) {
 }
 
 /**
- * Will register a native component builder with the component builders process.
- * @method
- * @param componentName name of the component to build for
- * @param builder the builder that constructs the component.
- */
-function registerComponentBuilder(componentName, builder) {
-    // sanity check
-    if (typeof (builder.build) !== 'function') {
-        throw new Error('Builder for ' + componentName + ' must expose a "build" method.');
-    }
-
-    componentBuilders[componentName] = builder;
-}
-
-/**
  * Returns the component builder required to construct a component from a blueprint
  * @method
  * @param componentName the name of the component to retrieve the builder for
@@ -328,8 +329,7 @@ function getComponentBuilder(componentName) {
     if (isRegisteredJSComponent(componentName)) {
         return componentBuilders.jsComponentBuilder;
     } else {
-        // return the bulder for the component if it exists, or just return the builder for a missingComponentBuilder
-        return componentBuilders[componentName] || componentBuilders.missingComponentBuilder;
+        return componentBuilders.nativeComponentBuilder;
     }
 }
 
@@ -345,7 +345,10 @@ function buildEntity(node, blueprint) {
     if (typeof (blueprint) === 'string') {
         blueprint = getBlueprint(blueprint);
     }
-    print('Building entity: ' + blueprint.name);
+
+    if (DEBUG) {
+        console.log('Building entity: ' + blueprint.name);
+    }
 
     var builder;
 
@@ -375,7 +378,6 @@ function createChild(parent, blueprint) {
     var node = parent.createChild(blueprint.name);
     return buildEntity(node, blueprint);
 }
-var buildChildEntity = createChild;
 
 function createChildAtPosition(parent, blueprint, spawnPosition) {
     var node = createChild(parent, blueprint);
@@ -389,23 +391,9 @@ function createChildAtPosition(parent, blueprint, spawnPosition) {
     return node;
 }
 
-function mixinBlueprint(owner, defaults, blueprintSection) {
-    print('mixing in');
-    for (var name in defaults) {
-        owner[name] = defaults[name];
-    }
-    for (name in blueprintSection) {
-        owner[name] = blueprintSection[name];
-    }
-}
-
 module.exports = {
-    buildEntity: buildEntity,
-    buildChildEntity: buildChildEntity,
     createChild: createChild,
-    mixinBlueprint: mixinBlueprint,
     createChildAtPosition: createChildAtPosition,
     getBlueprint: getBlueprint,
-    generatePrefabs: generatePrefabs,
-    registerComponentBuilder: registerComponentBuilder
+    generatePrefabs: generatePrefabs
 };

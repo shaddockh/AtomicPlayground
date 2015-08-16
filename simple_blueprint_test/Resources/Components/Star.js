@@ -3,7 +3,7 @@
 module.exports.component = function (self) {
 
     var inspectorFields = {
-        speed: 100
+        speed: 100,
     };
 
     var node = self.node;
