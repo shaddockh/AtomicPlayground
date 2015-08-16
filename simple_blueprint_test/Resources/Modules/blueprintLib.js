@@ -76,7 +76,7 @@ var componentBuilders = {
             var attributes = comp.getAttributes();
             for (var i = 0; i < attributes.length; i++) {
                 var attr = attributes[i];
-                compPropertyXref[attr.name.toLowerCase().replace(' ', '')] = attr;
+                compPropertyXref[attr.name.toLowerCase().replace(/\ /g, '')] = attr;
             }
 
             for (var prop in componentBlueprint) {
