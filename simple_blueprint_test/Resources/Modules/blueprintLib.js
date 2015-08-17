@@ -14,7 +14,7 @@ var RESOURCES_DIR = 'Resources';
 var PREFABS_DIR = 'Prefabs';
 var GENERATED_PREFABS_DIR = Atomic.addTrailingSlash(PREFABS_DIR) + 'Generated';
 var COMPONENTS_PATH = Atomic.addTrailingSlash(RESOURCES_DIR) + COMPONENTS_DIR;
-var DEBUG = true;
+var DEBUG = false;
 
 /**
  * Builders for the various types of components.  These are in charge of mapping the blueprint properties to 
@@ -128,26 +128,6 @@ function getProjectRoot() {
     return pth;
 }
 
-/**
- * Augments the base node object with a trigger function.  Calling this will
- * walk the components in the associated blueprint and if the component has the eventName as function
- * on it, will call it.
- * @method
- * @param {string} eventName the name of the event to call
- * @param {Any} args arguments to pass on through to the event handler
- */
-function trigger(eventName) {
-    // taken from es6 transpiled version
-    for (var componentName in this.blueprint) {
-        var component = this[componentName];
-        if (component && typeof component[eventName] === 'function') {
-            for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-                args[_key - 1] = arguments[_key];
-            }
-            component[eventName].apply(component, args);
-        }
-    }
-}
 
 function generatePrefab(scene, blueprint, path) {
     if (DEBUG) {
@@ -395,5 +375,8 @@ module.exports = {
     createChild: createChild,
     createChildAtPosition: createChildAtPosition,
     getBlueprint: getBlueprint,
-    generatePrefabs: generatePrefabs
+    generatePrefabs: generatePrefabs,
+    setDebug: function(val) {
+        DEBUG = val;
+    }
 };
