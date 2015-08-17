@@ -1,87 +1,85 @@
 'use strict';
 
-var game = Atomic.game;
-var node = self.node;
-var ui = game.ui;
-var root = ui.getRoot();
+module.exports.component = function (self) {
+    var node = self.node;
+    var root = new Atomic.UIView();
+    var uiStyle = Atomic.cache.getResource("XMLFile", "UI/DefaultStyle.xml");
+    root.defaultStyle = uiStyle;
 
-var uiStyle = game.cache.getResource("XMLFile", "UI/DefaultStyle.xml");
-root.defaultStyle = uiStyle;
+    var scoreText = new Atomic.UITextField();
 
-var scoreText = new Atomic.Text();
+    scoreText.text = "Score: 0";
+    var font = Atomic.cache.getResource("Font", "Fonts/Anonymous Pro.ttf");
 
-scoreText.text = "Score: 0";
-var font = game.cache.getResource("Font", "Fonts/Anonymous Pro.ttf");
+    var fd;
+    // FIXME
+    fd = new Atomic.UIFontDescription();
+    fd.id = "vera";
+    fd.size = 24;
+    scoreText.setFontDescription(fd);
+    scoreText.color = [0, 1, 0, 1];
 
-scoreText.setFont(font, 24);
-scoreText.color = [0, 1, 0, 1];
+    scoreText.gravity = Atomic.GRAVITY_RIGHT;
+    //scoreText.horizontalAlignment = Atomic.HA_RIGHT;
+    //scoreText.verticalAlignment = Atomic.VA_TOP;
+    root.addChild(scoreText);
 
-scoreText.horizontalAlignment = Atomic.HA_RIGHT;
-scoreText.verticalAlignment = Atomic.VA_TOP;
-root.addChild(scoreText);
+    var titleText = new Atomic.UITextField();
 
-var titleText = new Atomic.Text();
+    titleText.text = "Atomic Space Game";
 
-titleText.text = "Atomic Space Game";
+    // FIXME
+    //titleText.setFont(font, 18);
+    titleText.color = [0, 1, 0, 1];
 
-titleText.setFont(font, 18);
-titleText.color = [0, 1, 0, 1];
+    titleText.horizontalAlignment = Atomic.HA_LEFT;
+    titleText.verticalAlignment = Atomic.VA_TOP;
+    root.addChild(titleText);
 
-titleText.horizontalAlignment = Atomic.HA_LEFT;
-titleText.verticalAlignment = Atomic.VA_TOP;
-root.addChild(titleText);
+    var healthText = new Atomic.UITextField();
 
-var healthText = new Atomic.Text();
+    healthText.text = "Health: 10";
 
-healthText.text = "Health: 10";
+    // FIXME
+    //healthText.setFont(font, 18);
+    healthText.color = [0, 1, 0, 1];
 
-healthText.setFont(font, 18);
-healthText.color = [0, 1, 0, 1];
+    healthText.horizontalAlignment = Atomic.HA_RIGHT;
+    healthText.verticalAlignment = Atomic.VA_BOTTOM;
+    root.addChild(healthText);
 
-healthText.horizontalAlignment = Atomic.HA_RIGHT;
-healthText.verticalAlignment = Atomic.VA_BOTTOM;
-root.addChild(healthText);
+    var gameText = new Atomic.UITextField();
 
-var gameText = new Atomic.Text();
+    // FIXME
+    //gameText.setFont(font, 40);
+    gameText.color = [0, 1, 0, 1];
 
-gameText.setFont(font, 40);
-gameText.color = [0, 1, 0, 1];
+    gameText.horizontalAlignment = Atomic.HA_CENTER;
+    gameText.verticalAlignment = Atomic.VA_CENTER;
+    root.addChild(gameText);
 
-gameText.horizontalAlignment = Atomic.HA_CENTER;
-gameText.verticalAlignment = Atomic.VA_CENTER;
-root.addChild(gameText);
+    if (Atomic.platform === "iOS" || Atomic.platform === "Android") {
+        self.node.createJSComponent("TouchInput");
+    }
 
-if (Atomic.platform === "iOS" || Atomic.platform === "Android") {
-    self.node.createJSComponent("TouchInput");
-}
+    var inspectorFields = {};
 
-var defaultBlueprint = {};
+    // using start to initialize the script component
+    self.start = function start() {};
 
-// Initialize the blueprint here for elements that need to happen prior to start
-var blueprint = node.getComponentBlueprint(self, defaultBlueprint);
-/**
- * Perform any setup required before the first start iteration
- */
-(function() {
-}());
+    self.updateScore = function (value) {
+        scoreText.text = "Score: " + value;
+    };
 
-// using start to initialize the script component
-function start() {
-}
+    self.updateHealth = function (value) {
+        healthText.text = "Health: " + value;
+    };
 
-self.updateScore = function (value) {
-    scoreText.text = "Score: " + value;
+    self.updateGameText = function (text) {
+        gameText.text = text;
+    };
+
+    self.update = function update(timeStep) {
+
+    };
 };
-
-self.updateHealth = function (value) {
-    healthText.text = "Health: " + value;
-};
-
-self.updateGameText = function (text) {
-    gameText.text = text;
-};
-
-
-function update(timeStep) {
-
-}
