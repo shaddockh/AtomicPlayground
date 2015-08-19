@@ -6,7 +6,7 @@ The main goal for this is to test out whether the blueprint system would work fo
 
 To Build:
 * cd to the space_shooter_es6_blueprint root directory
-* ```npm install -g babel```
+* ``npm install -g babel```
 * ```babel -d . **/*.es6``
 *  if you wish to have babel compile your .es6 files while you edit them, use: ```babel -d . **/*.es6 -w```
 
@@ -22,7 +22,7 @@ The major changes include:
 * I needed to implement my own form of event system as the built in atomic system wasn't working quite right.  In order to handle this, I added a new trigger method that basically walks the components on the passed 
 in node and will auto-call any function that matches the name of the event being called.
 ```
-import * as triggerSys from 'atomicEventTrigger';
+import * as triggerSys from 'atomicTriggerEvent';
 ...
 triggerSys.trigger(node, 'onDie', params...);
 ```
