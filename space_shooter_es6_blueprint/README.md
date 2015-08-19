@@ -10,7 +10,6 @@ To Build:
 * ```babel -d . **/*.es6```
 *  if you wish to have babel compile your .es6 files while you edit them, use: ```babel -d . **/*.es6 -w```
 
-Your project should be built in the /build subdirectory.  This is the directory you would need to load into the Atomic Editor to run.
 
 The major changes include:
 * converting it all to es6 and transpiling it with BabelJs
