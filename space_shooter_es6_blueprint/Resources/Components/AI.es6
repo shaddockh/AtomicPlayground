@@ -6,16 +6,11 @@ const SpaceGame = Globals.SpaceGame;
 
 export default class AI extends Atomic.JSComponent {
 
-    constructor() {
-        super();
-        this.inspectorFields = {
-            canMove: false,
-            allowShoot: false,
-            bulletBlueprint: 'enemyBullet'
-        };
-    }
-
-    start() {}
+    inspectorFields = {
+        canMove: false,
+        allowShoot: false,
+        bulletBlueprint: 'enemyBullet'
+    };
 
     update(timeStep) {
 

@@ -1,0 +1,6 @@
+{
+    "sourceMaps": "inline",
+    "only": ["*.es6"],
+    "optional": ["es7.classProperties"],
+    "blacklist": ["strict"]
+}

@@ -7,14 +7,11 @@ const SpaceGame = Globals.SpaceGame;
 
 export default class Bullet extends Atomic.JSComponent {
 
-    constructor() {
-        super();
-        this.inspectorFields = {
-            isPlayer: false,
-            laserSound: '',
-            speed: 5
-        };
-    }
+    inspectorFields = {
+        isPlayer: false,
+        laserSound: '',
+        speed: 5
+    };
 
     start() {
         this.laserSound = Atomic.cache.getResource("Sound", this.laserSound);
@@ -107,4 +104,3 @@ export default class Bullet extends Atomic.JSComponent {
         }
     }
 }
-

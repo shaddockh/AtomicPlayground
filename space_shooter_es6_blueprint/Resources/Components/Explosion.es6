@@ -6,17 +6,14 @@ var sprites = [];
 
 export default class Explosion extends Atomic.JSComponent {
 
-    constructor() {
-        super();
-        this.inspectorFields = {
-            spriteSheet: ''
-        };
-        this.frame = 0;
-        this.frameTime = 0;
-    }
+    inspectorFields = {
+        spriteSheet: ''
+    };
 
     // using start to initialize the script component
     start() {
+        this.frame = 0;
+        this.frameTime = 0;
         if (sprites.length === 0) {
             // first time cache
             const expSheet = cache.getResource("SpriteSheet2D", this.spriteSheet);

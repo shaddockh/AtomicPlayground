@@ -1,4 +1,6 @@
 'use strict';
+"atomic component";
+
 import * as blueprintLib from 'blueprintLib';
 
 const SpaceGame = Globals.SpaceGame;

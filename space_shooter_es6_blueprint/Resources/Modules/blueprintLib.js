@@ -230,7 +230,7 @@ function extend(orig, extendwith) {
             if (typeof extendwith[i] === 'object') {
                 if (extendwith[i] === null) {
                     result[i] = null;
-                } else if (extendwith[i].length) {
+                } else if (Array.isArray(extendwith[i])) {
                     //handle array types
                     result[i] = extendwith[i];
                 } else {
@@ -337,7 +337,7 @@ function buildEntity(node, blueprint) {
     builder.build(node, null, null, blueprint);
 
     for (var componentName in blueprint) {
-        if (typeof (blueprint[componentName]) === 'object' && !blueprint[componentName].length) {
+        if (typeof (blueprint[componentName]) === 'object' && !Array.isArray(blueprint[componentName])) {
             builder = getComponentBuilder(componentName);
             try {
                 builder.build(node, blueprint[componentName], componentName, blueprint);

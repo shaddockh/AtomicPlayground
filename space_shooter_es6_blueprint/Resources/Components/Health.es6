@@ -7,15 +7,12 @@ import * as triggerEvent from 'atomicTriggerEvent';
 const SpaceGame = Globals.SpaceGame;
 export default class Health extends Atomic.JSComponent {
 
-    constructor() {
-        super();
-        this.inspectorFields = {
-            health: 1,
-        };
-    }
+    inspectorFields = {
+        health: 1,
+    };
 
     // using start to initialize the script component
-    start() {}
+    //start() {}
 
     onHit() {
         this.health--;

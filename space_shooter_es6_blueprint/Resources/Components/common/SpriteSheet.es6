@@ -3,15 +3,12 @@
 
 export default class SpriteSheet extends Atomic.JSComponent {
 
-    constructor() {
-        super();
-        this.inspectorFields = {
-            spriteSheet: null,
-            spriteName: null,
-            blendMode: Atomic.BLEND_ALPHA,
-            orderInLayer: 0,
-        };
-    }
+    inspectorFields = {
+        spriteSheet: null,
+        spriteName: null,
+        blendMode: Atomic.BLEND_ALPHA,
+        orderInLayer: 0,
+    };
 
     start() {
         /**

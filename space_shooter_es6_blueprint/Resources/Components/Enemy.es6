@@ -6,14 +6,10 @@ import * as blueprintLib from 'blueprintLib';
 const SpaceGame = Globals.SpaceGame;
 export default class Enemty extends Atomic.JSComponent {
 
-    constructor() {
-        super();
-        this.moveDelta = 0;
-        this.dead = false;
-    }
-
     // using start to initialize the script component
     start() {
+        this.moveDelta = 0;
+        this.dead = false;
         this.spawnPosition = this.node.position2D;
         this.node.roll(180);
         this.node.scale2D = [0.65, 0.65];
@@ -28,16 +24,11 @@ export default class Enemty extends Atomic.JSComponent {
     }
 
     onHit(pos) {
-        console.log('onHit');
         // what's different?
         // in the original version, the following line worked, but now it causes the
         // explosion to appear somewhere way off from the node...like the sprite is not displayed where the 2d coord is.
         // switching it to use the passed in pos works, but it may be masking some bug somewhere.
         //EntityBuilder.createChildAtPosition(game.scene, 'explosion', node.worldPosition2D);
-        
-        for (var x in this) { console.log(x); }
-        if (this.node) { console.log('node valid');  } else { console.log('node not valid');}
-        if (this.node.scene) { console.log('scene valid');  } else { console.log('scene not valid');}
         blueprintLib.createChildAtPosition(this.node.scene, 'explosion', pos);
     }
 
