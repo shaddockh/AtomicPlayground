@@ -6,8 +6,8 @@ The main goal for this is to test out whether the blueprint system would work fo
 
 To Build:
 * cd to the space_shooter_es6_blueprint root directory
-* ``npm install -g babel```
-* ```babel -d . **/*.es6``
+* ```npm install -g babel```
+* ```babel -d . **/*.es6```
 *  if you wish to have babel compile your .es6 files while you edit them, use: ```babel -d . **/*.es6 -w```
 
 Your project should be built in the /build subdirectory.  This is the directory you would need to load into the Atomic Editor to run.
