@@ -53,17 +53,13 @@ module.exports.component = function (self) {
         score += 10;
         self.enemies.splice(self.enemies.indexOf(enemy), 1);
         Atomic.destroy(enemy.node);
-
-        // FIXME
-        //node.HUD.updateScore(score);
+        node.HUD.updateScore(score);
     };
 
     self.capitalShipDestroyed = function () {
         score += 1000;
-
         Atomic.destroy(self.capitalShipNode);
         self.capitalShipNode = null;
-
         self.node.HUD.updateScore(score);
     };
 

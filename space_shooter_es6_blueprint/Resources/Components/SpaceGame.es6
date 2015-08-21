@@ -33,7 +33,7 @@ export default class SpaceGame extends Atomic.JSComponent {
     // using start to initialize the script component
     start() {
         console.log('start');
-        this.enemyBaseNode = this.node.scene.createChild("EnemyBaseNode");
+        this.enemyBaseNode = this.scene.createChild("EnemyBaseNode");
         this.gameOver = false;
         this.enemies = [];
         this.spawnSpace();
@@ -42,7 +42,7 @@ export default class SpaceGame extends Atomic.JSComponent {
 
         var musicFile = Atomic.cache.getResource("Sound", this.backgroundMusic);
         musicFile.looped = true;
-        var musicNode = this.node.scene.createChild("MusicNode");
+        var musicNode = this.scene.createChild("MusicNode");
         var musicSource = musicNode.createComponent("SoundSource");
         musicSource.gain = 0.5;
         musicSource.soundType = Atomic.SOUND_MUSIC;
@@ -58,7 +58,7 @@ export default class SpaceGame extends Atomic.JSComponent {
             blueprint = blueprintLib.getBlueprint(blueprint);
         }
 
-        blueprintLib.createChildAtPosition(this.node.scene, blueprint, pos);
+        blueprintLib.createChildAtPosition(this.scene, blueprint, pos);
     }
 
     removeEnemy(enemy) {
@@ -69,9 +69,7 @@ export default class SpaceGame extends Atomic.JSComponent {
 
         // CHANGED! For the event system to work, we need to schedule this to get deleted on the next update
         deleteQueue.push(enemy.node);
-
-        // FIXME
-        //node.HUD.updateScore(score);
+        this.node.HUD.updateScore(this.score);
     }
 
     capitalShipDestroyed() {
@@ -83,11 +81,11 @@ export default class SpaceGame extends Atomic.JSComponent {
     }
 
     spawnSpace() {
-        var spaceNode = blueprintLib.createChild(this.node.scene, 'background');
+        var spaceNode = blueprintLib.createChild(this.scene, 'background');
     }
 
     spawnEnemies() {
-        this.capitalShipNode = blueprintLib.createChildAtPosition(this.node.scene, 'capitalShip', [-4, this.halfHeight - 1]);
+        this.capitalShipNode = blueprintLib.createChildAtPosition(this.scene, 'capitalShip', [-4, this.halfHeight - 1]);
 
         var pos = [0, 0];
         pos[1] = this.halfHeight - 2.5;
@@ -140,7 +138,7 @@ export default class SpaceGame extends Atomic.JSComponent {
     }
 
     spawnPlayer() {
-        this.playerNode = blueprintLib.createChild(this.node.scene, 'player');
+        this.playerNode = blueprintLib.createChild(this.scene, 'player');
         this.player = this.playerNode.Player;
     }
 

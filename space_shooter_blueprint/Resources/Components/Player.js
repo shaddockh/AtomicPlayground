@@ -23,8 +23,7 @@ module.exports.component = function (self) {
 
     self.onHit = function (pos) {
         blueprintLib.createChildAtPosition(node.scene, 'explosion', pos);
-        //TODO: Fix
-        //SpaceGame.node.HUD.updateHealth(self.node.Health.health);
+        SpaceGame.node.HUD.updateHealth(self.node.Health.health);
     };
 
     self.onDie = function () {

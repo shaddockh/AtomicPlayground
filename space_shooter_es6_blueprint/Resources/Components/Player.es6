@@ -22,8 +22,7 @@ export default class Player extends Atomic.JSComponent {
 
     onHit(pos) {
         blueprintLib.createChildAtPosition(this.node.scene, 'explosion', pos);
-        //TODO: Fix
-        //SpaceGame.node.HUD.updateHealth(this.node.Health.health);
+        SpaceGame.node.HUD.updateHealth(this.node.Health.health);
     }
 
     onDie() {

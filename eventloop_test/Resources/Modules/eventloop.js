@@ -1,5 +1,6 @@
 /*
  *  Pure Ecmascript eventloop example.
+ *  Original Version: https://github.com/svaarala/duktape/blob/master/examples/eventloop/ecma_eventloop.js
  *
  *  Timer state handling is inefficient in this trivial example.  Timers are
  *  kept in an array sorted by their expiry time which works well for expiring
