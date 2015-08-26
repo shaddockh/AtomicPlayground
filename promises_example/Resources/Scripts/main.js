@@ -12,7 +12,15 @@ var scene = createScene();
 
 // initial head of the animation queue .. we will be adding to this
 var animationQueue = Promise.resolve();
+var uiQueue = null;
 var star;
+
+// generate a promise that resolves after # of milliseconds
+function delay(ms) {
+    return new Promise(function (resolve, reject) {
+        setTimeout(resolve, ms);
+    });
+}
 
 // create a scene
 function createScene() {
@@ -39,7 +47,7 @@ function createScene() {
 function buildUI(scene) {
     var view = new Atomic.UIView();
     var layout = new Atomic.UILayout();
-    layout.rect = [0, 0, 200, 200];
+    layout.rect = [0, 600, 200, 700];
     layout.axis = Atomic.UI_AXIS_Y;
     layout.layoutDistribution = Atomic.UI_LAYOUT_DISTRIBUTION_AVAILABLE;
     layout.layoutDistributionSize = Atomic.UI_LAYOUT_SIZE_AVAILABLE;
@@ -69,67 +77,38 @@ function buildUI(scene) {
         }
     });
     layout2.addChild(button);
+
+    uiQueue = buildQueueTracker(view);
+
 }
 
-// Queue up the action to perform
-function queueAction(action) {
-    switch (action) {
-    case 'btnSpinLeft':
-        // spin left for 10 seconds
-        animationQueue = animationQueue.then(function () {
-            return new Promise(function (resolve) {
-                star.speed = 100;
-                setTimeout(function () {
-                    star.speed = 0;
-                    resolve();
-                }, 5000);
-            });
-        });
-        break;
-    case 'btnSpinRight':
-        animationQueue = animationQueue.then(function () {
-            return new Promise(function (resolve) {
-                star.speed = -100;
-                setTimeout(function () {
-                    star.speed = 0;
-                    resolve();
-                }, 5000);
-            });
-        });
-        break;
-    case 'btnMoveLeft':
-        animationQueue = animationQueue.then(function () {
-            return new Promise(function (resolve) {
-                var pos = star.node.position2D;
-                var origPos = pos[0];
-                var interval = setInterval(function () {
-                    pos[0] -= .1;
-                    star.node.position2D = pos;
-                    if (Math.abs(origPos - pos[0]) > 3) {
-                        clearInterval(interval);
-                        resolve();
-                    }
-                }, 100);
-            });
-        });
-        break;
-    case 'btnMoveRight':
-        animationQueue = animationQueue.then(function () {
-            return new Promise(function (resolve) {
-                var pos = star.node.position2D;
-                var origPos = pos[0];
-                var interval = setInterval(function () {
-                    pos[0] += .1;
-                    star.node.position2D = pos;
-                    if (Math.abs(origPos - pos[0]) > 3) {
-                        clearInterval(interval);
-                        resolve();
-                    }
-                }, 100);
-            });
-        });
-        break;
-    }
+// Build the queue tracker window.  This will keep track of the items that are queued up.
+function buildQueueTracker(view) {
+    var window = new Atomic.UIWindow();
+
+    window.settings = Atomic.UI_WINDOW_SETTINGS_TITLEBAR;
+    window.text = "Action Queue";
+
+    var layout = new Atomic.UILayout();
+    layout.axis = Atomic.UI_AXIS_Y;
+    window.addChild(layout);
+
+    window.resizeToFitContent();
+    view.addChild(window);
+
+    return {
+        addText: function (text) {
+            var txt = new Atomic.UITextField();
+            txt.setText(text);
+            layout.addChild(txt);
+            window.resizeToFitContent();
+            return txt;
+        },
+        removeText: function (txtObj) {
+            layout.removeChild(txtObj, true);
+            window.resizeToFitContent();
+        }
+    };
 }
 
 // This is a popup dialog that returns a promise.  When a selection is made, the promise is resolved with
@@ -183,6 +162,94 @@ function launchDialog(view) {
     });
 }
 
+// Queue up the action to perform
+function queueAction(action) {
+    switch (action) {
+    case 'btnSpinLeft':
+        // spin left for 5 seconds
+        (function () {
+            // wrapping up the whole sequence in a closure so that all pieces have access to an instance 
+            // version of the text on the queue
+            var queuetxt = uiQueue.addText('Spin Left');
+            animationQueue = animationQueue.then(function () {
+                    star.speed = 100;
+                })
+                .then(function () {
+                    return delay(5000);
+                })
+                .then(function () {
+                    star.speed = 0;
+                    uiQueue.removeText(queuetxt);
+                });
+        })();
+        break;
+    case 'btnSpinRight':
+        (function () {
+            // wrapping up the whole sequence in a closure so that all pieces have access to an instance 
+            // version of the text on the queue
+            var queuetxt = uiQueue.addText('Spin Right');
+            animationQueue = animationQueue.then(function () {
+                    star.speed = -100;
+                })
+                .then(function () {
+                    return delay(5000);
+                })
+                .then(function () {
+                    star.speed = 0;
+                    uiQueue.removeText(queuetxt);
+                });
+        })();
+        break;
+    case 'btnMoveLeft':
+        (function () {
+            // wrapping up the whole sequence in a closure so that all pieces have access to an instance 
+            // version of the text on the queue
+            var queuetxt = uiQueue.addText('Move Left');
+            animationQueue = animationQueue.then(function () {
+                    return new Promise(function (resolve) {
+                        var pos = star.node.position2D;
+                        var origPos = pos[0];
+                        var interval = setInterval(function () {
+                            pos[0] -= .1;
+                            star.node.position2D = pos;
+                            if (Math.abs(origPos - pos[0]) > 3) {
+                                clearInterval(interval);
+                                resolve();
+                            }
+                        }, 100);
+                    });
+                })
+                .then(function () {
+                    uiQueue.removeText(queuetxt);
+                });
+        })();
+        break;
+    case 'btnMoveRight':
+        (function () {
+            // wrapping up the whole sequence in a closure so that all pieces have access to an instance 
+            // version of the text on the queue
+            var queuetxt = uiQueue.addText('Move Right');
+            animationQueue = animationQueue.then(function () {
+                    return new Promise(function (resolve) {
+                        var pos = star.node.position2D;
+                        var origPos = pos[0];
+                        var interval = setInterval(function () {
+                            pos[0] += .1;
+                            star.node.position2D = pos;
+                            if (Math.abs(origPos - pos[0]) > 3) {
+                                clearInterval(interval);
+                                resolve();
+                            }
+                        }, 100);
+                    });
+                })
+                .then(function () {
+                    uiQueue.removeText(queuetxt);
+                });
+        })();
+        break;
+    }
+}
 // called at the start of play
 function start(scene) {
     buildUI(scene);
