@@ -20,6 +20,8 @@ var viewport = null;
 viewport = new Atomic.Viewport(scene, camera);
 Atomic.renderer.setViewport(0, viewport);
 
+Atomic.renderer.textureFilterMode = Atomic.FILTER_NEAREST;
+
 // create the game component
 var comp = blueprintLib.createChild(scene, 'spaceGame');
 
