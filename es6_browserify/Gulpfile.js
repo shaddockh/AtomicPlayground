@@ -47,7 +47,7 @@ function doAtomify() {
     return b.bundle()
         .pipe(source('vendor.js'))
         .pipe(buffer())
-        .pipe(gulp.dest('./build/Resources/Scripts'));
+        .pipe(gulp.dest('./build/Resources/Modules'));
 }
 
 function doBabel() {

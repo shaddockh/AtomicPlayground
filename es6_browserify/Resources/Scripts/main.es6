@@ -1,8 +1,8 @@
 'use strict';
 // This script is the main entry point of the game
 
-// Add the vendor scripts to the global namespace
-Atomic.script('vendor');
+// Require in the vendor file
+import 'vendor';
 
 // create a 2D scene
 var scene = new Atomic.Scene();
@@ -17,12 +17,8 @@ camera.orthoSize = Atomic.graphics.height * Atomic.PIXEL_SIZE;
 
 var viewport = null;
 
-if (Atomic.editor) {
-    viewport = Atomic.editor.setView(scene, camera);
-} else {
-    viewport = new Atomic.Viewport(scene, camera);
-    Atomic.renderer.setViewport(0, viewport);
-}
+viewport = new Atomic.Viewport(scene, camera);
+Atomic.renderer.setViewport(0, viewport);
 
 // Put some limits on the renderer
 Atomic.engine.setMaxFps(30);
@@ -35,6 +31,6 @@ node.createJSComponent("Components/Star.js");
 Atomic.totalTime = 0;
 
 // called once per frame
-module.exports.update = function update(timeStep) {
+export function update(timeStep) {
     Atomic.totalTime += timeStep;
 }
