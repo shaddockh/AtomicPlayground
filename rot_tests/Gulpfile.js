@@ -62,14 +62,17 @@ function doAtomify() {
         return b.bundle()
             .pipe(source('vendor.js'))
             .pipe(buffer())
-            .pipe(gulp.dest('./build/Resources/Scripts'));
+            .pipe(gulp.dest('./build/Resources/Modules'));
     }
 }
 
 function doBabel() {
     return gulp.src(paths.babel)
         .pipe(babel({
-            blacklist: ['strict'] // atomic doesn't like use strict in all cases.  If you want it, add it to the es6 file and it will carry over.
+            blacklist: ['strict'], // atomic doesn't like use strict in all cases.  If you want it, add it to the es6 file and it will carry over.
+            "sourceMaps": true,
+            "only": ["*.es6"],
+            "optional": ["es7.classProperties"],
         }))
         .pipe(gulp.dest("./build/Resources"));
 }

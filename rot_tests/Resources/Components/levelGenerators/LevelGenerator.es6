@@ -1,55 +1,54 @@
 'use strict';
 import ROT from 'rot-js';
-import { nodeBuilder }
-from 'atomic-blueprintLib';
+import { nodeBuilder } from 'atomic-blueprintLib';
 
-var game = Atomic.game;
-var node = self.node;
+export default class LevelGenerator extends Atomic.JSComponent {
 
-var defaultBlueprint = {
-    strategy: 'Digger',
-    strategyOptions: {},
-    iterations: 1,
-    width: 80,
-    height: 25,
-    cellPixelSize: 16
-};
+    inspectorFields = {
+        strategy: 'Digger',
+        strategyOptions: {},
+        iterations: 1,
+        width: 80,
+        height: 25,
+        cellPixelSize: 16
+    };
 
-var children = [];
+    children = [];
 
-// Initialize the blueprint here for elements that need to happen prior to start
-var blueprint = node.getComponentBlueprint(self, defaultBlueprint);
-/**
- * Perform any setup required before the first start iteration
- */
-(function () {
+    start() {
+        var map = buildMap(this.strategy, this);
 
-}());
+        let scale = this.cellPixelSize * Atomic.PIXEL_SIZE,
+            offsetX = this.width / 2 * scale * -1,
+            offsetY = this.height / 2 * scale * -1;
 
-function start() {
-    var map = buildMap(blueprint.strategy);
+        for (let floorCoord in map) {
+            let [x, y] = floorCoord.split(',');
+            //children.push(nodeBuilder.createChildAtPosition(node, map[floorCoord], [parseInt(x) * scale + offsetX, parseInt(y) * scale + offsetY]));
+            children.push(nodeBuilder.createChildAtPosition(node, map[floorCoord], [parseInt(x) * scale, parseInt(y) * scale]));
+        }
 
-    let scale = blueprint.cellPixelSize * Atomic.PIXEL_SIZE,
-        offsetX = blueprint.width / 2 * scale * -1,
-        offsetY = blueprint.height / 2 * scale * -1;
-
-    for (let floorCoord in map) {
-        let [x, y] = floorCoord.split(',');
-        //children.push(nodeBuilder.createChildAtPosition(node, map[floorCoord], [parseInt(x) * scale + offsetX, parseInt(y) * scale + offsetY]));
-        children.push(nodeBuilder.createChildAtPosition(node, map[floorCoord], [parseInt(x) * scale, parseInt(y) * scale]));
+        node.position2D = [offsetX, offsetY];
     }
 
-    node.position2D = [offsetX, offsetY];
+    onClear() {
+        for (let i = 0; i < this.children.length; i++) {
+            Atomic.destroy(this.children[i]);
+        }
+        this.children = [];
+    }
+
+    update() {
+        //var camera = game.camera;
+        //var pos = game.cameraNode.position2D;
+        //pos[1] -= 4;
+        //node.position2D = pos;
+        //var zoom = camera.zoom;
+        //node.scale2D = [zoom, zoom];
+    }
 }
 
-self.onClear = function () {
-    for (let i = 0; i < children.length; i++) {
-        Atomic.destroy(children[i]);
-    }
-    children = [];
-};
-
-function buildMap(strategy) {
+function buildMap(strategy, generator) {
 
     // Taken from the Ananais tutorial.. there is a better way to store maps, but this works for now.
     var map = {};
@@ -58,33 +57,33 @@ function buildMap(strategy) {
 
     switch (strategy) {
     case 'Digger':
-        builder = new ROT.Map.Digger(blueprint.width, blueprint.height, blueprint.strategyOptions);
+        builder = new ROT.Map.Digger(generator.width, generator.height, generator.strategyOptions);
         break;
     case 'Uniform':
-        builder = new ROT.Map.Uniform(blueprint.width, blueprint.height, blueprint.strategyOptions);
+        builder = new ROT.Map.Uniform(generator.width, generator.height, generator.strategyOptions);
         break;
     case 'Rogue':
-        builder = new ROT.Map.Rogue(blueprint.width, blueprint.height, blueprint.strategyOptions);
+        builder = new ROT.Map.Rogue(generator.width, generator.height, generator.strategyOptions);
         break;
     case 'DividedMaze':
-        builder = new ROT.Map.DividedMaze(blueprint.width, blueprint.height, blueprint.strategyOptions);
+        builder = new ROT.Map.DividedMaze(generator.width, generator.height, generator.strategyOptions);
         break;
     case 'IceyMaze':
-        //builder = new ROT.Map.IceyMaze(blueprint.width, blueprint.height, blueprint.strategyOptions);
+        //builder = new ROT.Map.IceyMaze(generator.width, generator.height, generator.strategyOptions);
         //FIXME!
-        builder = new ROT.Map.IceyMaze(blueprint.width, blueprint.height);
+        builder = new ROT.Map.IceyMaze(generator.width, generator.height);
         break;
     case 'EllerMaze':
-        builder = new ROT.Map.EllerMaze(blueprint.width, blueprint.height, blueprint.strategyOptions);
+        builder = new ROT.Map.EllerMaze(generator.width, generator.height, generator.strategyOptions);
         break;
     case 'Cellular':
-        builder = new ROT.Map.Cellular(blueprint.width, blueprint.height, blueprint.strategyOptions);
-        builder.randomize(blueprint.strategyOptions.randomization);
+        builder = new ROT.Map.Cellular(generator.width, generator.height, generator.strategyOptions);
+        builder.randomize(generator.strategyOptions.randomization);
         break;
     }
 
-    for (let i = 0; i < blueprint.iterations; i++) {
-        if (i === blueprint.iterations - 1) {
+    for (let i = 0; i < generator.iterations; i++) {
+        if (i === generator.iterations - 1) {
             // Only capture final iteration
             builder.create((x, y, value) => {
                 if (value) {
@@ -110,13 +109,4 @@ function buildMap(strategy) {
     }
 
     return map;
-}
-
-function update() {
-    var camera = game.camera;
-    //var pos = game.cameraNode.position2D;
-    //pos[1] -= 4;
-    //node.position2D = pos;
-    //var zoom = camera.zoom;
-    //node.scale2D = [zoom, zoom];
 }
