@@ -11,11 +11,11 @@ export default class ROTDigger extends Atomic.JSComponent {
         cellPixelSize: 16,
 
         // Digger options
-        roomWidth: [3, 9],
+        roomWidth: [Atomic.VAR_VECTOR2, [3,9]],
         /* room minimum and maximum width */
-        roomHeight: [3, 5],
+        roomHeight: [Atomic.VAR_VECTOR2, [3, 5]],
         /* room minimum and maximum height */
-        corridorLength: [3, 10],
+        corridorLength: [Atomic.VAR_VECTOR2, [3, 10]],
         /* corridor minimum and maximum length */
         dugPercentage: 0.2,
         /* we stop after this percentage of level area has been dug out */
@@ -25,7 +25,7 @@ export default class ROTDigger extends Atomic.JSComponent {
     children = [];
 
     start() {
-        var map = buildMap();
+        var map = buildMap(this);
 
         let scale = this.cellPixelSize * Atomic.PIXEL_SIZE,
             offsetX = this.width / 2 * scale * -1,
@@ -36,22 +36,22 @@ export default class ROTDigger extends Atomic.JSComponent {
             for (let y = 0; y < this.height; y++) {
                 currentCell = map[x][y];
                 if (currentCell) {
-                    children.push(nodeBuilder.createChildAtPosition(node, currentCell, [x * scale, y * scale]));
+                    this.children.push(nodeBuilder.createChildAtPosition(this.node, currentCell, [x * scale, y * scale]));
                 }
             }
         }
-        node.position2D = [offsetX, offsetY];
+        this.node.position2D = [offsetX, offsetY];
     }
 
     onClear() {
-        for (let i = 0; i < children.length; i++) {
-            Atomic.destroy(children[i]);
+        for (let i = 0; i < this.children.length; i++) {
+            Atomic.destroy(this.children[i]);
         }
-        children = [];
+        this.children = [];
     }
 
     update() {
-        var camera = game.camera;
+        //var camera = game.camera;
         //var pos = game.cameraNode.position2D;
         //pos[1] -= 4;
         //node.position2D = pos;
@@ -109,6 +109,24 @@ function inBounds(generator, x, y) {
 
 function buildMap(generator) {
     var map = createEmptyMap(generator.width, generator.height);
+    console.log(`Generating map: ${generator.width} x ${generator.height}`);
+    console.log('Options:');
+    console.log(generator.roomWidth);
+    console.log(generator.roomHeight);
+    console.log(generator.corridorLength);
+    console.log(generator.dugPercentage);
+    console.log(generator.timeLimit);
+
+        //// Digger options
+        //roomWidth: [3, 9],
+        //[> room minimum and maximum width <]
+        //roomHeight: [3, 5],
+        //[> room minimum and maximum height <]
+        //corridorLength: [3, 10],
+        //[> corridor minimum and maximum length <]
+        //dugPercentage: 0.2,
+        //[> we stop after this percentage of level area has been dug out <]
+        //timeLimit: 1000 [> we stop after this much time has passed (msec) <]
 
     let builder = new ROT.Map.Digger(generator.width, generator.height, generator);
     builder.create((x, y, value) => {
@@ -140,7 +158,7 @@ function buildMap(generator) {
     for (let x = 0; x < generator.width; x++) {
         for (let y = 0; y < generator.height; y++) {
             if (map[x][y]) {
-                map[x][y] = tilexref[getNeighborSignature(map, x, y)] || tilexref.defaultTile;
+                map[x][y] = tilexref[getNeighborSignature(generator, map, x, y)] || tilexref.defaultTile;
             }
         }
     }

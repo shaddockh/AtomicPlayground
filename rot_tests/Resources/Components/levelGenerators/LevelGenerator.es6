@@ -25,10 +25,10 @@ export default class LevelGenerator extends Atomic.JSComponent {
         for (let floorCoord in map) {
             let [x, y] = floorCoord.split(',');
             //children.push(nodeBuilder.createChildAtPosition(node, map[floorCoord], [parseInt(x) * scale + offsetX, parseInt(y) * scale + offsetY]));
-            children.push(nodeBuilder.createChildAtPosition(node, map[floorCoord], [parseInt(x) * scale, parseInt(y) * scale]));
+            this.children.push(nodeBuilder.createChildAtPosition(this.node, map[floorCoord], [parseInt(x) * scale, parseInt(y) * scale]));
         }
 
-        node.position2D = [offsetX, offsetY];
+        this.node.position2D = [offsetX, offsetY];
     }
 
     onClear() {
