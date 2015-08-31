@@ -1,16 +1,18 @@
 export const levelGenerators = {
 
 
-    baseLevelGenerator: { },
+    baseLevelGenerator: {
+    
+        //LevelRenderer2D: {}
+    },
 
     // TODO: create separate components for each class of generator Maze, Dungeon, Cellular, Custom
     // Dungeon Based Generators
     levelGeneratorDigger: {
         inherits: 'baseLevelGenerator',
+        LevelRenderer2D: { },
         ROTDigger: {
-            opts: {
-                roomWidth: [2, 2], /* room minimum and maximum width */
-            }
+            roomWidth: [2, 2], /* room minimum and maximum width */
         }
     },
     baseLevelGenerator2: {

@@ -2,16 +2,18 @@
 'atomic component';
 import ROT from 'rot-js';
 import { nodeBuilder } from 'atomic-blueprintLib';
+import MapData from 'MapData';
+import BaseLevelGenerator from './BaseLevelGenerator';
 
-export default class ROTDigger extends Atomic.JSComponent {
+export default class ROTDigger extends BaseLevelGenerator {
 
     inspectorFields = {
-        width: 80,
-        height: 25,
-        cellPixelSize: 16,
+        debug: [Atomic.VAR_BOOL, true],
+        width: 80, // copied from BaseLevelGenerator
+        height: 25, // copied from BaseLevelGenerator
 
         // Digger options
-        roomWidth: [Atomic.VAR_VECTOR2, [3,9]],
+        roomWidth: [Atomic.VAR_VECTOR2, [3, 9]],
         /* room minimum and maximum width */
         roomHeight: [Atomic.VAR_VECTOR2, [3, 5]],
         /* room minimum and maximum height */
@@ -24,154 +26,100 @@ export default class ROTDigger extends Atomic.JSComponent {
 
     children = [];
 
-    start() {
-        var map = buildMap(this);
+    /** @override */
+    buildMap() {
 
-        let scale = this.cellPixelSize * Atomic.PIXEL_SIZE,
-            offsetX = this.width / 2 * scale * -1,
-            offsetY = this.height / 2 * scale * -1;
+        var mapData = new MapData(this.width, this.height);
+        if (this.debug) {
+            console.log(`Generating map: ${this.width} x ${this.height}`);
+            console.log('Options:');
+            console.log(this.roomWidth);
+            console.log(this.roomHeight);
+            console.log(this.corridorLength);
+            console.log(this.dugPercentage);
+            console.log(this.timeLimit);
+        }
 
-        let currentCell = 0;
-        for (let x = 0; x < this.width; x++) {
-            for (let y = 0; y < this.height; y++) {
-                currentCell = map[x][y];
-                if (currentCell) {
-                    this.children.push(nodeBuilder.createChildAtPosition(this.node, currentCell, [x * scale, y * scale]));
+        let builder = new ROT.Map.Digger(mapData.width, mapData.height, this);
+        builder.create((x, y, value) => {
+            if (value) {
+                return;
+            } /* do not store walls */
+            mapData.setTile(x, y, 'tile_floor_c');
+            //mapData.setTileType(x, y, MapData.TILE_FLOOR);
+        });
+
+        var tilexref = {
+            0: 'tile_floor_c',
+            1: 'tile_floor_cl',
+            2: 'tile_floor_cr',
+            3: 'tile_floor_vcorridor_c',
+            4: 'tile_floor_bc',
+            5: 'tile_floor_bl',
+            6: 'tile_floor_br',
+
+            8: 'tile_floor_tc',
+            9: 'tile_floor_tl',
+            10: 'tile_floor_tr',
+
+            12: 'tile_floor_hcorridor_c',
+
+            defaultTile: 'tile_floor_c'
+        };
+
+        // run through the entire map and remap the edge tiles
+        var tiles = mapData.tiles;
+        for (let x = 0, xEnd = mapData.width; x < xEnd; x++) {
+            for (let y = 0, yEnd = mapData.height; y < yEnd; y++) {
+                if (tiles[x][y]) {
+                    tiles[x][y] = tilexref[getNeighborSignature(mapData, x, y)] || tilexref.defaultTile;
                 }
             }
         }
-        this.node.position2D = [offsetX, offsetY];
-    }
 
-    onClear() {
-        for (let i = 0; i < this.children.length; i++) {
-            Atomic.destroy(this.children[i]);
-        }
-        this.children = [];
-    }
+        // See if there are any rooms
+        //if (builder.getRooms) {
+        //let rooms = builder.getRooms();
+        //for (let i = 0, iLen = rooms.length; i < iLen; i++) {
+        //rooms[i].getDoors((x, y) => {
+        ////map[x][y] = 'tile_floor_c';
+        //});
+        //}
+        //}
 
-    update() {
-        //var camera = game.camera;
-        //var pos = game.cameraNode.position2D;
-        //pos[1] -= 4;
-        //node.position2D = pos;
-        //var zoom = camera.zoom;
-        //node.scale2D = [zoom, zoom];
+        return mapData;
     }
 }
 
-function createEmptyMap(width, height, defaultValue = 0) {
-    var arr = [];
-    for (var x = 0; x < width; x++) {
-        // Create the nested array for the y values
-        arr.push([]);
-        // Add all the tiles
-        for (var y = 0; y < height; y++) {
-            arr[x].push(defaultValue);
-        }
-    }
-    return arr;
-}
 
-function getNeighborSignature(generator, map, x, y) {
+function getNeighborSignature(mapData, x, y) {
+    let tiles = mapData.tiles;
     let t = 0;
     // left edge
-    if (x === 0 || !map[x - 1][y]) {
+    if (x === 0 || !tiles[x - 1][y]) {
         t += 1;
     }
 
     // right edge
-    if (x === generator.width - 1 || !map[x + 1][y]) {
+    if (x === mapData.width - 1 || !tiles[x + 1][y]) {
         t += 2;
     }
 
     // top edge
-    if (y === 0 || !map[x][y - 1]) {
+    if (y === 0 || !tiles[x][y - 1]) {
         t += 4;
     }
 
     // bottom edge
-    if (y === generator.height - 1 || !map[x][y + 1]) {
+    if (y === mapData.height - 1 || !tiles[x][y + 1]) {
         t += 8;
     }
 
     // top left edge -- not right...commenting out
-    //if (!inBounds(x-1,y-1) || !map[x-1][y-1]) {
+    //if (!inBounds(x-1,y-1) || !tiles[x-1][y-1]) {
     //t += 16;
     //}
 
     return t;
 }
 
-function inBounds(generator, x, y) {
-    return x >= 0 && x < generator.width && y >= 0 && y < generator.height;
-}
-
-function buildMap(generator) {
-    var map = createEmptyMap(generator.width, generator.height);
-    console.log(`Generating map: ${generator.width} x ${generator.height}`);
-    console.log('Options:');
-    console.log(generator.roomWidth);
-    console.log(generator.roomHeight);
-    console.log(generator.corridorLength);
-    console.log(generator.dugPercentage);
-    console.log(generator.timeLimit);
-
-        //// Digger options
-        //roomWidth: [3, 9],
-        //[> room minimum and maximum width <]
-        //roomHeight: [3, 5],
-        //[> room minimum and maximum height <]
-        //corridorLength: [3, 10],
-        //[> corridor minimum and maximum length <]
-        //dugPercentage: 0.2,
-        //[> we stop after this percentage of level area has been dug out <]
-        //timeLimit: 1000 [> we stop after this much time has passed (msec) <]
-
-    let builder = new ROT.Map.Digger(generator.width, generator.height, generator);
-    builder.create((x, y, value) => {
-        if (value) {
-            return;
-        } /* do not store walls */
-        map[x][y] = "tile_floor_c";
-    });
-
-    var tilexref = {
-        0: 'tile_floor_c',
-        1: 'tile_floor_cl',
-        2: 'tile_floor_cr',
-        3: 'tile_floor_vcorridor_c',
-        4: 'tile_floor_bc',
-        5: 'tile_floor_bl',
-        6: 'tile_floor_br',
-
-        8: 'tile_floor_tc',
-        9: 'tile_floor_tl',
-        10: 'tile_floor_tr',
-
-        12: 'tile_floor_hcorridor_c',
-
-        defaultTile: 'tile_floor_c'
-    };
-
-    // run through the entire map and remap the edge tiles
-    for (let x = 0; x < generator.width; x++) {
-        for (let y = 0; y < generator.height; y++) {
-            if (map[x][y]) {
-                map[x][y] = tilexref[getNeighborSignature(generator, map, x, y)] || tilexref.defaultTile;
-            }
-        }
-    }
-
-    // See if there are any rooms
-    //if (builder.getRooms) {
-    //let rooms = builder.getRooms();
-    //for (let i = 0, iLen = rooms.length; i < iLen; i++) {
-    //rooms[i].getDoors((x, y) => {
-    ////map[x][y] = 'tile_floor_c';
-    //});
-    //}
-    //}
-
-    return map;
-}

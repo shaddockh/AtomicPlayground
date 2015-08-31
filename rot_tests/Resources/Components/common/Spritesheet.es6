@@ -1,6 +1,7 @@
 'use strict';
 "atomic component";
 
+//export default class SpriteSheet extends Atomic.JSComponent {
 export default class SpriteSheet extends Atomic.JSComponent {
 
     inspectorFields = {
