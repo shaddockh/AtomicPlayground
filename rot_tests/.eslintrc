@@ -1,6 +1,15 @@
 {
-  "parser": "babel-eslint",
-  "rules": {
-    "strict": 0
-  }
+    "parser": "babel-eslint",
+    "rules": {
+        "strict": 0,
+        "no-console": 0
+    },
+    "globals": {
+        "Atomic": true
+    },
+    "env": {
+        "es6": true,
+        "node": true
+    },
+    "extends": "eslint:recommended"
 }

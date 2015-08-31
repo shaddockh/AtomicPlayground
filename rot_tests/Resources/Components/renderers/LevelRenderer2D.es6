@@ -1,13 +1,12 @@
 'use strict';
 'atomic component';
-import ROT from 'rot-js';
 import { nodeBuilder } from 'atomic-blueprintLib';
 
 export default class ROTDigger extends Atomic.JSComponent {
 
     inspectorFields = {
         debug: [Atomic.VAR_BOOL, true],
-        cellPixelSize: 16,
+        cellPixelSize: 16
     };
 
     children = [];

@@ -1,7 +1,6 @@
 'use strict';
 'atomic component';
 import ROT from 'rot-js';
-import { nodeBuilder } from 'atomic-blueprintLib';
 import MapData from 'MapData';
 import BaseLevelGenerator from './BaseLevelGenerator';
 
@@ -48,7 +47,6 @@ export default class ROTDigger extends BaseLevelGenerator {
             mapData.setTile(x, y, 'tile_floor_c');
             //mapData.setTileType(x, y, MapData.TILE_FLOOR);
         });
-
         var tilexref = {
             0: 'tile_floor_c',
             1: 'tile_floor_cl',

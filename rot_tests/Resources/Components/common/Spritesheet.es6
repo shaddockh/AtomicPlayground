@@ -8,7 +8,7 @@ export default class SpriteSheet extends Atomic.JSComponent {
         spriteSheet: null,
         spriteName: null,
         blendMode: Atomic.BLEND_ALPHA,
-        orderInLayer: 0,
+        orderInLayer: 0
     };
 
     start() {
