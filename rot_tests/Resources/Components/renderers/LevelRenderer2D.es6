@@ -17,15 +17,35 @@ export default class ROTDigger extends Atomic.JSComponent {
             offsetX = mapData.width / 2 * scale * -1,
             offsetY = mapData.height / 2 * scale * -1;
 
-        let currentCell = 0;
+        var tilexref = {
+            0: 'tile_floor_c',
+            1: 'tile_floor_cl',
+            2: 'tile_floor_cr',
+            3: 'tile_floor_vcorridor_c',
+            4: 'tile_floor_bc',
+            5: 'tile_floor_bl',
+            6: 'tile_floor_br',
+
+            8: 'tile_floor_tc',
+            9: 'tile_floor_tl',
+            10: 'tile_floor_tr',
+
+            12: 'tile_floor_hcorridor_c',
+
+            defaultTile: 'tile_floor_c'
+        };
+
+        let tile = 0,
+            blueprint = '';
         for (let x = 0; x < mapData.width; x++) {
             for (let y = 0; y < mapData.height; y++) {
-                currentCell = mapData.tiles[x][y];
-                if (currentCell.type !== MapData.TILE_NONE) {
+                tile = mapData.tiles[x][y];
+                if (tile.type !== MapData.TILE_NONE) {
+                    blueprint = tilexref[tile.edge] || tilexref.defaultTile;
                     if (this.debug) {
-                        console.log(`Construction cell [${x},${y}] - ${currentCell}`);
+                        console.log(`Construction cell [${x},${y}] - ${blueprint}`);
                     }
-                    this.children.push(nodeBuilder.createChildAtPosition(this.node, currentCell.blueprint, [x * scale, y * scale]));
+                    this.children.push(nodeBuilder.createChildAtPosition(this.node, blueprint, [x * scale, y * scale]));
                 }
             }
         }
@@ -51,4 +71,3 @@ export default class ROTDigger extends Atomic.JSComponent {
         //node.scale2D = [zoom, zoom];
     }
 }
-
