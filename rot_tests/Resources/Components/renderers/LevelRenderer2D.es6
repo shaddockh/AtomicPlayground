@@ -1,11 +1,12 @@
 'use strict';
 'atomic component';
 import { nodeBuilder } from 'atomic-blueprintLib';
+import MapData from 'MapData';
 
 export default class ROTDigger extends Atomic.JSComponent {
 
     inspectorFields = {
-        debug: [Atomic.VAR_BOOL, true],
+        debug: [Atomic.VAR_BOOL, false],
         cellPixelSize: 16
     };
 
@@ -20,11 +21,11 @@ export default class ROTDigger extends Atomic.JSComponent {
         for (let x = 0; x < mapData.width; x++) {
             for (let y = 0; y < mapData.height; y++) {
                 currentCell = mapData.tiles[x][y];
-                if (currentCell) {
+                if (currentCell.type !== MapData.TILE_NONE) {
                     if (this.debug) {
                         console.log(`Construction cell [${x},${y}] - ${currentCell}`);
                     }
-                    this.children.push(nodeBuilder.createChildAtPosition(this.node, currentCell, [x * scale, y * scale]));
+                    this.children.push(nodeBuilder.createChildAtPosition(this.node, currentCell.blueprint, [x * scale, y * scale]));
                 }
             }
         }

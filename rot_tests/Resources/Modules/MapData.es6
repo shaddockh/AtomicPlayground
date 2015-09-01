@@ -1,7 +1,10 @@
 'use strict';
 export default class MapData {
 
-    constructor(width, height, defaultValue = 0) {
+    constructor(width, height, defaultValue = {
+        type: MapData.TILE_NONE,
+        edge: 0
+    }) {
         this.width = width;
         this.height = height;
         this.tiles = createEmptyMap(width, height, defaultValue);
@@ -14,20 +17,28 @@ export default class MapData {
         return x >= 0 && x < this.width && y >= 0 && y < this.height;
     }
 
-    setTile(x,y,value) {
-        if (this.inBounds(x,y)) {
+    setTile(x, y, value) {
+        if (this.inBounds(x, y)) {
             this.tiles[x][y] = value;
         } else {
             throw new Error(`Position out of bounds: ${x},${y}`);
         }
     }
 
-    getTile(x,y) {
-        if (this.inBounds(x,y)) {
+    getTile(x, y) {
+        if (this.inBounds(x, y)) {
             return this.tiles[x][y];
         } else {
             throw new Error(`Position out of bounds: ${x},${y}`);
         }
+    }
+
+    static buildTile(type = 0, edge = 0, blueprint = null) {
+        return {
+            type: type,
+            edge: edge,
+            blueprint: blueprint
+        };
     }
 
     static TILE_NONE = 0;
@@ -35,8 +46,11 @@ export default class MapData {
     static TILE_FLOOR = 2;
 }
 
-
-function createEmptyMap(width, height, defaultValue = 0) {
+function createEmptyMap(width, height, defaultValue = {
+    type: 0,
+    edge: 0,
+    blueprint: ''
+}) {
     var arr = [];
     for (var x = 0; x < width; x++) {
         // Create the nested array for the y values

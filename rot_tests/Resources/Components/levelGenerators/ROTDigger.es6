@@ -44,8 +44,8 @@ export default class ROTDigger extends BaseLevelGenerator {
             if (value) {
                 return;
             } /* do not store walls */
-            mapData.setTile(x, y, 'tile_floor_c');
-            //mapData.setTileType(x, y, MapData.TILE_FLOOR);
+            mapData.setTile(x, y, 
+                    MapData.buildTile(MapData.TILE_FLOOR, 0, 'tile_floor_c'));
         });
         var tilexref = {
             0: 'tile_floor_c',
@@ -69,8 +69,11 @@ export default class ROTDigger extends BaseLevelGenerator {
         var tiles = mapData.tiles;
         for (let x = 0, xEnd = mapData.width; x < xEnd; x++) {
             for (let y = 0, yEnd = mapData.height; y < yEnd; y++) {
-                if (tiles[x][y]) {
-                    tiles[x][y] = tilexref[getNeighborSignature(mapData, x, y)] || tilexref.defaultTile;
+                var tile = tiles[x][y];
+                if (tile.type === MapData.TILE_FLOOR) {
+                    tile.edge = getNeighborSignature(mapData, x, y);
+                    //TODO: renderer responsibility
+                    tile.blueprint = tilexref[tile.edge] || tilexref.defaultTile;
                 }
             }
         }
@@ -94,27 +97,27 @@ function getNeighborSignature(mapData, x, y) {
     let tiles = mapData.tiles;
     let t = 0;
     // left edge
-    if (x === 0 || !tiles[x - 1][y]) {
+    if (x === 0 || tiles[x - 1][y].type !== MapData.TILE_FLOOR) {
         t += 1;
     }
 
     // right edge
-    if (x === mapData.width - 1 || !tiles[x + 1][y]) {
+    if (x === mapData.width - 1 || tiles[x + 1][y].type !== MapData.TILE_FLOOR) {
         t += 2;
     }
 
     // top edge
-    if (y === 0 || !tiles[x][y - 1]) {
+    if (y === 0 || tiles[x][y - 1].type !== MapData.TILE_FLOOR) {
         t += 4;
     }
 
     // bottom edge
-    if (y === mapData.height - 1 || !tiles[x][y + 1]) {
+    if (y === mapData.height - 1 || tiles[x][y + 1].type !== MapData.TILE_FLOOR) {
         t += 8;
     }
 
     // top left edge -- not right...commenting out
-    //if (!inBounds(x-1,y-1) || !tiles[x-1][y-1]) {
+    //if (!inBounds(x-1,y-1) || tiles[x-1][y-1] !== TILE_FLOOR) {
     //t += 16;
     //}
 
