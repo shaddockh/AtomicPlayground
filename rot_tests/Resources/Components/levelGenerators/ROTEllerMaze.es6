@@ -4,23 +4,12 @@ import ROT from 'rot-js';
 import MapData from 'MapData';
 import BaseLevelGenerator from './BaseLevelGenerator';
 
-export default class ROTDigger extends BaseLevelGenerator {
+export default class ROTEllerMaze extends BaseLevelGenerator {
 
     inspectorFields = {
         debug: [Atomic.VAR_BOOL, true],
         width: 80, // copied from BaseLevelGenerator
-        height: 25, // copied from BaseLevelGenerator
-
-        // Digger options
-        roomWidth: [Atomic.VAR_VECTOR2, [3, 9]],
-        /* room minimum and maximum width */
-        roomHeight: [Atomic.VAR_VECTOR2, [3, 5]],
-        /* room minimum and maximum height */
-        corridorLength: [Atomic.VAR_VECTOR2, [3, 10]],
-        /* corridor minimum and maximum length */
-        dugPercentage: 0.2,
-        /* we stop after this percentage of level area has been dug out */
-        timeLimit: 1000 /* we stop after this much time has passed (msec) */
+        height: 25 // copied from BaseLevelGenerator
     };
 
     children = [];
@@ -30,16 +19,10 @@ export default class ROTDigger extends BaseLevelGenerator {
 
         this.mapData = new MapData(this.width, this.height);
         if (this.debug) {
-            console.log(`Generating Terrain: ROT Digger (${this.width} x ${this.height})`);
-            console.log('Options:');
-            console.log(this.roomWidth);
-            console.log(this.roomHeight);
-            console.log(this.corridorLength);
-            console.log(this.dugPercentage);
-            console.log(this.timeLimit);
+            console.log(`Generating Terrain: ROT Eller Maze (${this.width} x ${this.height})`);
         }
 
-        let builder = new ROT.Map.Digger(this.width, this.height, this);
+        let builder = new ROT.Map.EllerMaze(this.width, this.height, this);
         builder.create((x, y, value) => {
             if (value) {
                 return;
@@ -70,4 +53,3 @@ export default class ROTDigger extends BaseLevelGenerator {
         //}
     }
 }
-

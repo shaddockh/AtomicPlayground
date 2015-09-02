@@ -14,13 +14,13 @@ export default class BaseLevelGenerator extends Atomic.JSComponent {
     }
 
     generateLevel() {
-        this.mapData = this.buildMap();
+        this.buildMapData();
         triggerEvent.trigger(this.node, 'onLevelGenerated', this.mapData);
         return this.mapData;
     }
 
     /** overridable */
-    buildMap() {
+    buildMapData() {
         console.log('should not be called');
     }
 

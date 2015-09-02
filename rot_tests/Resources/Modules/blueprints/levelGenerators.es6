@@ -12,7 +12,7 @@ export const levelGenerators = {
         inherits: 'baseLevelGenerator',
         LevelRenderer2D: { },
         ROTDigger: {
-            roomWidth: [2, 2], /* room minimum and maximum width */
+            roomWidth: [2, 2] /* room minimum and maximum width */
         }
     },
     baseLevelGenerator2: {
@@ -28,60 +28,63 @@ export const levelGenerators = {
     },
     levelGeneratorUniform: {
         inherits: 'baseLevelGenerator',
-        LevelGenerator: {
-            strategy: 'Uniform'
-        }
+        LevelRenderer2D: { },
+        ROTUniform: { }
     },
     levelGeneratorRogue: {
         inherits: 'baseLevelGenerator',
-        LevelGenerator: {
-            strategy: 'Rogue'
-        }
+        LevelRenderer2D: { },
+        ROTRogue: { }
     },
 
 
     // Maze Generators
     levelGeneratorDividedMaze: {
         inherits: 'baseLevelGenerator',
-        LevelGenerator: {
-            strategy: 'DividedMaze'
-        }
+        LevelRenderer2D: { },
+        ROTDividedMaze: { }
     },
     levelGeneratorIceyMaze: {
         inherits: 'baseLevelGenerator',
-        LevelGenerator: {
-            strategy: 'IceyMaze'
-        }
+        LevelRenderer2D: { },
+        ROTIceyMaze: { }
     },
     levelGeneratorEllerMaze: {
         inherits: 'baseLevelGenerator',
-        LevelGenerator: {
-            strategy: 'EllerMaze'
-        }
+        LevelRenderer2D: { },
+        ROTEllerMaze: { }
     },
 
     // Cellular Automata
     levelGeneratorCellular: {
         inherits: 'baseLevelGenerator',
-        LevelGenerator: {
-            strategy: 'Cellular',
+        LevelRenderer2D: { },
+        ROTCellular: { 
             iterations: 4,
-            strategyOptions: {
-                randomization: 0.5
-            }
+            randomization: 0.5,
+            connected: false
         }
     },
 
     levelGeneratorCellularCustom: {
         inherits: 'baseLevelGenerator',
-        LevelGenerator: {
-            strategy: 'Cellular',
+        LevelRenderer2D: { },
+        ROTCellular: { 
             iterations: 49,
-            strategyOptions: {
-                randomization: 0.9,
-                born: [4,5,6,7,8],
-                survive: [2, 3, 4, 5]
-            }
+            randomization: 0.9,
+            born: [4,5,6,7,8],
+            survive: [2,3,4,5],
+            connected: false
+        }
+    },
+
+    levelGeneratorCellularConnected: {
+        inherits: 'baseLevelGenerator',
+        LevelRenderer2D: { },
+        ROTCellular: { 
+            iterations: 2,
+            randomization: 0.5,
+            connected: true
         }
     }
 };
