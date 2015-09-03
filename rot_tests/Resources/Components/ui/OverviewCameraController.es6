@@ -3,9 +3,10 @@
 
 export default class OverviewCameraController extends Atomic.JSComponent {
     inspectorFields = {
-        allowZoom: [Atomic.VAR_BOOL, true],
+        debug: false,
+        allowZoom: true,
         zoomIncrement: 0.05,
-        allowPan: [Atomic.VAR_BOOL, true]
+        allowPan: true
     };
 
     update() {

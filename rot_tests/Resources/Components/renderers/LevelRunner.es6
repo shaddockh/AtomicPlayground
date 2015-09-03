@@ -1,15 +1,11 @@
 'use strict';
 'atomic component';
-import {
-    nodeBuilder
-}
-from 'atomic-blueprintLib';
 import * as triggerEvent from 'atomicTriggerEvent';
 
 export default class LevelRunner extends Atomic.JSComponent {
 
     inspectorFields = {
-        debug: [Atomic.VAR_BOOL, false]
+        debug: false
     };
 
     onSetMapData(mapData) {

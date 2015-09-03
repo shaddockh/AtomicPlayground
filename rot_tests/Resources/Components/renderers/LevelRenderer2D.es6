@@ -6,7 +6,7 @@ import MapData from 'MapData';
 export default class LevelRenderer2D extends Atomic.JSComponent {
 
     inspectorFields = {
-        debug: [Atomic.VAR_BOOL, false],
+        debug: false,
         cellPixelSize: 16,
         theme: 'tile_floor'
     };

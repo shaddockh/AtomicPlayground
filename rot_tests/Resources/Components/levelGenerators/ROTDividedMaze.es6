@@ -7,7 +7,7 @@ import BaseLevelGenerator from './BaseLevelGenerator';
 export default class ROTDividedMaze extends BaseLevelGenerator {
 
     inspectorFields = {
-        debug: [Atomic.VAR_BOOL, false],
+        debug: false,
         width: 80, // copied from BaseLevelGenerator
         height: 25 // copied from BaseLevelGenerator
     };
