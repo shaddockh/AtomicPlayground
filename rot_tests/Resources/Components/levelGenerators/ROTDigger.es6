@@ -7,7 +7,7 @@ import BaseLevelGenerator from './BaseLevelGenerator';
 export default class ROTDigger extends BaseLevelGenerator {
 
     inspectorFields = {
-        debug: [Atomic.VAR_BOOL, true],
+        debug: [Atomic.VAR_BOOL, false],
         width: 80, // copied from BaseLevelGenerator
         height: 25, // copied from BaseLevelGenerator
 
@@ -22,8 +22,6 @@ export default class ROTDigger extends BaseLevelGenerator {
         /* we stop after this percentage of level area has been dug out */
         timeLimit: 1000 /* we stop after this much time has passed (msec) */
     };
-
-    children = [];
 
     /** @override */
     buildMapData() {
@@ -44,8 +42,7 @@ export default class ROTDigger extends BaseLevelGenerator {
             if (value) {
                 return;
             } /* do not store walls */
-            this.mapData.setTile(x, y,
-                MapData.buildTile(MapData.TILE_FLOOR, 0, 'tile_floor_c'));
+            this.mapData.setTile(x, y, MapData.buildTile(MapData.TILE_FLOOR));
         });
 
         // run through the entire map and remap the edge tiles

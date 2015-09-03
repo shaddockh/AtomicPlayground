@@ -5,16 +5,22 @@
  * @param {Node} node the node to trigger the event on
  * @param {string} eventName the name of the event to call
  * @param {Any} args arguments to pass on through to the event handler
+ * @return {Array} an array of all the results, if there are any, otherwise an empty array
  */
 function trigger(node, eventName) {
     var components = node.getComponents();
+    var results = [];
     for (var c = 0, cLen = components.length; c < cLen; c++) {
         var component = components[c];
         if (component && typeof component[eventName] === 'function') {
             var args = Array.prototype.slice.call(arguments, 2);
-            component[eventName].apply(component, args);
+            var r = component[eventName].apply(component, args);
+            if (typeof (r) !== 'undefined') {
+                results.push(r);
+            }
         }
     }
+    return results;
 }
 
 module.exports.trigger = trigger;

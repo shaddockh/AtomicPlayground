@@ -3,11 +3,12 @@
 import { nodeBuilder } from 'atomic-blueprintLib';
 import MapData from 'MapData';
 
-export default class ROTDigger extends Atomic.JSComponent {
+export default class LevelRenderer2D extends Atomic.JSComponent {
 
     inspectorFields = {
         debug: [Atomic.VAR_BOOL, false],
-        cellPixelSize: 16
+        cellPixelSize: 16,
+        theme: 'tile_floor'
     };
 
     children = [];
@@ -17,22 +18,26 @@ export default class ROTDigger extends Atomic.JSComponent {
             offsetX = mapData.width / 2 * scale * -1,
             offsetY = mapData.height / 2 * scale * -1;
 
+        // TODO: this theming system needs to take into account
+        // rooms, walls, and other features.  This means that 
+        // a specific list of features needs to be created.
+        // possible algorithm:  {theme}_{tileType}_{cornerId}
         var tilexref = {
-            0: 'tile_floor_c',
-            1: 'tile_floor_cl',
-            2: 'tile_floor_cr',
-            3: 'tile_floor_vcorridor_c',
-            4: 'tile_floor_bc',
-            5: 'tile_floor_bl',
-            6: 'tile_floor_br',
+            0: this.theme + '_c',
+            1: this.theme + '_cl',
+            2: this.theme + '_cr',
+            3: this.theme + '_vcorridor_c',
+            4: this.theme + '_bc',
+            5: this.theme + '_bl',
+            6: this.theme + '_br',
 
-            8: 'tile_floor_tc',
-            9: 'tile_floor_tl',
-            10: 'tile_floor_tr',
+            8: this.theme + '_tc',
+            9: this.theme + '_tl',
+            10: this.theme + '_tr',
 
-            12: 'tile_floor_hcorridor_c',
+            12: this.theme + '_hcorridor_c',
 
-            defaultTile: 'tile_floor_c'
+            defaultTile: this.theme + '_c'
         };
 
         let tile = 0,
@@ -52,6 +57,13 @@ export default class ROTDigger extends Atomic.JSComponent {
         this.node.position2D = [offsetX, offsetY];
     }
     onLevelGenerated(mapData) {
+        this.renderMap(mapData);
+    }
+
+    onRender(mapData) {
+        if (this.debug) {
+            console.log('LevelRenderer2D: onRender called');
+        }
         this.renderMap(mapData);
     }
 

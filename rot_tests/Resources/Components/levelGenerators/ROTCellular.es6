@@ -7,7 +7,7 @@ import BaseLevelGenerator from './BaseLevelGenerator';
 export default class ROTCellular extends BaseLevelGenerator {
 
     inspectorFields = {
-        debug: [Atomic.VAR_BOOL, true],
+        debug: [Atomic.VAR_BOOL, false],
         width: 80, // copied from BaseLevelGenerator
         height: 25, // copied from BaseLevelGenerator
         iterations: 3,
@@ -25,8 +25,6 @@ export default class ROTCellular extends BaseLevelGenerator {
         topology: 8,
         connected: false
     };
-
-    children = [];
 
     /** @override */
     buildMapData() {
@@ -56,8 +54,7 @@ export default class ROTCellular extends BaseLevelGenerator {
             if (value) {
                 return;
             } /* do not store walls */
-            this.mapData.setTile(x, y,
-                MapData.buildTile(MapData.TILE_FLOOR, 0, 'tile_floor_c'));
+            this.mapData.setTile(x, y, MapData.buildTile(MapData.TILE_FLOOR));
         });
 
         // run through the entire map and remap the edge tiles

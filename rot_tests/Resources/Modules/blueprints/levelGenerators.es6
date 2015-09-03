@@ -86,5 +86,14 @@ export const levelGenerators = {
             randomization: 0.5,
             connected: true
         }
+    },
+
+    customLevelRunner: {
+        LevelRenderer2D: {
+            debug: true
+        },
+        LevelRunner: {
+            debug: true
+        }
     }
 };

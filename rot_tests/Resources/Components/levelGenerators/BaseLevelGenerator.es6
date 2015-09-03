@@ -21,7 +21,15 @@ export default class BaseLevelGenerator extends Atomic.JSComponent {
 
     /** overridable */
     buildMapData() {
-        console.log('should not be called');
+        throw new Error('BaseLevelGenerator.buildMapData must be overridden.');
+    }
+
+    /**
+     * event to listen for someone asking for map data
+     * @returns {MapData} the map data that was generated
+     */
+    onGetMapData() {
+        return this.mapData;
     }
 
     getNeighborSignature(x, y) {

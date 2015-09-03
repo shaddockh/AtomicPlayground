@@ -1,6 +1,8 @@
 WindowInfo
 	title Level Generator
 TBLayout: axis: y, distribution-position: top
-	TBLayout: distribution: gravity
+	TBLayout: axis: y, distribution: gravity
 		TBSelectList: id: "selGenerators", value: 1, gravity: all
-	TBButton: text: "Generate Level", id: "btnGenerate"
+	TBLayout: axis: x, distribution: gravity
+		TBButton: text: "Generate Level", id: "btnGenerate"
+		TBButton: text: "Run Level", id: "btnRun", state: disabled
