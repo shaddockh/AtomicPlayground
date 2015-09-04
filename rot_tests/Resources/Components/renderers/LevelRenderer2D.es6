@@ -1,6 +1,9 @@
 'use strict';
 'atomic component';
-import { nodeBuilder } from 'atomic-blueprintLib';
+import {
+    nodeBuilder
+}
+from 'atomic-blueprintLib';
 import MapData from 'MapData';
 
 export default class LevelRenderer2D extends Atomic.JSComponent {
@@ -52,6 +55,17 @@ export default class LevelRenderer2D extends Atomic.JSComponent {
                     }
                     this.children.push(nodeBuilder.createChildAtPosition(this.node, blueprint, [x * scale, y * scale]));
                 }
+            }
+        }
+
+        for (let x = 0; x < mapData.entities.length; x++) {
+            let entity = mapData.entities[x];
+            if (entity.blueprint) {
+                blueprint = entity.blueprint;
+                if (this.debug) {
+                    console.log(`Constructing entity [${entity.x},${entity.y}] - ${blueprint}`);
+                }
+                this.children.push(nodeBuilder.createChildAtPosition(this.node, blueprint, [entity.x * scale, entity.y * scale]));
             }
         }
         this.node.position2D = [offsetX, offsetY];
