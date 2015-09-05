@@ -15,10 +15,13 @@ export const entities = {
         },
         PointLight2D: {
             castShadows: true,
-            radius: 2
+            radius: 2,
+            numRays: 16,
+            color: [0.7, 0.9, 0.9, 0.7]
         },
         LightFlicker: {
-            baseRange: 2
+            baseRange: 2,
+            speed: 0.2
         }
     }
 
