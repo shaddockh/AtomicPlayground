@@ -43,20 +43,17 @@ export default class LevelRenderer2D extends Atomic.JSComponent {
             defaultTile: this.theme + '_c'
         };
 
-        let tile = 0,
-            blueprint = '';
-        for (let x = 0; x < mapData.width; x++) {
-            for (let y = 0; y < mapData.height; y++) {
-                tile = mapData.tiles[x][y];
-                if (tile.type !== MapData.TILE_NONE) {
-                    blueprint = tilexref[tile.edge] || tilexref.defaultTile;
-                    if (this.debug) {
-                        console.log(`Construction cell [${x},${y}] - ${blueprint}`);
-                    }
-                    this.children.push(nodeBuilder.createChildAtPosition(this.node, blueprint, [x * scale, y * scale]));
+        let blueprint = '';
+
+        mapData.iterateMap((x, y, tile) => {
+            if (tile.terrainType !== MapData.TILE_NONE) {
+                blueprint = tile.blueprint || tilexref[tile.edge] || tilexref.defaultTile;
+                if (this.debug) {
+                    console.log(`Construction cell [${x},${y}] - ${blueprint}`);
                 }
+                this.children.push(nodeBuilder.createChildAtPosition(this.node, blueprint, [x * scale, y * scale]));
             }
-        }
+        });
 
         for (let x = 0; x < mapData.entities.length; x++) {
             let entity = mapData.entities[x];

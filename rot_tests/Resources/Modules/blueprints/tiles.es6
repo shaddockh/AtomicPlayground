@@ -117,5 +117,17 @@ export const tiles = {
             spriteTexture: 'Sprites/tile_floor_overview.png',
             color: [0, 1, 0, 1]
         }
+    },
+    //TODO: need to batch together walls so we don't have 2000 collision objects
+    tile_shadow_wall: {
+        inherits: 'tile_base',
+        RigidBody2D: {
+            bodyType:Atomic.BT_STATIC,
+            castShadows: true
+        },
+        CollisionBox2D: {
+            size: [16 * Atomic.PIXEL_SIZE, 16 * Atomic.PIXEL_SIZE]
+        }
     }
+
 };

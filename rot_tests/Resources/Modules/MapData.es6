@@ -2,7 +2,7 @@
 export default class MapData {
 
     constructor(width, height, defaultValue = {
-        type: MapData.TILE_NONE,
+        terrainType: MapData.TILE_NONE,
         edge: 0
     }) {
         this.width = width;
@@ -36,7 +36,7 @@ export default class MapData {
 
     isEmpty(x, y) {
         let tile = this.getTile(x, y);
-        if (tile && tile.type === MapData.TILE_FLOOR) {
+        if (tile && tile.terrainType === MapData.TILE_FLOOR) {
             return true;
         } else {
             return false;
@@ -59,9 +59,25 @@ export default class MapData {
         this.entities.push(entity);
     }
 
-    static buildTile(type = 0, edge = 0, blueprint = null) {
+    /**
+     * Iterate over the entire map calling back (x,y,tile) for every entry.
+     * return 'falsy' value in the callback to exit.
+     */
+    iterateMap(callback) {
+        let tiles = this.tiles;
+        for (let x = 0, xEnd = this.width; x < xEnd; x++) {
+            for (let y = 0, yEnd = this.height; y < yEnd; y++) {
+                let result = callback(x,y,tiles[x][y]);
+                if (typeof(result) !== 'undefined'  && !result) {
+                    return;
+                }
+            }
+        }
+    }
+
+    static buildTile(terrainType = 0, edge = 0, blueprint = null) {
         return {
-            type: type,
+            terrainType: terrainType,
             edge: edge,
             blueprint: blueprint
         };
@@ -81,7 +97,7 @@ export default class MapData {
 }
 
 function createEmptyMap(width, height, defaultValue = {
-    type: 0,
+    terrainType: MapData.TILE_NONE,
     edge: 0,
     blueprint: ''
 }) {
@@ -91,7 +107,14 @@ function createEmptyMap(width, height, defaultValue = {
         arr.push([]);
         // Add all the tiles
         for (var y = 0; y < height; y++) {
-            arr[x].push(defaultValue);
+            //TODO: This should move to buildTile.
+            //Note: we have to create a copy of the default value for each cell otherwise
+            //changing one cell will update all the other cells
+            let newTile = {};
+            for (var p in defaultValue) {
+                newTile[p] = defaultValue[p];
+            }
+            arr[x].push(newTile);
         }
     }
     return arr;

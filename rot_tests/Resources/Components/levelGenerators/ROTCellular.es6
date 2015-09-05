@@ -57,16 +57,6 @@ export default class ROTCellular extends BaseLevelGenerator {
             this.mapData.setTile(x, y, MapData.buildTile(MapData.TILE_FLOOR));
         });
 
-        // run through the entire map and remap the edge tiles
-        var tiles = this.mapData.tiles;
-        for (let x = 0, xEnd = this.width; x < xEnd; x++) {
-            for (let y = 0, yEnd = this.height; y < yEnd; y++) {
-                var tile = tiles[x][y];
-                if (tile.type === MapData.TILE_FLOOR) {
-                    tile.edge = this.getNeighborSignature(x, y);
-                }
-            }
-        }
 
         // See if there are any rooms
         //if (builder.getRooms) {
@@ -77,5 +67,6 @@ export default class ROTCellular extends BaseLevelGenerator {
         //});
         //}
         //}
+        this.processEdges();
     }
 }
