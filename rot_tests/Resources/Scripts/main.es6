@@ -1,7 +1,7 @@
 // This script is the main entry point of the game
 import 'vendor';
-import 'blueprints';  // Load all the blueprints into the catalog
-import {nodeBuilder} from 'atomic-blueprintLib';
+import 'blueprints'; // Load all the blueprints into the catalog
+import { nodeBuilder } from 'atomic-blueprintLib';
 
 // Add the vendor scripts to the global namespace
 
@@ -23,6 +23,9 @@ Atomic.renderer.setViewport(0, viewport);
 
 Atomic.renderer.textureFilterMode = Atomic.FILTER_NEAREST;
 Atomic.totalTime = 0;
+
+var zone = scene.createComponent("Zone");
+zone.ambientColor = [.1, .1, .1, 0];
 
 nodeBuilder.createChild(scene, 'uiLevelGenerationChooser');
 

@@ -16,6 +16,9 @@ export const entities = {
         PointLight2D: {
             castShadows: true,
             radius: 2
+        },
+        LightFlicker: {
+            baseRange: 2
         }
     }
 
