@@ -1,7 +1,6 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.atomicBlueprintLib = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 // Routines for generating an entity from a blueprint -- very basic implementation here
 
-var cache = {};
 var componentCrossref = null;
 var COMPONENTS_DIR = 'Components';
 var RESOURCES_DIR = 'Resources';
@@ -32,25 +31,24 @@ var componentBuilders = {
     // Used for mapping the root attributes of a node from a blueprint
     rootNodeComponentBuilder: {
         build: function (node, componentBlueprint, componentName, blueprint) {
-            // handling this as an object literal in case I want to add things to the right of the property
-            // TODO: see if we can use the native component builder
-            var props = {
-                position2D: '',
-                position3D: '',
-                scale2D: '',
-                scale3D: ''
-            };
-            for (var p in props) {
-                if (blueprint[p]) {
-                    node[p] = blueprint[p];
-                }
+            mapBlueprintToNativeComponent(node, blueprint, 'Node');
+        }
+    },
+
+    // used to create and map a native component
+    nativeComponentBuilder: {
+        build: function (node, componentBlueprint, componentName) {
+            if (DEBUG) {
+                console.log('Attaching Native Component: ' + componentName + ' to node.');
             }
+            var comp = node.createComponent(componentName);
+            mapBlueprintToNativeComponent(comp, componentBlueprint, componentName);
         }
     },
 
     // Used to create and map a JSComponent
     jsComponentBuilder: {
-        build: function (node, componentBlueprint, componentName, blueprint) {
+        build: function (node, componentBlueprint, componentName) {
             if (DEBUG) {
                 console.log('Attaching JSComponent: ' + componentName + ' to node.');
             }
@@ -63,63 +61,71 @@ var componentBuilders = {
             node[componentName] = jsComp;
             return jsComp;
         }
-    },
-
-    // used to create and map a native component
-    nativeComponentBuilder: {
-        build: function (node, componentBlueprint, componentName, blueprint) {
-
-            if (DEBUG) {
-                console.log('Generating native component: ' + componentName);
-            }
-            var comp = node.createComponent(componentName);
-
-            // let's build up a cross ref of all the exposed types on the component
-            // TODO: Optimize.. probably want to cache the component types so we don't have to continually reflect on them
-            var compPropertyXref = {};
-            var attributes = comp.getAttributes();
-            for (var i = 0; i < attributes.length; i++) {
-                var attr = attributes[i];
-                compPropertyXref[attr.name.toLowerCase().replace(/\ /g, '')] = attr;
-            }
-
-            for (var prop in componentBlueprint) {
-                var attribute = compPropertyXref[prop.toLowerCase()];
-                if (!attribute) {
-                    throw new Error('Unknown property name: ' + componentName + '.' + prop + ' in blueprint: ' + blueprint.name);
-                }
-
-                switch (attribute.type) {
-                case Atomic.VAR_BOOL: // true or false
-                case Atomic.VAR_INT: // 0
-                case Atomic.VAR_FLOAT: // 0.0
-                case Atomic.VAR_STRING: // "string"
-                case Atomic.VAR_VECTOR2: // [0,0]
-                case Atomic.VAR_VECTOR3: // [0,0,0]
-                case Atomic.VAR_QUATERNION: // [0,0,0]
-                case Atomic.VAR_COLOR: // [0,0,0,0]
-                    // blueprint already has the value in the right format, so let's just set it
-                    if (DEBUG) {
-                        console.log('setting attribute: ' + attribute.name + ' to value: ' + componentBlueprint[prop]);
-                    }
-                    comp.setAttribute(attribute.name, componentBlueprint[prop]);
-                    break;
-                case Atomic.VAR_RESOURCEREF:
-                    if (attribute.resourceTypeName) {
-                        if (DEBUG) {
-                            console.log('setting attribute: ' + attribute.name + ' to value: ' + componentBlueprint[prop] + ', resource type: ' + attribute.resourceTypeName);
-                        }
-                        comp.setAttribute(attribute.name, Atomic.cache.getResource(attribute.resourceTypeName, componentBlueprint[prop]));
-                    }
-                    break;
-                default:
-                    throw new Error('Unknown attribute type: ' + attribute.type + ' on component ' + componentName);
-                }
-            }
-        }
     }
 };
 
+var cachedNativeComponentProps = {};
+/**
+ * maps blueprint properties to a native component.  Will cache the native component type attributes for speed. 
+ * @method
+ * @param {AObject} component the component to map
+ * @param {object} blueprint the blueprint to map to the component
+ * @param {string} the name of the component
+ */
+function mapBlueprintToNativeComponent(component, blueprint, componentName) {
+
+    var compPropertyXref = cachedNativeComponentProps[componentName];
+    if (!compPropertyXref) {
+        compPropertyXref = {};
+        var attributes = component.getAttributes();
+        for (var i = 0; i < attributes.length; i++) {
+            var attr = attributes[i];
+            compPropertyXref[attr.name.toLowerCase().replace(/\ /g, '')] = attr;
+        }
+        cachedNativeComponentProps[componentName] = compPropertyXref;
+    }
+
+    for (var prop in blueprint) {
+        if (typeof (blueprint.prop) === 'object' && !Array.isArray(blueprint.prop)) {
+            continue;
+        }
+
+        var attribute = compPropertyXref[prop.toLowerCase()];
+        if (!attribute) {
+            continue;
+        }
+
+        switch (attribute.type) {
+        case Atomic.VAR_BOOL: // true or false
+        case Atomic.VAR_INT: // 0
+        case Atomic.VAR_FLOAT: // 0.0
+        case Atomic.VAR_STRING: // "string"
+        case Atomic.VAR_VECTOR2: // [0,0]
+        case Atomic.VAR_VECTOR3: // [0,0,0]
+        case Atomic.VAR_QUATERNION: // [0,0,0]
+        case Atomic.VAR_COLOR: // [0,0,0,0]
+            // blueprint already has the value in the right format, so let's just set it
+            if (DEBUG) {
+                console.log('setting attribute: ' + attribute.name + ' to value: ' + blueprint[prop]);
+            }
+            component.setAttribute(attribute.name, blueprint[prop]);
+            break;
+        case Atomic.VAR_RESOURCEREF:
+            if (attribute.resourceTypeName) {
+                if (DEBUG) {
+                    console.log('setting attribute: ' + attribute.name + ' to value: ' + blueprint[prop] + ', resource type: ' + attribute.resourceTypeName);
+                }
+                component.setAttribute(attribute.name, Atomic.cache.getResource(attribute.resourceTypeName, blueprint[prop]));
+            }
+            break;
+        default:
+            throw new Error('Unknown attribute type: ' + attribute.type + ' on ' + componentName);
+        }
+    }
+
+}
+
+//TODO: need to find a better way to get the project root
 function getProjectRoot() {
     var pth = '';
     var cl = Atomic.getArguments().join(',').split(',');
@@ -131,7 +137,6 @@ function getProjectRoot() {
     }
     return pth;
 }
-
 
 function generatePrefab(scene, blueprint, path) {
     if (DEBUG) {
@@ -163,10 +168,10 @@ function generatePrefabs() {
     var path = Atomic.addTrailingSlash(getProjectRoot() + RESOURCES_DIR) + GENERATED_PREFABS_DIR;
     fs.createDir(path);
 
-    for (var bp in blueprintLibrary) {
-        var blueprint = getBlueprint(bp);
+    for (var bpName in blueprintCatalog.getAllBlueprintNames()) {
+        var blueprint = blueprintCatalog.getBlueprint(bpName);
         if (blueprint.isPrefab) {
-            generatePrefab(scene, blueprint, Atomic.addTrailingSlash(path) + bp + '.prefab');
+            generatePrefab(scene, blueprint, Atomic.addTrailingSlash(path) + bpName + '.prefab');
         }
     }
 }
@@ -179,7 +184,6 @@ function generatePrefabs() {
  */
 function buildComponentCrossref() {
     //TODO: look at having a way of registering js components.  There may be a scenario where these components don't live in the Components folder and may be supplied by a library.
-    
     // Cached
     if (componentCrossref) {
         return componentCrossref;
@@ -372,11 +376,10 @@ exports.nodeBuilder = {
     createChildAtPosition: createChildAtPosition,
     getBlueprint: getBlueprint,
     generatePrefabs: generatePrefabs,
-    setDebug: function(val) {
+    setDebug: function (val) {
         DEBUG = val;
     }
 };
-
 
 },{"entity-blueprint-manager":2}],2:[function(_dereq_,module,exports){
 module.exports.MixinCatalog = _dereq_('./lib/mixinCatalog');
