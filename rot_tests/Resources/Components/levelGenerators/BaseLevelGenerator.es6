@@ -58,11 +58,27 @@ export default class BaseLevelGenerator extends Atomic.JSComponent {
             t += 8;
         }
 
-        // top left edge -- not right...commenting out
-        //if (!inBounds(x-1,y-1) || tiles[x-1][y-1] !== currentTileType) {
-        //t += 16;
-        //}
+        /* not sure this is working correctly
+        // top left edge
+        if (!this.mapData.inBounds(x - 1, y - 1) || ignore.indexOf(tiles[x - 1][y - 1].terrainType) === -1) {
+            t += 16;
+        }
 
+        // bottom right
+        if (!this.mapData.inBounds(x + 1, y + 1) || ignore.indexOf(tiles[x + 1][y + 1].terrainType) === -1) {
+            t += 32;
+        }
+
+        // bottom left
+        if (!this.mapData.inBounds(x - 1, y + 1) || ignore.indexOf(tiles[x - 1][y + 1].terrainType) === -1) {
+            t += 64;
+        }
+
+        // top right
+        if (!this.mapData.inBounds(x + 1, y - 1) || ignore.indexOf(tiles[x + 1][y - 1].terrainType) === -1) {
+            t += 128;
+        }
+        */
         return t;
     }
 

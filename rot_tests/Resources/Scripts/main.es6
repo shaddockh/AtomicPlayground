@@ -47,5 +47,4 @@ nodeBuilder.createChild(scene, 'uiLevelGenerationChooser');
 export function update(timeStep) {
     Atomic.totalTime += timeStep;
     //physicsWorld.drawDebugGeometry();
-    //physicsWorld.update(timeStep);
 }

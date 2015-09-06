@@ -39,6 +39,8 @@ export const entities = {
             linearVelocity: [0,0],
             allowSleep: true,
             bodyType: Atomic.BT_DYNAMIC,
+            //bodyType: Atomic.BT_KINEMATIC,
+            kinematic: true,
             mass: 50,
             bullet: false,
             fixedRotation: true
@@ -47,7 +49,9 @@ export const entities = {
             baseRange: 2,
             speed: 0.2
         },
-        Mover: {}
+        Mover: {
+            usePhysics: false
+        }
     }
 
 };
