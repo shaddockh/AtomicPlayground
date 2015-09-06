@@ -1,6 +1,6 @@
 'use strict';
 'atomic component';
-//import * as triggerEvent from 'atomicTriggerEvent';
+import * as triggerEvent from 'atomicTriggerEvent';
 //import { nodeBuilder } from 'atomic-blueprintLib';
 //import MapData from 'MapData';
 
@@ -15,8 +15,7 @@ class PlayerActions {
 export default class PlayerInputHandler extends Atomic.JSComponent {
 
     inspectorFields = {
-        debug: false,
-        TILE_SIZE: 16
+        debug: false
     };
 
     /* beautify preserve:start */
@@ -46,36 +45,27 @@ export default class PlayerInputHandler extends Atomic.JSComponent {
         return PlayerActions.NO_ACTION;
     }
 
-    update(/*timeStep*/) {
+    update( /*timeStep*/ ) {
         var action = this.getCurrentAction();
         if (action !== PlayerActions.NO_ACTION) {
-            this.DEBUG(`Processing Action - ${action}`);
-            //var speed = this.TILE_SIZE * timeStep;
-            var speed = this.TILE_SIZE * Atomic.PIXEL_SIZE;
-            var pos = this.node.position2D;
-            this.DEBUG(pos);
-            this.DEBUG(speed);
             switch (action) {
             case PlayerActions.MOVE_LEFT:
-                pos[0] -= speed; // use translate?
-                this.DEBUG('move left');
+                this.DEBUG('Processing Action: move left');
+                triggerEvent.trigger(this.node, "onTryMove", [-1, 0])
                 break;
             case PlayerActions.MOVE_RIGHT:
-                pos[0] += speed; // use translate?
-                this.DEBUG('move right');
+                this.DEBUG('Processing Action: move right');
+                triggerEvent.trigger(this.node, "onTryMove", [1, 0])
                 break;
             case PlayerActions.MOVE_UP:
-                pos[1] += speed; // use translate?
-                this.DEBUG('move up');
+                this.DEBUG('Processing Action: move up');
+                triggerEvent.trigger(this.node, "onTryMove", [0, 1])
                 break;
             case PlayerActions.MOVE_DOWN:
-                pos[1] -= speed; // use translate?
-                this.DEBUG('move down');
+                this.DEBUG('Processing Action: move down');
+                triggerEvent.trigger(this.node, "onTryMove", [0, -1])
                 break;
             }
-            console.log(pos);
-            this.node.position2D = pos;
-            console.log(this.node.position2D);
         }
     }
 

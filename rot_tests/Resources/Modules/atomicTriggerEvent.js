@@ -8,7 +8,7 @@
  * @return {Array} an array of all the results, if there are any, otherwise an empty array
  */
 function trigger(node, eventName) {
-    var components = node.getComponents();
+    var components = node.getComponents('JSComponent');
     var results = [];
     for (var c = 0, cLen = components.length; c < cLen; c++) {
         var component = components[c];
