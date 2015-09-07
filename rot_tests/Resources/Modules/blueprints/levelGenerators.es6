@@ -93,7 +93,8 @@ export const levelGenerators = {
             debug: true
         },
         LevelRunner: {
-            debug: true
+            debug: true,
+            turnBased: true
         }
     }
 };

@@ -62,7 +62,11 @@ export default class LevelRenderer2D extends Atomic.JSComponent {
                 if (this.debug) {
                     console.log(`Constructing entity [${entity.x},${entity.y}] - ${blueprint}`);
                 }
-                this.children.push(nodeBuilder.createChildAtPosition(this.node, blueprint, [entity.x * scale, entity.y * scale]));
+                let entityNode = nodeBuilder.createChildAtPosition(this.node, blueprint, [entity.x * scale, entity.y * scale]);
+                if (entityNode.getJSComponent('Entity')) {
+                    entityNode.getJSComponent('Entity').setMapEntityReference(entity);
+                }
+                this.children.push(entityNode);
             }
         }
         this.node.position2D = [offsetX, offsetY];

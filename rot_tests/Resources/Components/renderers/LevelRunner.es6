@@ -7,8 +7,30 @@ import MapData from 'MapData';
 export default class LevelRunner extends Atomic.JSComponent {
 
     inspectorFields = {
-        debug: false
+        debug: false,
+        mapData: null,
+        turnBased: false
     };
+
+    start() {
+        this.node.scene.Level = this;
+    }
+
+    calculateOffsetPosition(pos, vector2D) {
+        return [pos[0] + vector2D[0], pos[1] + vector2D[1]];
+    }
+
+    getTileAt(pos) {
+        return this.mapData.getTile(pos[0], pos[1]);
+    }
+
+    getEntitiesAt(pos) {
+        return this.mapData.getEntitiesAt(pos[0], pos[1]);
+    }
+
+    iterateEntitiesAt(pos, callback) {
+        this.mapData.iterateEntitiesAt(pos[0],pos[1],callback);
+    }
 
     onSetMapData(mapData) {
         // let's just defer to the renderer for now

@@ -1,6 +1,7 @@
 export const entities = {
 
     entity_base: {
+        Entity: { }
     },
 
     actor: {
@@ -55,6 +56,11 @@ export const entities = {
 
     // placeholder
     door: {
+        Entity: {
+            blocksPath: true,
+            blocksLight: true,
+            bumpable: true
+        },
         StaticSprite2D: {
             sprite: 'Sprites/door_ns_c.png',
             orderInLayer: 10
@@ -65,6 +71,9 @@ export const entities = {
         },
         CollisionBox2D: {
             size: [16 * Atomic.PIXEL_SIZE, 16 * Atomic.PIXEL_SIZE]
+        },
+        Door: {
+            debug: true
         }
     },
     door_ns: {

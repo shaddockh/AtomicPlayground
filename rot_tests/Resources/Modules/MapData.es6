@@ -34,6 +34,23 @@ export default class MapData {
         }
     }
 
+    getEntitiesAt(x,y) {
+        if(this.inBounds(x,y)) {
+            return this.entities.filter((entity) => {
+                return entity.x === x && entity.y === y;
+            });
+        } else {
+            throw new Error(`Position out of bounds: ${x},${y}`);
+        }
+    }
+
+    iterateEntitiesAt(x,y,callback) {
+        let entities = this.getEntitiesAt(x,y);
+        for (let x = 0, xEnd = entities.length; x < xEnd; x++) {
+            callback(entities[x]);
+        }
+    }
+
     isEmpty(x, y) {
         let tile = this.getTile(x, y);
         if (tile && tile.terrainType === MapData.TILE_FLOOR) {

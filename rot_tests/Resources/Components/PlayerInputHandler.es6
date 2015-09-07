@@ -36,8 +36,14 @@ export default class PlayerInputHandler extends Atomic.JSComponent {
             let keys = keymap[action];
             if (keys && keys.length) {
                 for (let i = 0; i < keys.length; i++) {
-                    if (input.getKeyPress(keys[i])) {
-                        return parseInt(action);
+                    if (this.scene.Level.turnBased) {
+                        if (input.getKeyPress(keys[i])) {
+                            return parseInt(action);
+                        }
+                    } else {
+                        if (input.getKeyDown(keys[i])) {
+                            return parseInt(action);
+                        }
                     }
                 }
             }
