@@ -29,7 +29,7 @@ Atomic.totalTime = 0;
 
 // set up lighting zone
 var zone = scene.createComponent("Zone");
-zone.ambientColor = [.1, .1, .1, 0];
+zone.ambientColor = [.2, .2, .2, 0];
 
 // set up physics
 scene.createComponent("DebugRenderer");
