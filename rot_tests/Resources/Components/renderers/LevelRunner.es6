@@ -9,7 +9,7 @@ export default class LevelRunner extends Atomic.JSComponent {
     inspectorFields = {
         debug: false,
         mapData: null,
-        turnBased: false
+        turnBased: true
     };
 
     start() {

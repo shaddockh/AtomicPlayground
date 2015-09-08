@@ -1,11 +1,9 @@
 // This script is the main entry point of the game
 import 'vendor';
 import 'blueprints'; // Load all the blueprints into the catalog
-import {
-    nodeBuilder
-}
-from 'atomic-blueprintLib';
+import { nodeBuilder } from 'atomic-blueprintLib';
 
+nodeBuilder.setDebug(false);
 // Add the vendor scripts to the global namespace
 
 // create a 2D scene

@@ -1,9 +1,6 @@
 'use strict';
 'atomic component';
-import {
-    nodeBuilder
-}
-from 'atomic-blueprintLib';
+import { nodeBuilder } from 'atomic-blueprintLib';
 import MapData from 'MapData';
 
 export default class LevelRenderer2D extends Atomic.JSComponent {
@@ -15,6 +12,11 @@ export default class LevelRenderer2D extends Atomic.JSComponent {
     };
 
     children = [];
+
+    start() {
+        this.node.scene.LevelRenderer = this;
+        this.cellUnitSize = this.cellPixelSize * Atomic.PIXEL_SIZE;
+    }
 
     renderMap(mapData) {
         let scale = this.cellPixelSize * Atomic.PIXEL_SIZE,
@@ -48,23 +50,20 @@ export default class LevelRenderer2D extends Atomic.JSComponent {
         mapData.iterateMap((x, y, tile) => {
             if (tile.terrainType !== MapData.TILE_NONE) {
                 blueprint = tile.blueprint || tilexref[tile.edge] || tilexref.defaultTile;
-                if (this.debug) {
-                    console.log(`Construction cell [${x},${y}] - ${blueprint}`);
-                }
+                this.DEBUG(`Construction cell [${x},${y}] - ${blueprint}`);
                 this.children.push(nodeBuilder.createChildAtPosition(this.node, blueprint, [x * scale, y * scale]));
             }
         });
 
-        for (let x = 0; x < mapData.entities.length; x++) {
+        for (let x = 0, xEnd = mapData.entities.length; x < xEnd; x++) {
             let entity = mapData.entities[x];
             if (entity.blueprint) {
                 blueprint = entity.blueprint;
-                if (this.debug) {
-                    console.log(`Constructing entity [${entity.x},${entity.y}] - ${blueprint}`);
-                }
+                this.DEBUG(`Constructing entity [${entity.x},${entity.y}] - ${blueprint}`);
                 let entityNode = nodeBuilder.createChildAtPosition(this.node, blueprint, [entity.x * scale, entity.y * scale]);
-                if (entityNode.getJSComponent('Entity')) {
-                    entityNode.getJSComponent('Entity').setMapEntityReference(entity);
+                let entityComponent = entityNode.getJSComponent('Entity');
+                if (entityComponent) {
+                    entityComponent.setMapEntityReference(entity);
                 }
                 this.children.push(entityNode);
             }
@@ -76,9 +75,7 @@ export default class LevelRenderer2D extends Atomic.JSComponent {
     }
 
     onRender(mapData) {
-        if (this.debug) {
-            console.log('LevelRenderer2D: onRender called');
-        }
+        this.DEBUG('LevelRenderer2D: onRender called');
         this.renderMap(mapData);
     }
 
@@ -96,5 +93,11 @@ export default class LevelRenderer2D extends Atomic.JSComponent {
         //node.position2D = pos;
         //var zoom = camera.zoom;
         //node.scale2D = [zoom, zoom];
+    }
+
+    DEBUG(msg) {
+        if (this.debug) {
+            console.log(`LevelRenderer2D: ${msg}`);
+        }
     }
 }

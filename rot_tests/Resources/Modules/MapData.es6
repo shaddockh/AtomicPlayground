@@ -34,8 +34,8 @@ export default class MapData {
         }
     }
 
-    getEntitiesAt(x,y) {
-        if(this.inBounds(x,y)) {
+    getEntitiesAt(x, y) {
+        if (this.inBounds(x, y)) {
             return this.entities.filter((entity) => {
                 return entity.x === x && entity.y === y;
             });
@@ -44,8 +44,8 @@ export default class MapData {
         }
     }
 
-    iterateEntitiesAt(x,y,callback) {
-        let entities = this.getEntitiesAt(x,y);
+    iterateEntitiesAt(x, y, callback) {
+        let entities = this.getEntitiesAt(x, y);
         for (let x = 0, xEnd = entities.length; x < xEnd; x++) {
             callback(entities[x]);
         }
@@ -82,10 +82,13 @@ export default class MapData {
      */
     iterateMap(callback) {
         let tiles = this.tiles;
-        for (let x = 0, xEnd = this.width; x < xEnd; x++) {
-            for (let y = 0, yEnd = this.height; y < yEnd; y++) {
-                let result = callback(x,y,tiles[x][y]);
-                if (typeof(result) !== 'undefined'  && !result) {
+        let xEnd = this.width,
+            yEnd = this.height;
+
+        for (let x = 0; x < xEnd; x++) {
+            for (let y = 0; y < yEnd; y++) {
+                let result = callback(x, y, tiles[x][y]);
+                if (typeof (result) !== 'undefined' && !result) {
                     return;
                 }
             }
