@@ -30,7 +30,7 @@ export default class PlayerInputHandler extends Atomic.JSComponent {
     start() {}
 
     getCurrentAction() {
-        var input = Atomic.input,
+        let input = Atomic.input,
             keymap = this.keymap;
         for (let action in keymap) {
             let keys = keymap[action];
@@ -52,7 +52,7 @@ export default class PlayerInputHandler extends Atomic.JSComponent {
     }
 
     update( /*timeStep*/ ) {
-        var action = this.getCurrentAction();
+        let action = this.getCurrentAction();
         if (action !== PlayerActions.NO_ACTION) {
             switch (action) {
             case PlayerActions.MOVE_LEFT:

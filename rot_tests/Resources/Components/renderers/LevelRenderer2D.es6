@@ -27,7 +27,7 @@ export default class LevelRenderer2D extends Atomic.JSComponent {
         // rooms, walls, and other features.  This means that 
         // a specific list of features needs to be created.
         // possible algorithm:  {theme}_{tileType}_{cornerId}
-        var tilexref = {
+        const tilexref = {
             0: this.theme + '_c',
             1: this.theme + '_cl',
             2: this.theme + '_cr',

@@ -7,17 +7,17 @@ nodeBuilder.setDebug(false);
 // Add the vendor scripts to the global namespace
 
 // create a 2D scene
-var scene = new Atomic.Scene();
+let scene = new Atomic.Scene();
 scene.createComponent("Octree");
 
-var cameraNode = scene.createChild("Camera");
+let cameraNode = scene.createChild("Camera");
 cameraNode.position = [0.0, 0.0, -10.0];
 
-var camera = cameraNode.createComponent("Camera");
+let camera = cameraNode.createComponent("Camera");
 camera.orthographic = true;
 camera.orthoSize = Atomic.graphics.height * Atomic.PIXEL_SIZE;
 
-var viewport = null;
+let viewport = null;
 
 viewport = new Atomic.Viewport(scene, camera);
 Atomic.renderer.setViewport(0, viewport);
@@ -26,13 +26,13 @@ Atomic.renderer.textureFilterMode = Atomic.FILTER_NEAREST;
 Atomic.totalTime = 0;
 
 // set up lighting zone
-var zone = scene.createComponent("Zone");
+let zone = scene.createComponent("Zone");
 zone.ambientColor = [.2, .2, .2, 0];
 
 // set up physics
 scene.createComponent("DebugRenderer");
 //scene.createComponent("Renderer2D");
-var physicsWorld = scene.createComponent("PhysicsWorld2D");
+let physicsWorld = scene.createComponent("PhysicsWorld2D");
 physicsWorld.drawShape = true;
 physicsWorld.allowSleeping = true;
 physicsWorld.warmStarting = true;

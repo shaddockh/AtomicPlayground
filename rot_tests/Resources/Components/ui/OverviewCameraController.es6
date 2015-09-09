@@ -11,7 +11,7 @@ export default class OverviewCameraController extends Atomic.JSComponent {
 
     update() {
         if (this.allowZoom) {
-            var wheel = Atomic.input.getMouseMoveWheel();
+            const wheel = Atomic.input.getMouseMoveWheel();
             if (wheel) {
                 this.node.scene.getMainCamera().zoom += this.zoomIncrement * wheel;
             }

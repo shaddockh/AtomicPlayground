@@ -21,13 +21,13 @@ export default class Mover extends Atomic.JSComponent {
     }
 
     updatePhysics( /*timeStep*/ ) {
-        var pos = this.node.position2D;
-        var speed = (this.scene.LevelRenderer.cellPixelSize * Atomic.PIXEL_SIZE);
+        let pos = this.node.position2D;
+        let speed = (this.scene.LevelRenderer.cellPixelSize * Atomic.PIXEL_SIZE);
         let dist = [Math.abs(this.targetPos[0] - pos[0]), Math.abs(this.targetPos[1] - pos[1])];
         // this may not work, but what I'm trying to do is if the actor has stopped and
         // we aren't at our target position, then something may have happened, so let's go
         // back to our start position
-        var linearVel = this.body.linearVelocity;
+        let linearVel = this.body.linearVelocity;
         if (linearVel[0] == 0 && linearVel[1] == 0) {
             if (Math.abs(this.targetPos[0] - pos[0]) > 0 || Math.abs(this.targetPos[1] - pos[1]) > 0) {
                 this.DEBUG(`Could not get to position.  Resetting to ${this.startPos}`);
@@ -113,8 +113,8 @@ export default class Mover extends Atomic.JSComponent {
 
         this.adjustedSpeed = this.speed * this.scene.LevelRenderer.cellPixelSize;
 
-        var unitSize = this.scene.LevelRenderer.cellUnitSize;
-        var pos = this.node.position2D;
+        let unitSize = this.scene.LevelRenderer.cellUnitSize;
+        let pos = this.node.position2D;
         this.startPos = pos;
         this.targetPos = [pos[0] + vector2D[0] * unitSize, pos[1] + vector2D[1] * unitSize];
         this.ticks = 0;

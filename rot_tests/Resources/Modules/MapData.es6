@@ -121,17 +121,17 @@ function createEmptyMap(width, height, defaultValue = {
     edge: 0,
     blueprint: ''
 }) {
-    var arr = [];
-    for (var x = 0; x < width; x++) {
+    let arr = [];
+    for (let x = 0; x < width; x++) {
         // Create the nested array for the y values
         arr.push([]);
         // Add all the tiles
-        for (var y = 0; y < height; y++) {
+        for (let y = 0; y < height; y++) {
             //TODO: This should move to buildTile.
             //Note: we have to create a copy of the default value for each cell otherwise
             //changing one cell will update all the other cells
             let newTile = {};
-            for (var p in defaultValue) {
+            for (let p in defaultValue) {
                 newTile[p] = defaultValue[p];
             }
             arr[x].push(newTile);
@@ -142,10 +142,12 @@ function createEmptyMap(width, height, defaultValue = {
 
 function randomNumber(min = 0, max = -1) {
 
+    let newMax = max,
+        newMin = min;
     if (max < min) {
-        max = min;
-        min = 0;
+        newMax = min;
+        newMin = 0;
     }
 
-    return Math.floor(Math.random() * max) + min;
+    return Math.floor(Math.random() * newMax) + newMin;
 }

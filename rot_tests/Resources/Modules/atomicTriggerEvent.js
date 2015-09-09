@@ -1,3 +1,5 @@
+/*eslint no-var:0*/
+
 /**
  * Calling this will walk the components in the provided node and if the component has the eventName as function
  * on it, will call it.  Ideally, this will be replaced by the native Atomic sendEvent/subscribeToEvent, but this works for now.

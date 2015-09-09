@@ -35,7 +35,7 @@ export default class LevelGenerationChooser extends Atomic.JSComponent {
     }
 
     runLoadedScene() {
-        var mapData = triggerEvent.trigger(this.generatorNode, 'onGetMapData');
+        let mapData = triggerEvent.trigger(this.generatorNode, 'onGetMapData');
         // we are getting an array back, so grab the first element
         mapData = mapData[0];
         this.runButton.setState(1 /*WIDGET_STATE_DISABLED*/, true);
@@ -50,14 +50,14 @@ export default class LevelGenerationChooser extends Atomic.JSComponent {
 
     build() {
         //layout.setSize(game.graphics.width, game.graphics.height);
-        var view = new Atomic.UIView();
-        var layout = new Atomic.UIWidget();
+        const view = new Atomic.UIView();
+        const layout = new Atomic.UIWidget();
         layout.rect = [0, 0, 300, Atomic.graphics.height];
         layout.load("Ui/levelgen_selector.ui.txt");
         view.addChild(layout);
 
-        var selectList = layout.getWidget('selGenerators');
-        var selectSource = new Atomic.UISelectItemSource();
+        const selectList = layout.getWidget('selGenerators');
+        const selectSource = new Atomic.UISelectItemSource();
 
         blueprintCatalog.find(blueprint => {
             if (blueprint.inherits === 'baseLevelGenerator') {

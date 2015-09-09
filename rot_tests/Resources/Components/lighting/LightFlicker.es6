@@ -50,15 +50,15 @@ export default class LightFlicker extends Atomic.JSComponent {
     }
 
     update(timestep) {
-        var time = (this.time += timestep);
+        let time = (this.time += timestep);
         if (time > this.speed) {
-            var index = this.index++;
+            let index = this.index++;
             time = this.time = 0.0;
             if (index >= this.flicker.length) {
                 index = this.index = 0;
             }
 
-            var targetValue = this.targetValue = this.baseRange * (this.flicker.charCodeAt(index) / 255);
+            let targetValue = this.targetValue = this.baseRange * (this.flicker.charCodeAt(index) / 255);
 
             if (this.getLightRange() < targetValue) {
                 this.incDecLightRange(timestep * 10);
