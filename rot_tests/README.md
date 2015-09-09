@@ -4,11 +4,11 @@ Testing out using the ROguelike Toolkit (http://ondras.github.io/rot.js/hp/) for
 
 # Features (In Progress)
 * Level generation explorer - interactively generate maps of different types.  The idea is that you should be able to configure a level generator from a blueprint and provide options to the level generator component.
+* Walking around a map
+* Dynamic lighting tests
 
 # Features (future planned)
-* Walking around a map
 * FOV (Field of View)
-* Dynamic lighting tests
 * Monsters / Combat (Melee)
 * Treasure/Inventory
 * win/lose scenario
