@@ -20,7 +20,7 @@ export const entities = {
         inherits: 'actor',
         StaticSprite2D: {
             sprite: 'Sprites/hero_0.png',
-            orderInLayer: 10
+            orderInLayer: 12
         },
         PlayerInputHandler: {
             debug: true

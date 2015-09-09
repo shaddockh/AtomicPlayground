@@ -108,7 +108,7 @@ export default class MapData {
             x: x,
             y: y,
             blueprint: blueprint
-        }
+        };
     }
 
     static TILE_NONE = 0;

@@ -57,19 +57,19 @@ export default class PlayerInputHandler extends Atomic.JSComponent {
             switch (action) {
             case PlayerActions.MOVE_LEFT:
                 this.DEBUG('Processing Action: move left');
-                triggerEvent.trigger(this.node, "onTryMove", [-1, 0])
+                triggerEvent.trigger(this.node, "onTryMove", [-1, 0]);
                 break;
             case PlayerActions.MOVE_RIGHT:
                 this.DEBUG('Processing Action: move right');
-                triggerEvent.trigger(this.node, "onTryMove", [1, 0])
+                triggerEvent.trigger(this.node, "onTryMove", [1, 0]);
                 break;
             case PlayerActions.MOVE_UP:
                 this.DEBUG('Processing Action: move up');
-                triggerEvent.trigger(this.node, "onTryMove", [0, 1])
+                triggerEvent.trigger(this.node, "onTryMove", [0, 1]);
                 break;
             case PlayerActions.MOVE_DOWN:
                 this.DEBUG('Processing Action: move down');
-                triggerEvent.trigger(this.node, "onTryMove", [0, -1])
+                triggerEvent.trigger(this.node, "onTryMove", [0, -1]);
                 break;
             }
         }
