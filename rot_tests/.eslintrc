@@ -2,7 +2,14 @@
     "parser": "babel-eslint",
     "rules": {
         "strict": 0,
-        "no-console": 0
+        "no-console": 0,
+        "no-param-reassign" : 1,
+        "no-warning-comments": 1,
+        "wrap-iife": 2,
+        "no-use-before-define": [2,"nofunc"],
+        "no-var": 1,
+        "no-const-assign":2,
+        "semi":2
     },
     "globals": {
         "Atomic": true
