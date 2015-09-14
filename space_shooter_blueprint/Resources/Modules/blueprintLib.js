@@ -14,7 +14,7 @@ var RESOURCES_DIR = 'Resources';
 var PREFABS_DIR = 'Prefabs';
 var GENERATED_PREFABS_DIR = Atomic.addTrailingSlash(PREFABS_DIR) + 'Generated';
 var COMPONENTS_PATH = Atomic.addTrailingSlash(RESOURCES_DIR) + COMPONENTS_DIR;
-var DEBUG = false;
+var DEBUG = true;
 
 /**
  * Builders for the various types of components.  These are in charge of mapping the blueprint properties to 
@@ -128,7 +128,6 @@ function getProjectRoot() {
     return pth;
 }
 
-
 function generatePrefab(scene, blueprint, path) {
     if (DEBUG) {
         console.log('Generating prefab: ' + blueprint.name + ' at ' + path);
@@ -148,23 +147,102 @@ function generatePrefab(scene, blueprint, path) {
 
 function generatePrefabs() {
     // Let's create an edit-time scene..one that doesn't update or start the component
+    var projectRoot = getProjectRoot();
+    if (projectRoot === '') {
+        console.log('Cannot generate prefabs without --project command line argument');
+        return;
+    }
+    projectRoot = Atomic.addTrailingSlash(projectRoot);
     var scene = new Atomic.Scene();
     scene.setUpdateEnabled(false);
 
     // Build the directory that our generated prefabs will go into  
     // TODO: Could be cleaner
     var fs = Atomic.fileSystem;
-    var prefabPath = Atomic.addTrailingSlash(getProjectRoot() + RESOURCES_DIR) + PREFABS_DIR;
-    fs.createDir(prefabPath);
-    var path = Atomic.addTrailingSlash(getProjectRoot() + RESOURCES_DIR) + GENERATED_PREFABS_DIR;
-    fs.createDir(path);
+    var path = Atomic.addTrailingSlash(RESOURCES_DIR) + GENERATED_PREFABS_DIR;
+    if (fs.checkAccess(projectRoot + path)) {
+        fs.createDirs(projectRoot, path);
 
-    for (var bp in blueprintLibrary) {
-        var blueprint = getBlueprint(bp);
-        if (blueprint.isPrefab) {
-            generatePrefab(scene, blueprint, Atomic.addTrailingSlash(path) + bp + '.prefab');
+        for (var bp in blueprintLibrary) {
+            var blueprint = getBlueprint(bp);
+            if (blueprint.isPrefab) {
+                generatePrefab(scene, blueprint, Atomic.addTrailingSlash(projectRoot + path) + bp + '.prefab');
+            }
+        }
+    } else {
+        if (DEBUG) {
+            console.log('Access denied writing to: ' + path);
         }
     }
+}
+
+/**
+ * Scans for component files in the workspace and generated an index of componentname=componentpath entries
+ * This will be loaded up in order to resolve blueprint components at runtime
+ */
+function generateComponentIndex(projectRoot, componentXrefFn) {
+
+    var fs = Atomic.fileSystem;
+    var idxPath = Atomic.addTrailingSlash(projectRoot) + Atomic.addTrailingSlash(RESOURCES_DIR) + componentXrefFn;
+    var idxFile = new Atomic.File(idxPath, Atomic.FILE_WRITE);
+    var xref = {};
+    var componentsFound = 0;
+    var slash = Atomic.addTrailingSlash('1')[1];
+    if (DEBUG) {
+        console.log('Writing component xref file to: ' + idxPath);
+    }
+    for (var i = 0, iEnd = Atomic.cache.resourceDirs.length; i < iEnd; i++) {
+        var pth = Atomic.addTrailingSlash(Atomic.cache.resourceDirs[i]);
+
+        if (fs.checkAccess(pth) && fs.dirExists(pth)) {
+            if (DEBUG) {
+                console.log('Searching for components in: ' + pth);
+            }
+            var componentFiles = fs.scanDir(pth, '*.js', Atomic.SCAN_FILES, true);
+            for (var f = 0, fEnd = componentFiles.length; f < fEnd; f++) {
+                // check to see if this is a component
+                // TODO: for now, we just want to try and load components under a Components/ directory
+                if (componentFiles[f].toLowerCase().indexOf('components' + slash) === -1) {
+                    // skip it.
+                    continue; 
+                }
+
+                var resource = Atomic.cache.getTempResource('JSComponentFile', componentFiles[f], false);
+
+                if (resource) {
+                    var internalComponentPath = componentFiles[f];
+
+                    // if the path to the component starts with Resources/, then we need to peel that part off of it
+                    if (internalComponentPath.indexOf(Atomic.addTrailingSlash(RESOURCES_DIR) === 0)) {
+                        internalComponentPath = internalComponentPath.replace(Atomic.addTrailingSlash(RESOURCES_DIR), '');
+                    }
+
+                    var componentName = internalComponentPath.replace('.js', '');
+                    // Grabbing just the filename part
+                    if (componentName.indexOf(slash) >= 0) {
+                        componentName = componentName.split(slash).pop();
+                    }
+
+                    // See if we have already registered this component
+                    var oldComponent = xref[componentName];
+                    if (oldComponent && oldComponent !== internalComponentPath && oldComponent.indexOf(internalComponentPath) === -1 && internalComponentPath.indexOf(oldComponent) === -1) {
+                        throw new Error('Component names must be unique.  Component: ' + componentName + ' already registered as ' + xref[componentName] + '; trying to re-register as ' + internalComponentPath);
+                    }
+                    if (!oldComponent || (oldComponent.indexOf(internalComponentPath) === -1 && internalComponentPath.indexOf(oldComponent) === -1)) {
+                        xref[componentName] = internalComponentPath;
+                        if (componentsFound > 0) {
+                            idxFile.writeString('\n');
+                        }
+                        idxFile.writeString(componentName + '=' + internalComponentPath);
+                        componentsFound++;
+                    }
+                }
+            }
+        }
+    }
+
+    idxFile.flush();
+    idxFile.close();
 }
 /**
  * Utility function that will scan the Components directory for components and build a cross reference so that
@@ -175,34 +253,31 @@ function generatePrefabs() {
  */
 function buildComponentCrossref() {
     //TODO: look at having a way of registering js components.  There may be a scenario where these components don't live in the Components folder and may be supplied by a library.
-    
     // Cached
     if (componentCrossref) {
         return componentCrossref;
     }
-
     componentCrossref = {};
+    var componentXrefFn = '_componentXref.txt';
+    var projectRoot = getProjectRoot();
+    if (projectRoot !== '') {
+        // We have a project root, which means the --project command line param was passed.
+        // this indicates that we are not running as a packaged build so we should
+        // re-build the component index.
+        generateComponentIndex(projectRoot, componentXrefFn);
+    }
+    var xrefFile = Atomic.cache.getFile(componentXrefFn);
+    var fileContents = xrefFile.readString().split('\n');
 
-    var fs = Atomic.fileSystem;
-    var pth = getProjectRoot();
-    var componentFiles = fs.scanDir(pth + COMPONENTS_PATH, '*.js', Atomic.SCAN_FILES, true);
-    for (var f = 0; f < componentFiles.length; f++) {
-        var fn = componentFiles[f].replace('.js', '');
-        var componentName = fn;
-        if (fn.search('/')) {
-            componentName = fn.split('/').pop();
-        } else if (fn.search('\\')) {
-            componentName = fn.split('\\').pop();
-        }
-        if (componentCrossref[componentName]) {
-            throw new Error('Component names must be unique.  Component: ' + componentName + ' already registered.');
-        }
-        componentCrossref[componentName] = Atomic.addTrailingSlash(COMPONENTS_DIR) + fn + '.js';
+    for (var c = 0; c < fileContents.length; c++) {
+        var namePathSplit = fileContents[c].split('=');
+        componentCrossref[namePathSplit[0]] = namePathSplit[1];
         if (DEBUG) {
-            console.log('Registering component: ' + componentName + ': ' + componentCrossref[componentName]);
+            console.log('Registering component: ' + namePathSplit[0] + ' at ' + namePathSplit[1]);
         }
     }
 
+    xrefFile.close();
     return componentCrossref;
 }
 
@@ -230,7 +305,7 @@ function extend(orig, extendwith) {
             if (typeof extendwith[i] === 'object') {
                 if (extendwith[i] === null) {
                     result[i] = null;
-                } else if (extendwith[i].length) {
+                } else if (Array.isArray(extendwith[i])) {
                     //handle array types
                     result[i] = extendwith[i];
                 } else {
@@ -337,7 +412,7 @@ function buildEntity(node, blueprint) {
     builder.build(node, null, null, blueprint);
 
     for (var componentName in blueprint) {
-        if (typeof (blueprint[componentName]) === 'object' && !blueprint[componentName].length) {
+        if (typeof (blueprint[componentName]) === 'object' && !Array.isArray(blueprint[componentName])) {
             builder = getComponentBuilder(componentName);
             try {
                 builder.build(node, blueprint[componentName], componentName, blueprint);
@@ -376,7 +451,7 @@ module.exports = {
     createChildAtPosition: createChildAtPosition,
     getBlueprint: getBlueprint,
     generatePrefabs: generatePrefabs,
-    setDebug: function(val) {
+    setDebug: function (val) {
         DEBUG = val;
     }
 };
