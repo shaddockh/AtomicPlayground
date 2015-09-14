@@ -31,14 +31,14 @@ export default class LevelGenerationChooser extends Atomic.JSComponent {
     loadScene(builderName) {
         this.clearGeneratedContent();
         this.generatorNode = nodeBuilder.createChild(this.node.scene, builderName);
-        this.runButton.setState(1 /*WIDGET_STATE_DISABLED*/, false);
+        this.runButton.setState(Atomic.UI_WIDGET_STATE_DISABLED, false);
     }
 
     runLoadedScene() {
         let mapData = triggerEvent.trigger(this.generatorNode, 'onGetMapData');
         // we are getting an array back, so grab the first element
         mapData = mapData[0];
-        this.runButton.setState(1 /*WIDGET_STATE_DISABLED*/, true);
+        this.runButton.setState(Atomic.UI_WIDGET_STATE_DISABLED, true);
         this.clearGeneratedContent();
         this.runNode = nodeBuilder.createChild(this.node.scene, 'customLevelRunner');
         triggerEvent.trigger(this.runNode, 'onSetMapData', mapData);
