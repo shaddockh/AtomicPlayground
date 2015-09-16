@@ -8,7 +8,8 @@ export default class SpriteSheet extends Atomic.JSComponent {
         spriteSheet: null,
         spriteName: null,
         blendMode: Atomic.BLEND_ALPHA,
-        orderInLayer: 0
+        orderInLayer: 0,
+        debug: true
     };
 
     start() {
@@ -20,9 +21,16 @@ export default class SpriteSheet extends Atomic.JSComponent {
         sprite2D.blendMode = this.blendMode;
         sprite2D.orderInLayer = this.orderInLayer;
 
+        this.DEBUG(`Loading spritesheet ${this.spriteSheet}`);
         const sheet = Atomic.cache.getResource("SpriteSheet2D", this.spriteSheet);
         if (this.spriteName) {
             sprite2D.sprite = sheet.getSprite(this.spriteName);
+        }
+    }
+
+    DEBUG(msg) {
+        if (this.debug) {
+            console.log(`Spritesheet: ${msg}`);
         }
     }
 }

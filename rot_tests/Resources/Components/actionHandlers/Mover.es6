@@ -59,6 +59,7 @@ export default class Mover extends Atomic.JSComponent {
     }
 
     updateManual(timeStep) {
+        const limit = this.scene.LevelRenderer.cellUnitSize;
         let pos = this.node.position2D;
 
         if (this.scene.Level.turnBased) {
@@ -67,9 +68,11 @@ export default class Mover extends Atomic.JSComponent {
             this.node.position2D = this.constSpeed(pos, this.targetPos, timeStep * this.adjustedSpeed);
         }
 
-        let limit = this.scene.LevelRenderer.cellUnitSize;
-        let dist = [Math.abs(this.targetPos[0] - pos[0]), Math.abs(this.targetPos[1] - pos[1])];
-        if (dist[0] > limit || dist[1] > limit || (dist[0] < 0.0001 && dist[1] < 0.0001)) {
+        pos = this.node.position2D;
+
+        const distVec = [this.targetPos[0] - pos[0], this.targetPos[1] - pos[1]];
+        const dist = Math.sqrt(distVec[0] * distVec[0] + distVec[1] * distVec[1]);
+        if (dist > limit || dist < 0.0001){
             this.DEBUG('At position.  Stopping');
             this.position2D = this.targetPos;
             this.moving = false;

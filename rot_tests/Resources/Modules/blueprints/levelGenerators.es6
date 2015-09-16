@@ -2,12 +2,9 @@ export const levelGenerators = {
 
 
     baseLevelGenerator: {
-    
         //LevelRenderer2D: {}
     },
 
-    // TODO: create separate components for each class of generator Maze, Dungeon, Cellular, Custom
-    // Dungeon Based Generators
     levelGeneratorDigger: {
         inherits: 'baseLevelGenerator',
         LevelRenderer2D: { },
@@ -90,11 +87,11 @@ export const levelGenerators = {
 
     customLevelRunner: {
         LevelRenderer2D: {
-            debug: true
+            debug: false
         },
         LevelRunner: {
             debug: true,
-            turnBased: false
+            turnBased: true
         }
     }
 };

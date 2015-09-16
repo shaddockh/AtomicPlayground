@@ -50,7 +50,8 @@ export const entities = {
             speed: 0.2
         },
         Mover: {
-            usePhysics: false
+            usePhysics: false,
+            speed: 3
         }
     },
 
