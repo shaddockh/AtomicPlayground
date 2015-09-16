@@ -40,7 +40,7 @@ gulp.task('atomify', ['copy-files'], doAtomify);
 gulp.task('atomify-watch', doAtomify);
 
 gulp.task('copy-files', ['clean'], function () {
-    return gulp.src(['*.atomic', './Resources/**', '!**/*.es6'], {
+    return gulp.src(['*.atomic', 'UserPrefs.json', 'BuildSettings.json', './Resources/**', '!**/*.es6'], {
             base: './'
         })
         .pipe(gulp.dest('./build'));
