@@ -1,3 +1,14 @@
+2015-09-16
+---
+* Lots of work on the core blueprint library to support blueprints working in a build
+* updated textures to be POT compliant (web-gl build was complaining)
+* begin work on integrating gl-matrix and the vector library in the map so we use vector calcs for movement, etc.
+* lots of tuning of the movement component to support smooth movement...think it should be solved now
+* added a rat with a very simple Astar ai component.  It basically tries to find the player and then paths to it as soon as all the doors between it and the player are open.
+  * should be more of a awareness-radius so that if the player comes within it's zone of awareness, it wakes up and heads toward the player
+* iniital thoughts about supporting real time and turn based, but until the scheduler is in place, it's not going to work right.
+
+
 2015-09-08
 ---
 Lots of Changes - some highlights:
