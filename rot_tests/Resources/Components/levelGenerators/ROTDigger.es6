@@ -57,7 +57,13 @@ export default class ROTDigger extends BaseLevelGenerator {
 
         this.processEdges();
 
-        let rooms = builder.getRooms();
+        this.placeDoors(builder.getRooms());
+
+        this.placeCreatures();
+    }
+
+    placeDoors(rooms) {
+        // TOOD: move this out into it's own generator ( a door generator or something )
         for (let rIndex = 0; rIndex < rooms.length; rIndex++) {
             rooms[rIndex].getDoors((x, y) => {
                 let tile = this.mapData.getTile(x, y);
@@ -71,6 +77,18 @@ export default class ROTDigger extends BaseLevelGenerator {
                 this.mapData.addEntityAtPosition(x, y, entity); 
 
             });
+        }
+    }
+
+    placeCreatures() {
+        // TODO: Hard Coded!  Definitely move to blueprints
+        const numCreatures = 1,
+              creatureTypes = ['fred'];
+
+        for (let i = 0; i < numCreatures; i++) {
+            let [x,y] = this.mapData.getRandomEmptyPosition();
+            let entity = MapData.buildRandomEntity(creatureTypes);
+            this.mapData.addEntityAtPosition(x, y, entity);
         }
     }
 }

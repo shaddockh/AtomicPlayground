@@ -51,6 +51,10 @@ export default class MapData {
         }
     }
 
+    filterEntities(callback) {
+        return this.entities.filter(callback);
+    }
+
     isEmpty(x, y) {
         let tile = this.getTile(x, y);
         if (tile && tile.terrainType === MapData.TILE_FLOOR) {
@@ -108,6 +112,14 @@ export default class MapData {
             x: x,
             y: y,
             blueprint: blueprint
+        };
+    }
+
+    static buildRandomEntity(blueprintArr, x = 0, y = 0) {
+        return {
+            x: x,
+            y: y,
+            blueprint: blueprintArr[randomNumber(blueprintArr.length)]
         };
     }
 

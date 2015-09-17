@@ -6,12 +6,10 @@ export const entities = {
 
     actor: {
         inherits: 'entity_base',
-        RigidBody2D: {
-            bodyType:Atomic.BT_STATIC,
-            castShadows: false
-        },
-        CollisionBox2D: {
-            size: [7 * Atomic.PIXEL_SIZE, 7 * Atomic.PIXEL_SIZE]
+        Entity: {
+            blocksPath: true,
+            blocksLight: false,
+            bumpable: true
         }
     },
 
@@ -32,19 +30,6 @@ export const entities = {
             color: [0.9, 0.7, 0.5, 0.7],
             backtrace: true
         },
-        CollisionBox2D: {
-            friction: 15.0,
-            density: 19.0,
-            restitution: 0.1
-        },
-        RigidBody2D: {
-            linearVelocity: [0,0],
-            allowSleep: true,
-            bodyType: Atomic.BT_STATIC,
-            mass: 50,
-            bullet: false,
-            fixedRotation: true
-        },
         LightFlicker: {
             baseRange: 2,
             speed: 0.2
@@ -52,6 +37,41 @@ export const entities = {
         Mover: {
             usePhysics: false,
             speed: 3
+        }
+    },
+
+    // doesn't work -- here for future research
+    physicsHero: {
+        inherits: 'hero',
+        CollisionBox2D: {
+            density: 19.0,
+            friction: 15.0,
+            restitution: 0.1,
+            size: [7 * Atomic.PIXEL_SIZE, 7 * Atomic.PIXEL_SIZE]
+        },
+        RigidBody2D: {
+            allowSleep: true,
+            bodyType: Atomic.BT_STATIC,
+            bullet: false,
+            castShadows: false,
+            fixedRotation: true,
+            linearVelocity: [0,0],
+            mass: 50
+        }
+    },
+
+    fred: {
+        inherits: 'actor',
+        Mover: {
+            usePhysics: false,
+            speed: 3
+        },
+        StaticSprite2D: {
+            sprite: 'Sprites/rodent0_10.png',
+            orderInLayer: 12
+        },
+        MonsterAi: {
+
         }
     },
 

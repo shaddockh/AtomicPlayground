@@ -4,6 +4,7 @@
 //export default class SpriteSheet extends Atomic.JSComponent {
 export default class SpriteSheet extends Atomic.JSComponent {
 
+    componentName = 'SpriteSheet';
     inspectorFields = {
         spriteSheet: null,
         spriteName: null,

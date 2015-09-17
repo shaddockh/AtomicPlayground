@@ -3,12 +3,15 @@
 
 import MapData from 'MapData';
 import * as triggerEvent from 'atomicTriggerEvent';
-export default class Mover extends Atomic.JSComponent {
+import { vec2 } from 'gl-matrix';
 
+export default class Mover extends Atomic.JSComponent {
+    componentName = 'Mover';
     inspectorFields = {
         usePhysics: true,
         speed: 1,
-        debug: true
+        debug: true,
+        smoothMovement: true
     };
 
     start() {
@@ -49,33 +52,19 @@ export default class Mover extends Atomic.JSComponent {
 
     }
 
-    lerp(from, to, time) {
-        return [from[0] + time * (to[0] - from[0]), from[1] + time * (to[1] - from[1])];
-    }
-
-    constSpeed(from, to, time) {
-        // TODO: this is a lerp, needs to be a constant motion
-        return [from[0] + time * (to[0] - from[0]), from[1] + time * (to[1] - from[1])];
-    }
-
     updateManual(timeStep) {
-        const limit = this.scene.LevelRenderer.cellUnitSize;
-        let pos = this.node.position2D;
-
-        if (this.scene.Level.turnBased) {
-            this.node.position2D = this.lerp(pos, this.targetPos, timeStep * this.adjustedSpeed);
-        } else {
-            this.node.position2D = this.constSpeed(pos, this.targetPos, timeStep * this.adjustedSpeed);
-        }
-
-        pos = this.node.position2D;
-
-        const distVec = [this.targetPos[0] - pos[0], this.targetPos[1] - pos[1]];
-        const dist = Math.sqrt(distVec[0] * distVec[0] + distVec[1] * distVec[1]);
-        if (dist > limit || dist < 0.0001){
-            this.DEBUG('At position.  Stopping');
-            this.position2D = this.targetPos;
+        if (!this.smoothMovement) {
+            this.node.position2D = this.targetPos;
             this.moving = false;
+            this.DEBUG('At position.  Stopping');
+        } else { 
+            if (this.t < 1) {
+              this.t = Math.min(this.t + timeStep / (this.speed * .01), 1); // Sweeps from 0 to 1 in time seconds
+              this.node.position2D = vec2.lerp(vec2.create(), this.startPos, this.targetPos, this.t);
+            } else {
+                this.moving = false;
+                this.DEBUG('At position.  Stopping');
+            }
         }
 
         if (!this.moving && this.queuedVector) {
@@ -85,8 +74,6 @@ export default class Mover extends Atomic.JSComponent {
 
     update(timeStep) {
         if (this.moving) {
-            this.ticks += timeStep;
-            // if we are greater than 1 tile away, we went too far...reset
             if (this.usePhysics) {
                 this.updatePhysics(timeStep);
             } else {
@@ -119,12 +106,12 @@ export default class Mover extends Atomic.JSComponent {
         let unitSize = this.scene.LevelRenderer.cellUnitSize;
         let pos = this.node.position2D;
         this.startPos = pos;
-        this.targetPos = [pos[0] + vector2D[0] * unitSize, pos[1] + vector2D[1] * unitSize];
-        this.ticks = 0;
+        this.targetPos = vec2.add(vec2.create(), pos, vec2.scale(vec2.create(), vector2D, unitSize));
+        this.t = 0;
 
         // see if we can move into the next space
         let mapPos = this.getMapPosition();
-        let newMapPos = this.scene.Level.calculateOffsetPosition(mapPos, vector2D);
+        let newMapPos = vec2.add(vec2.create(), mapPos, vector2D);
         this.DEBUG(`Current position: ${mapPos}`);
         this.DEBUG(`Moving to: ${newMapPos}`);
 

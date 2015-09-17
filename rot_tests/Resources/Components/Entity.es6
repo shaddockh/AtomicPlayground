@@ -5,6 +5,7 @@
 //import MapData from 'MapData';
 
 export default class Entity extends Atomic.JSComponent {
+    componentName = 'Entity';
     inspectorFields = {
         debug: false,
         blocksPath: false,
@@ -12,6 +13,7 @@ export default class Entity extends Atomic.JSComponent {
         bumpable: false,
         mapEntity: null
     };
+
 
     getPosition() {
         return [this.mapEntity.x, this.mapEntity.y];

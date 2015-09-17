@@ -13,7 +13,7 @@ var eslint = require('gulp-eslint');
 var paths = {
     babel: 'Resources/**/*.es6',
     atomify: './vendor.js',
-    lint: 'Resources/**/*.{es6,js}'
+    lint: ['Resources/**/*.{es6,js}','!Resources/Modules/gl-matrix.js']
 };
 
 gulp.task('clean', function (cb) {

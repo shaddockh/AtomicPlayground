@@ -12,6 +12,8 @@ export default class LevelRunner extends Atomic.JSComponent {
         turnBased: true
     };
 
+    actors = [];
+
     start() {
         this.node.scene.Level = this;
     }
@@ -52,6 +54,16 @@ export default class LevelRunner extends Atomic.JSComponent {
             console.log(`Create actor at: ${x},${y}`);
         }
         this.mapData.addEntityAtPosition(x, y, new MapData.buildEntity('hero'));
+    }
+
+    registerActor(ai) {
+        this.actors.push(ai);
+    }
+
+    update() {
+        this.actors.forEach((actor) => {
+            actor.act();
+        });
     }
 
 }
