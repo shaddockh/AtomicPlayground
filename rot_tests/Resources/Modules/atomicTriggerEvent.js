@@ -13,20 +13,23 @@
 function trigger(node, eventName) {
     var components = node.getComponents('JSComponent');
     var results = [];
-    var args = Array.prototype.slice.call(arguments, 2);
-    var argsAny = Array.prototype.slice.call(arguments, 2).unshift(eventName);
+    var args, argsAny;
     for (var c = 0, cLen = components.length; c < cLen; c++) {
         var component = components[c];
         var r;
 
         // Look for the named event
         if (component && typeof component[eventName] === 'function') {
+            // only populate args the first time we need it
+            args = args || Array.prototype.slice.call(arguments, 2);
             r = component[eventName].apply(component, args);
         }
 
         // See if there is an "onAny" event
         if (component && typeof component['onAny'] === 'function') {
-            r = component[eventName].apply(component, argsAny);
+            //o only populate argsAny the first time we need it
+            argsAny = argsAny || [eventName].concat(Array.prototype.slice.call(arguments, 2));
+            r = component['onAny'].apply(component, argsAny);
         }
 
         // Capture the results
