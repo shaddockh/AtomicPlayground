@@ -1,3 +1,12 @@
+2015-09-17
+---
+* integrated the ROT turn based scheduler.
+  * Now all actors will register with the scheduler and have their 'act' method called in the proper sequence
+  * The HeroAi component will control pausing the scheduler when it is the player's turn and re-enable it once the player makes a move
+* started work on a basic attack / health system.  Basically, each entity has a [Health] component and when it gets an onBump message, it will reduce life
+  * if life reaches 0, then an onDie message will be sent and handled by the ai component.
+* bound [space] to skip turn
+
 2015-09-16
 ---
 * Lots of work on the core blueprint library to support blueprints working in a build
