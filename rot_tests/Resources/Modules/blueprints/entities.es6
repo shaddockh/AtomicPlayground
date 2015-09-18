@@ -99,8 +99,15 @@ export const entities = {
             size: [16 * Atomic.PIXEL_SIZE, 16 * Atomic.PIXEL_SIZE]
         },
         Door: {
-            debug: true
+            debug: true,
+            openSound: 'Sounds/doorOpen_1.ogg'
         }
+        // works, but it's too dynamic :p ... not good for editing in the editor
+        //EventSound: {
+        //    eventMap: {
+        //        'onOpen': 'Sounds/doorOpen_1.ogg'
+        //    }
+        //}
     },
     door_ns: {
         inherits: 'door',

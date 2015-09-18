@@ -1,6 +1,6 @@
 'use strict';
 'atomic component';
-//import * as triggerEvent from 'atomicTriggerEvent';
+import * as triggerEvent from 'atomicTriggerEvent';
 //import { nodeBuilder } from 'atomic-blueprintLib';
 //import MapData from 'MapData';
 
@@ -10,7 +10,9 @@ export default class Door extends Atomic.JSComponent {
         debug: false,
         open: false,
         openSprite: 'Sprites/door_ns_o.png',
-        closedSprite: 'Sprites/door_ns_c.png'
+        closedSprite: 'Sprites/door_ns_c.png',
+        openSound: 'Sounds/doorOpen_1.ogg',
+        closeSound: null
     };
 
     start() {
@@ -38,12 +40,23 @@ export default class Door extends Atomic.JSComponent {
         }
     }
 
-    onBump(bumperComponent /*, bumperNode*/) {
+    onBump(bumperComponent /*, bumperNode*/ ) {
         this.DEBUG(`Bumped by: ${bumperComponent.className} `);
         if (!this.open) {
             this.DEBUG('Door opened.');
             this.open = true;
             this.updateState();
+            triggerEvent.trigger(this.node, 'onOpen');
+
+            if (this.openSound) {
+                let soundSource = this.node.createComponent("SoundSource");
+                soundSource.soundType = Atomic.SOUND_EFFECT;
+                soundSource.gain = 0.75;
+                let sound = Atomic.cache.getResource("Sound", this.openSound);
+                soundSource.play(sound);
+                soundSource.setAutoRemove(true);
+
+            }
         }
     }
 
