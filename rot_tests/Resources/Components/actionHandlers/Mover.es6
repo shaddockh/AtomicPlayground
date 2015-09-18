@@ -58,7 +58,7 @@ export default class Mover extends CustomJSComponent {
             this.DEBUG('At position.  Stopping');
         } else { 
             if (this.t < 1) {
-              this.t = Math.min(this.t + timeStep / (this.speed * .01), 1); // Sweeps from 0 to 1 in time seconds
+              this.t = Math.min(this.t + timeStep / (this.speed * .1), 1); // Sweeps from 0 to 1 in time seconds
               this.node.position2D = vec2.lerp(vec2.create(), this.startPos, this.targetPos, this.t);
             } else {
                 this.moving = false;
