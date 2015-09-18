@@ -1,14 +1,14 @@
 'use strict';
 'atomic component';
 
+import CustomJSComponent from 'CustomJSComponent';
 import MapData from 'MapData';
 import * as triggerEvent from 'atomicTriggerEvent';
 import ROT from 'rot-js';
 import { vec2 } from 'gl-matrix';
 
-export default class MonsterAi extends Atomic.JSComponent {
+export default class MonsterAi extends CustomJSComponent {
 
-    componentName = 'MonsterAi';
     inspectorFields = {
         debug: true
     };
@@ -84,9 +84,11 @@ export default class MonsterAi extends Atomic.JSComponent {
             this.DEBUG('Could not reach target.');
         }
     }
-    DEBUG(msg) {
-        if (this.debug) {
-            console.log(`${this.componentName}: ${msg}`);
-        }
+
+    onDie(/*killerComponent, killerNode*/) {
+        this.DEBUG('Killed!');
+        this.scene.Level.deregisterActor(this);
+        triggerEvent.trigger(this.node, 'onDestroy');
+        Atomic.destroy(this.node);
     }
 }

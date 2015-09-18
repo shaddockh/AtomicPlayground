@@ -10,6 +10,7 @@ class PlayerActions {
     static MOVE_RIGHT = 2;
     static MOVE_UP = 3;
     static MOVE_DOWN = 4;
+    static SKIP_TURN = 5;
 }
 
 export default class PlayerInputHandler extends Atomic.JSComponent {
@@ -23,7 +24,8 @@ export default class PlayerInputHandler extends Atomic.JSComponent {
         [PlayerActions.MOVE_LEFT]: [Atomic.KEY_LEFT, Atomic.KEY_H, Atomic.KEY_A],
         [PlayerActions.MOVE_RIGHT]: [Atomic.KEY_RIGHT, Atomic.KEY_L, Atomic.KEY_D],
         [PlayerActions.MOVE_UP]: [Atomic.KEY_UP, Atomic.KEY_K, Atomic.KEY_W],
-        [PlayerActions.MOVE_DOWN]: [Atomic.KEY_DOWN, Atomic.KEY_J, Atomic.KEY_S]
+        [PlayerActions.MOVE_DOWN]: [Atomic.KEY_DOWN, Atomic.KEY_J, Atomic.KEY_S],
+        [PlayerActions.SKIP_TURN]: [Atomic.KEY_SPACE]
     };
     /* beautify preserve:end */
 
@@ -70,6 +72,10 @@ export default class PlayerInputHandler extends Atomic.JSComponent {
             case PlayerActions.MOVE_DOWN:
                 this.DEBUG('Processing Action: move down');
                 triggerEvent.trigger(this.node, "onTryMove", [0, -1]);
+                break;
+            case PlayerActions.SKIP_TURN:
+                this.DEBUG('Processing Action: skip turn');
+                triggerEvent.trigger(this.node, "onSkipTurn");
                 break;
             }
         }

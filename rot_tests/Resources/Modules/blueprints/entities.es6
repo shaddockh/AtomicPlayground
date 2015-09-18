@@ -37,6 +37,10 @@ export const entities = {
         Mover: {
             usePhysics: false,
             speed: 3
+        },
+        HeroAi: { },
+        Health: {
+            life: 10
         }
     },
 
@@ -70,8 +74,9 @@ export const entities = {
             sprite: 'Sprites/rodent0_10.png',
             orderInLayer: 12
         },
-        MonsterAi: {
-
+        MonsterAi: { },
+        Health: {
+            life: 1
         }
     },
 

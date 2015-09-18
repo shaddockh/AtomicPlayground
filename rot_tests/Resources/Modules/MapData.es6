@@ -80,6 +80,14 @@ export default class MapData {
         this.entities.push(entity);
     }
 
+    removeEntity(entity) {
+        let idx = this.entities.indexOf(entity);
+        if (idx > -1) {
+            console.log('REMOVING');
+            this.entities.splice(idx, 1);
+        }
+    }
+
     /**
      * Iterate over the entire map calling back (x,y,tile) for every entry.
      * return 'falsy' value in the callback to exit.

@@ -29,4 +29,8 @@ export default class Entity extends Atomic.JSComponent {
         mapEntity.entityComponent = this;
         this.mapEntity = mapEntity;
     }
+
+    onDestroy() {
+        this.scene.Level.mapData.removeEntity(this.mapEntity);
+    }
 }

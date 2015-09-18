@@ -1,12 +1,11 @@
 'use strict';
 "atomic component";
-
+import CustomJSComponent from 'CustomJSComponent';
 import MapData from 'MapData';
 import * as triggerEvent from 'atomicTriggerEvent';
 import { vec2 } from 'gl-matrix';
 
-export default class Mover extends Atomic.JSComponent {
-    componentName = 'Mover';
+export default class Mover extends CustomJSComponent {
     inspectorFields = {
         usePhysics: true,
         speed: 1,
@@ -149,11 +148,6 @@ export default class Mover extends Atomic.JSComponent {
             this.body.setLinearVelocity(vector2D);
             this.moving = true;
         }
-    }
-
-    DEBUG(msg) {
-        if (this.debug) {
-            console.log(`Mover: ${msg}`);
-        }
+        triggerEvent.trigger(this.node, 'onTurnTaken', this, this.node);
     }
 }

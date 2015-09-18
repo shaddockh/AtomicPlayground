@@ -1,10 +1,19 @@
 'use strict';
 'atomic component';
+import CustomJSComponent from 'CustomJSComponent';
 import * as triggerEvent from 'atomicTriggerEvent';
 //import { nodeBuilder } from 'atomic-blueprintLib';
 import MapData from 'MapData';
+import ROT from 'rot-js';
 
-export default class LevelRunner extends Atomic.JSComponent {
+/**
+ * Level runner component. This component is in charge of running a particular
+ * level and making sure actors act, etc.  It is also the interface that entities
+ * can use to get to the map data.
+ *
+ * This component, on startup, will register itself as scene.Level
+ */
+export default class LevelRunner extends CustomJSComponent {
 
     inspectorFields = {
         debug: false,
@@ -12,35 +21,36 @@ export default class LevelRunner extends Atomic.JSComponent {
         turnBased: true
     };
 
-    actors = [];
-
     start() {
-        this.node.scene.Level = this;
-    }
-
-    calculateOffsetPosition(pos, vector2D) {
-        return [pos[0] + vector2D[0], pos[1] + vector2D[1]];
+        this.scene.Level = this;
+        this.scheduler = new ROT.Scheduler.Simple();
+        this.engine = new ROT.Engine(this.scheduler);
+        this.engine.start();
+        this.turns = 0;
     }
 
     getTileAt(pos) {
-        return this.mapData.getTile(pos[0], pos[1]);
+        // yes...this looks strange, but we are getting a Float32Array in here, not an array, so destructuring doesn't work
+        let [x, y] = [pos[0], pos[1]];
+        return this.mapData.getTile(x, y);
     }
 
     getEntitiesAt(pos) {
-        return this.mapData.getEntitiesAt(pos[0], pos[1]);
+        // yes...this looks strange, but we are getting a Float32Array in here, not an array, so destructuring doesn't work
+        let [x, y] = [pos[0], pos[1]];
+        return this.mapData.getEntitiesAt(x, y);
     }
 
     iterateEntitiesAt(pos, callback) {
-        this.mapData.iterateEntitiesAt(pos[0],pos[1],callback);
+        // yes...this looks strange, but we are getting a Float32Array in here, not an array, so destructuring doesn't work
+        let [x, y] = [pos[0], pos[1]];
+        this.mapData.iterateEntitiesAt(x, y, callback);
     }
 
     onSetMapData(mapData) {
         // let's just defer to the renderer for now
         //
-        if (this.debug) {
-            console.log(`LevelRunner: onSetMapData called.`);
-            console.log(`LevelRunner: dimensions - ${mapData.width} x ${mapData.height}`);
-        }
+        this.DEBUG(`LevelRunner: onSetMapData called Dimensions - ${mapData.width} x ${mapData.height}`);
         this.mapData = mapData;
 
         this.createHero(mapData.getRandomEmptyPosition());
@@ -48,22 +58,46 @@ export default class LevelRunner extends Atomic.JSComponent {
         triggerEvent.trigger(this.node, 'onRender', mapData);
     }
 
-    createHero(position) {
-        let [x,y] = position;
-        if (this.debug) {
-            console.log(`Create actor at: ${x},${y}`);
-        }
-        this.mapData.addEntityAtPosition(x, y, new MapData.buildEntity('hero'));
+    createHero(pos) {
+        // yes...this looks strange, but we are getting a Float32Array in here, not an array, so destructuring doesn't work
+        let [x, y] = [pos[0], pos[1]];
+        this.DEBUG(`Create actor at: ${x},${y}`);
+        let hero = new MapData.buildEntity('hero');
+        this.mapData.addEntityAtPosition(x, y, hero);
     }
 
     registerActor(ai) {
-        this.actors.push(ai);
+        this.scheduler.add(ai, true);
+        //this.actors.push(ai);
     }
 
-    update() {
-        this.actors.forEach((actor) => {
-            actor.act();
-        });
+    deregisterActor(ai) {
+        this.scheduler.remove(ai);
+        //this.actors.push(ai);
+    }
+
+    pause(val) {
+        if (typeof(val) === 'undefined' || val) {
+            this.engine.lock();
+        } else {
+            this.engine.unlock();
+        }
+    }
+
+    update( /* timestep */ ) {
+        // ROT will handle scheduling movements
+        //this.actors.forEach((actor) => {
+        //actor.act();
+        //});
+    }
+
+    incTurn() {
+        this.turns++;
+    }
+
+    gameOver() {
+        this.engine.lock();
+        console.log('Game Over!');
     }
 
 }
