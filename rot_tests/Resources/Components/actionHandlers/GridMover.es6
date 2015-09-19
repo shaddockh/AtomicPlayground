@@ -10,8 +10,8 @@ from 'gl-matrix';
 
 export default class GridMover extends CustomJSComponent {
     inspectorFields = {
-        speed: 1,
         debug: true,
+        speed: 1,
         smoothMovement: true
     };
 
@@ -27,9 +27,6 @@ export default class GridMover extends CustomJSComponent {
         this.targetPos = this.node.position2D;
         this.startPos = this.node.position2D;
         this.moving = false;
-        if (this.usePhysics) {
-            this.body = this.node.getComponent('RigidBody2D');
-        }
     }
 
     update(timeStep) {
@@ -81,8 +78,10 @@ export default class GridMover extends CustomJSComponent {
         this.DEBUG(`Current position: ${mapPos}`);
         this.DEBUG(`Moving to: ${newMapPos}`);
 
+        // check to see if we are blocked
         if (this.scene.Level.getTileAt(newMapPos).terrainType !== MapData.TILE_FLOOR) {
             this.DEBUG('Blocked by terrain');
+            triggerEvent.trigger(this.node, 'onMoveBlocked', mapPos, newMapPos);
             return;
         }
 
