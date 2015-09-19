@@ -34,9 +34,13 @@ export const entities = {
             baseRange: 2,
             speed: 0.2
         },
-        Mover: {
-            usePhysics: false,
+        GridMover: {
             speed: 3
+        },
+        EventSound: {
+            eventMap: {
+                onMoveStart: 'Sounds/footstep02.ogg'
+            }
         },
         HeroAi: { },
         Health: {
@@ -66,8 +70,7 @@ export const entities = {
 
     fred: {
         inherits: 'actor',
-        Mover: {
-            usePhysics: false,
+        GridMover: {
             speed: 3
         },
         StaticSprite2D: {
