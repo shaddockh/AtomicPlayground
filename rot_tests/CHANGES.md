@@ -1,3 +1,7 @@
+2015-09-19
+---
+* integrated the ROT visibility calcs
+
 2015-09-17
 ---
 * integrated the ROT turn based scheduler.

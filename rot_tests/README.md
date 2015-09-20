@@ -13,11 +13,11 @@ Walk around a randomly generated dungeon level, pick up some treasure and items,
 ## Features (In Progress)
 * Monsters / Combat (Melee)
 * win/lose scenario
+* FOV (Field of View)
 
 ## Features (future planned)
 * Message console
 * Status UI
-* FOV (Field of View)
 * Treasure
 * Items
 
