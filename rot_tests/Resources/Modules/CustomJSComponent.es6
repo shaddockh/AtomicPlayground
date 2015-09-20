@@ -23,7 +23,7 @@ export default class CustomJSComponent extends Atomic.JSComponent {
             if (!this._componentName) {
                 this._componentName = Atomic.splitPath(this.componentFile.name).fileName;
             }
-            console.log(`${this._componentName}: ${msg}`);
+            console.log(`${this.node.name}.${this._componentName}: ${msg}`);
         }
     }
 }
