@@ -10,7 +10,8 @@ import { vec2 } from 'gl-matrix';
 export default class MonsterAi extends CustomJSComponent {
 
     inspectorFields = {
-        debug: true
+        debug: true,
+        chaseEnemy: false
     };
 
     start() {
@@ -53,6 +54,10 @@ export default class MonsterAi extends CustomJSComponent {
     }
 
     act() {
+        if (!this.chaseEnemy) {
+            return;
+
+        }
         let hero = this.scene.Level.mapData.filterEntities((entity) => {
             return entity.blueprint === 'hero';
         }).pop();

@@ -87,11 +87,12 @@ export const levelGenerators = {
 
     customLevelRunner: {
         LevelRenderer2D: {
-            debug: false
+            debug: true
         },
         LevelRunner: {
             debug: true,
-            turnBased: true
+            turnBased: true,
+            useFov: true
         }
     }
 };

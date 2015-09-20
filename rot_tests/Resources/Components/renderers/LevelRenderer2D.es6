@@ -1,9 +1,12 @@
 'use strict';
 'atomic component';
+import ROT from 'rot-js';
 import { nodeBuilder } from 'atomic-blueprintLib';
 import MapData from 'MapData';
+import * as triggerEvent from 'atomicTriggerEvent';
+import CustomJSComponent from 'CustomJSComponent';
 
-export default class LevelRenderer2D extends Atomic.JSComponent {
+export default class LevelRenderer2D extends CustomJSComponent {
 
     inspectorFields = {
         debug: false,
@@ -51,25 +54,31 @@ export default class LevelRenderer2D extends Atomic.JSComponent {
             if (tile.terrainType !== MapData.TILE_NONE) {
                 blueprint = tile.blueprint || tilexref[tile.edge] || tilexref.defaultTile;
                 this.DEBUG(`Construction cell [${x},${y}] - ${blueprint}`);
-                this.children.push(nodeBuilder.createChildAtPosition(this.node, blueprint, [x * scale, y * scale]));
+                let tileNode = nodeBuilder.createChildAtPosition(this.node, blueprint, [x * scale, y * scale]);
+                let tileComponent = tileNode.getJSComponent('Tile');
+                if (tileComponent) {
+                    tileComponent.setMapReference(tile);
+                }
+                this.children.push(tileNode);
             }
         });
 
-        for (let x = 0, xEnd = mapData.entities.length; x < xEnd; x++) {
-            let entity = mapData.entities[x];
+        mapData.iterateEntities((entity) => {
             if (entity.blueprint) {
                 blueprint = entity.blueprint;
                 this.DEBUG(`Constructing entity [${entity.x},${entity.y}] - ${blueprint}`);
                 let entityNode = nodeBuilder.createChildAtPosition(this.node, blueprint, [entity.x * scale, entity.y * scale]);
                 let entityComponent = entityNode.getJSComponent('Entity');
                 if (entityComponent) {
-                    entityComponent.setMapEntityReference(entity);
+                    entityComponent.setMapReference(entity);
                 }
                 this.children.push(entityNode);
             }
-        }
+        });
+
         this.node.position2D = [offsetX, offsetY];
     }
+
     onLevelGenerated(mapData) {
         this.renderMap(mapData);
     }
@@ -77,6 +86,60 @@ export default class LevelRenderer2D extends Atomic.JSComponent {
     onRender(mapData) {
         this.DEBUG('LevelRenderer2D: onRender called');
         this.renderMap(mapData);
+    }
+
+    updateFov(viewerPos, radius, mapData) {
+
+        if (!this.fov) {
+            this.fov = new ROT.FOV.PreciseShadowcasting((x, y) => {
+            //this.fov = new ROT.FOV.RecursiveShadowcasting((x, y) => {
+                // returns whether the point at x,y blocks light
+                if (mapData.inBounds(x, y)) {
+                    if (mapData.getTile(x, y).blocksLight) {
+                        return false;
+                    } else {
+                        let canSee = true;
+                        mapData.iterateEntitiesAt(x, y, (entity) => {
+                            if (entity.entityComponent.blocksLight) {
+                                canSee = false;
+                                return false; //break out
+                            }
+                        });
+                        return canSee;
+                    }
+                } else {
+                    return false;
+                }
+            });
+
+            // run through and set everything to out of view
+            mapData.iterateMap((x,y,tile) => {
+                if (tile.terrainType !== MapData.TILE_NONE) {
+                    triggerEvent.trigger(tile.node, 'onUpdateFov', false );
+                    mapData.iterateEntitiesAt(x, y, (entity) => {
+                        triggerEvent.trigger(entity.node, 'onUpdateFov', false );
+                    });
+                }
+            });
+
+        }
+
+        this.DEBUG('Calculating FOV');
+        this.fov.compute(viewerPos[0], viewerPos[1], radius, (x, y, distFromCenter, visibility) => {
+            if (mapData.inBounds(x, y)) {
+                let tile = mapData.getTile(x, y);
+                if (tile.terrainType !== MapData.TILE_NONE) {
+                    triggerEvent.trigger(tile.node, 'onUpdateFov', visibility);
+                    mapData.iterateEntitiesAt(x, y, (entity) => {
+                        triggerEvent.trigger(entity.node, 'onUpdateFov', visibility);
+                    });
+                } 
+            }
+        });
+    }
+
+    onUpdateFov(heroPos, radius, mapData) {
+        this.updateFov(heroPos, radius, mapData);
     }
 
     onClear() {
@@ -93,11 +156,5 @@ export default class LevelRenderer2D extends Atomic.JSComponent {
         //node.position2D = pos;
         //var zoom = camera.zoom;
         //node.scale2D = [zoom, zoom];
-    }
-
-    DEBUG(msg) {
-        if (this.debug) {
-            console.log(`LevelRenderer2D: ${msg}`);
-        }
     }
 }

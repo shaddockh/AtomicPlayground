@@ -27,7 +27,7 @@ Atomic.totalTime = 0;
 
 // set up lighting zone
 let zone = scene.createComponent("Zone");
-zone.ambientColor = [.2, .2, .2, 0];
+zone.ambientColor = [.1, .1, .1, 0];
 
 // set up physics
 scene.createComponent("DebugRenderer");

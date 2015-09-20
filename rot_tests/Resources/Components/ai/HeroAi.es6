@@ -12,6 +12,7 @@ export default class HeroAi extends CustomJSComponent {
     start() {
         if (this.scene.Level) {
             this.scene.Level.registerActor(this);
+            this.scene.Level.updateFov(this.getPosition(), this.sightRadius);
         }
     }
 
@@ -30,6 +31,20 @@ export default class HeroAi extends CustomJSComponent {
         this.scene.Level.incTurn();
         this.scene.Level.pause(false);
         this.DEBUG('Unpausing action.');
+    }
+
+    getPosition() {
+        return this.node.getJSComponent('Entity').getPosition();
+    }
+
+    onMoveComplete() {
+        this.scene.Level.incTurn();
+        this.scene.Level.updateFov(this.getPosition());
+    }
+
+    onActionComplete() {
+        this.scene.Level.incTurn();
+        this.scene.Level.updateFov(this.getPosition());
     }
 
     onDie(/*killerComponent, killerNode*/) {

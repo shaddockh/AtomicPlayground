@@ -1,13 +1,20 @@
 export const tiles = {
 
     tile_base: {
+        Tile: {
+            debug: false
+        },
+        StaticSprite2D: {
+            blendMode: Atomic.BLEND_ALPHA,
+            orderInLayer: 0,
+            color: [1, 1, 1, 1]
+        }
     },
 
     tile_floor_overview: {
         inherits: 'tile_base',
         StaticSprite2D: {
-            sprite: 'Sprites/tile_floor_overview.png',
-            color: [1, 1, 1, 1]
+            sprite: 'Sprites/tile_floor_overview.png'
         }
     },
 
@@ -111,13 +118,7 @@ export const tiles = {
             spriteName: 'aqua_hcorridor_r'
         }
     },
-    tile_door_overview: {
-        inherits: 'tile_base',
-        Spritesheet: {
-            spriteTexture: 'Sprites/tile_floor_overview.png',
-            color: [0, 1, 0, 1]
-        }
-    },
+
     //TODO: need to batch together walls so we don't have 2000 collision objects
     tile_shadow_wall: {
         inherits: 'tile_base',

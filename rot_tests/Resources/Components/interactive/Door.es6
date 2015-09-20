@@ -41,12 +41,13 @@ export default class Door extends Atomic.JSComponent {
     }
 
     onBump(bumperComponent /*, bumperNode*/ ) {
-        this.DEBUG(`Bumped by: ${bumperComponent.className} `);
+        this.DEBUG(`Bumped by: ${bumperComponent.node.name} `);
         if (!this.open) {
             this.DEBUG('Door opened.');
             this.open = true;
             this.updateState();
             triggerEvent.trigger(this.node, 'onOpen');
+            triggerEvent.trigger(bumperComponent.node,'onActionComplete');
 
             if (this.openSound) {
                 let soundSource = this.node.createComponent("SoundSource");

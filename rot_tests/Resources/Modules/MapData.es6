@@ -3,6 +3,8 @@ export default class MapData {
 
     constructor(width, height, defaultValue = {
         terrainType: MapData.TILE_NONE,
+        blocksLight: true,
+        blocksPath: true,
         edge: 0
     }) {
         this.width = width;
@@ -20,6 +22,8 @@ export default class MapData {
 
     setTile(x, y, value) {
         if (this.inBounds(x, y)) {
+            value.x = x;
+            value.y = y;
             this.tiles[x][y] = value;
         } else {
             throw new Error(`Position out of bounds: ${x},${y}`);
@@ -46,8 +50,21 @@ export default class MapData {
 
     iterateEntitiesAt(x, y, callback) {
         let entities = this.getEntitiesAt(x, y);
+        for (let i = 0, iEnd = entities.length; i < iEnd; i++) {
+            let cont = callback(entities[i]);
+            if (typeof(cont) !== 'undefined' && !cont) {
+                return;
+            }
+        }
+    }
+
+    iterateEntities(callback) {
+        let entities = this.entities;
         for (let x = 0, xEnd = entities.length; x < xEnd; x++) {
-            callback(entities[x]);
+            let cont = callback(entities[x]);
+            if (typeof(cont) !== 'undefined' && !cont) {
+                return;
+            }
         }
     }
 
@@ -75,15 +92,18 @@ export default class MapData {
     }
 
     addEntityAtPosition(x, y, entity) {
+        if (!entity.blueprint) {
+            throw new Error(`Cannot add an entity without a blueprint. ${x},${y}`);
+        }
         entity.x = x;
         entity.y = y;
         this.entities.push(entity);
+
     }
 
     removeEntity(entity) {
         let idx = this.entities.indexOf(entity);
         if (idx > -1) {
-            console.log('REMOVING');
             this.entities.splice(idx, 1);
         }
     }
@@ -150,7 +170,10 @@ function createEmptyMap(width, height, defaultValue = {
             //TODO: This should move to buildTile.
             //Note: we have to create a copy of the default value for each cell otherwise
             //changing one cell will update all the other cells
-            let newTile = {};
+            let newTile = {
+                x: x,
+                y: y
+            };
             for (let p in defaultValue) {
                 newTile[p] = defaultValue[p];
             }

@@ -70,6 +70,9 @@ export const entities = {
 
     fred: {
         inherits: 'actor',
+        Entity: {
+            debug: true
+        },
         GridMover: {
             speed: 3
         },
@@ -88,7 +91,8 @@ export const entities = {
         Entity: {
             blocksPath: true,
             blocksLight: true,
-            bumpable: true
+            bumpable: true,
+            fovRemember: true
         },
         StaticSprite2D: {
             sprite: 'Sprites/door_ns_c.png',

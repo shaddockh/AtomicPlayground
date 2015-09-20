@@ -18,15 +18,37 @@ export default class LevelRunner extends CustomJSComponent {
     inspectorFields = {
         debug: false,
         mapData: null,
-        turnBased: true
+        turnBased: true,
+        useFov: true,
+        fovRadius: 50
     };
+
+    /** The hero node */
+    hero = null;
+
+    /** ROT scheduler */
+    scheduler = null;
+
+    /** ROT engine */
+    engine = null;
+
+    /** # of turns elapsed */
+    turns = 0;
+
+    /** The map data for this level */
+    mapData = null;
+
+    /** use field of view calcs */
+    useFov = true;
+
+    /** radius to run field of view calcs on.  You may want to tweak this if you have more or less tiles on the screen at once. */
+    fovRadius = 50;
 
     start() {
         this.scene.Level = this;
         this.scheduler = new ROT.Scheduler.Simple();
         this.engine = new ROT.Engine(this.scheduler);
         this.engine.start();
-        this.turns = 0;
     }
 
     getTileAt(pos) {
@@ -62,18 +84,16 @@ export default class LevelRunner extends CustomJSComponent {
         // yes...this looks strange, but we are getting a Float32Array in here, not an array, so destructuring doesn't work
         let [x, y] = [pos[0], pos[1]];
         this.DEBUG(`Create actor at: ${x},${y}`);
-        let hero = new MapData.buildEntity('hero');
-        this.mapData.addEntityAtPosition(x, y, hero);
+        this.hero = new MapData.buildEntity('hero');
+        this.mapData.addEntityAtPosition(x, y, this.hero);
     }
 
     registerActor(ai) {
         this.scheduler.add(ai, true);
-        //this.actors.push(ai);
     }
 
     deregisterActor(ai) {
         this.scheduler.remove(ai);
-        //this.actors.push(ai);
     }
 
     pause(val) {
@@ -89,6 +109,12 @@ export default class LevelRunner extends CustomJSComponent {
         //this.actors.forEach((actor) => {
         //actor.act();
         //});
+    }
+
+    updateFov(position) {
+        if (this.useFov) {
+            triggerEvent.trigger(this.node, 'onUpdateFov', position, this.fovRadius, this.mapData);
+        }
     }
 
     incTurn() {

@@ -68,14 +68,24 @@ export default class ROTDigger extends BaseLevelGenerator {
             rooms[rIndex].getDoors((x, y) => {
                 let tile = this.mapData.getTile(x, y);
                 let doorbp = '';
-                if (tile.edge === 12) {
-                    doorbp = 'door_ew';
-                } else if (tile.ege === 3) {
-                    doorbp = 'door_ns';
+                switch (tile.edge) {
+                    case 1: 
+                    case 2:
+                    case 12:
+                        doorbp = 'door_ew';
+                        break;
+
+                    case 3:
+                    case 4:
+                    case 8:
+                        doorbp = 'door_ns';
+                        break;
+
+                    default:
+                        console.log(`Unknown edge type for a door: ${tile.edge}`);
                 }
                 let entity = MapData.buildEntity(doorbp);
                 this.mapData.addEntityAtPosition(x, y, entity); 
-
             });
         }
     }
