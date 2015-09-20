@@ -1,6 +1,6 @@
 // This script is the main entry point of the game
 import 'vendor';
-import 'blueprints'; // Load all the blueprints into the catalog
+import 'Blueprints/blueprints'; // Load all the blueprints into the catalog
 import { nodeBuilder } from 'atomic-blueprintLib';
 
 nodeBuilder.setDebug(false);
