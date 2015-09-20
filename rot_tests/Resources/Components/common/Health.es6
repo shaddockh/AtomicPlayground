@@ -13,7 +13,7 @@ export default class Health extends CustomJSComponent {
 
     onBump(bumperComponent, bumperNode) {
         this.life--;
-        this.DEBUG(`Bumped by: ${bumperComponent.className} `);
+        this.DEBUG(`Bumped by: ${bumperComponent.node.name} `);
         this.DEBUG(`Life reduced.  Current Life: ${this.life} `);
         if (this.life <= 0) {
             // send an onDie message as if it came from the bumper

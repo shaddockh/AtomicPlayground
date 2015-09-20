@@ -4,6 +4,7 @@ export const entities = {
         Entity: { }
     },
 
+    /** ACTORS */
     actor: {
         inherits: 'entity_base',
         Entity: {
@@ -86,7 +87,7 @@ export const entities = {
         }
     },
 
-    // placeholder
+    /* INTERACTIVE OBJECT */
     door: {
         Entity: {
             blocksPath: true,
@@ -131,6 +132,24 @@ export const entities = {
             openSprite: 'Sprites/door_ew_o.png',
             closedSprite: 'Sprites/door_ew_c.png'
         }
+    },
+
+
+    /* EFFECTS */
+    death_effect: {
+        StaticSprite2D: {
+            sprite: 'Sprites/decor0_092_skull.png',
+            orderInLayer: 100
+        },
+        GraphicEffect: {
+            debug: true,
+            duration: 3,
+            useZoom: true,
+            zoomTo: 10,
+            fadeOut: true
+        }
     }
+
+
 
 };

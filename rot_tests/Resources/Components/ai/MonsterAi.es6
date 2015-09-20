@@ -11,7 +11,8 @@ export default class MonsterAi extends CustomJSComponent {
 
     inspectorFields = {
         debug: true,
-        chaseEnemy: false
+        chaseEnemy: false,
+        deathEffect: 'death_effect'
     };
 
     start() {
@@ -93,6 +94,10 @@ export default class MonsterAi extends CustomJSComponent {
     onDie(/*killerComponent, killerNode*/) {
         this.DEBUG('Killed!');
         this.scene.Level.deregisterActor(this);
+        if (this.deathEffect) {
+           this.scene.LevelRenderer.addVisualEffect(this.deathEffect, this.node.position2D); 
+        }
+        this.scene.Level.killEnemy();
         triggerEvent.trigger(this.node, 'onDestroy');
         Atomic.destroy(this.node);
     }

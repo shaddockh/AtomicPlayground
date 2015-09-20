@@ -75,10 +75,11 @@ export default class MapData {
     isEmpty(x, y) {
         let tile = this.getTile(x, y);
         if (tile && tile.terrainType === MapData.TILE_FLOOR) {
-            return true;
-        } else {
-            return false;
+            if (this.getEntitiesAt(x,y).length === 0) {
+                return true;
+            }
         }
+        return false;
     }
 
     getRandomEmptyPosition() {

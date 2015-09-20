@@ -92,7 +92,7 @@ export default class ROTDigger extends BaseLevelGenerator {
 
     placeCreatures() {
         // TODO: Hard Coded!  Definitely move to blueprints
-        const numCreatures = 1,
+        const numCreatures = 5,
               creatureTypes = ['fred'];
 
         for (let i = 0; i < numCreatures; i++) {

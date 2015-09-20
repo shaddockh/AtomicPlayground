@@ -44,6 +44,9 @@ export default class LevelRunner extends CustomJSComponent {
     /** radius to run field of view calcs on.  You may want to tweak this if you have more or less tiles on the screen at once. */
     fovRadius = 50;
 
+    /** # of enemies remaining in level */
+    enemiesRemaining = 99;
+
     start() {
         this.scene.Level = this;
         this.scheduler = new ROT.Scheduler.Simple();
@@ -78,6 +81,14 @@ export default class LevelRunner extends CustomJSComponent {
         this.createHero(mapData.getRandomEmptyPosition());
 
         triggerEvent.trigger(this.node, 'onRender', mapData);
+
+        this.enemiesRemaining = 0;
+        this.mapData.iterateEntities((entity) => {
+            // TODO this is a naive way of determining monsters, but is good enough for this example
+            if (entity.blueprint.MonsterAi) {
+                this.enemiesRemaining++;
+            }
+        });
     }
 
     createHero(pos) {
@@ -119,6 +130,18 @@ export default class LevelRunner extends CustomJSComponent {
 
     incTurn() {
         this.turns++;
+    }
+
+    killEnemy() {
+        this.enemiesRemaining--;
+        if (this.enemiesRemaining ===0) {
+            this.gameWon();
+        }
+    }
+
+    gameWon() {
+        this.engine.lock();
+        console.log('YOU WIN!');
     }
 
     gameOver() {

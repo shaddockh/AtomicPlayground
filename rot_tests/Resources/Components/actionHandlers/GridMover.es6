@@ -3,10 +3,7 @@
 import CustomJSComponent from 'CustomJSComponent';
 import MapData from 'MapData';
 import * as triggerEvent from 'atomicTriggerEvent';
-import {
-    vec2
-}
-from 'gl-matrix';
+import { vec2 } from 'gl-matrix';
 
 export default class GridMover extends CustomJSComponent {
     inspectorFields = {

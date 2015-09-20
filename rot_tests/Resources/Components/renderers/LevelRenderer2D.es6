@@ -14,6 +14,8 @@ export default class LevelRenderer2D extends CustomJSComponent {
         theme: 'tile_floor'
     };
 
+    mapData = null;
+
     children = [];
 
     start() {
@@ -22,6 +24,7 @@ export default class LevelRenderer2D extends CustomJSComponent {
     }
 
     renderMap(mapData) {
+        this.mapData = mapData;
         let scale = this.cellPixelSize * Atomic.PIXEL_SIZE,
             offsetX = mapData.width / 2 * scale * -1,
             offsetY = mapData.height / 2 * scale * -1;
@@ -77,6 +80,16 @@ export default class LevelRenderer2D extends CustomJSComponent {
         });
 
         this.node.position2D = [offsetX, offsetY];
+    }
+
+    /**
+     * add a visual effect at world position (not grid position).
+     * Note that this doesn't get added to a particular cells entity list..it's a visual effect only
+     */
+    addVisualEffect(blueprint, worldPos) {
+            this.DEBUG(`Constructing effect [${worldPos[0]},${worldPos[1]}] - ${blueprint}`);
+            let entityNode = nodeBuilder.createChildAtPosition(this.node, blueprint, [worldPos[0], worldPos[1]]);
+            this.children.push(entityNode);
     }
 
     onLevelGenerated(mapData) {
