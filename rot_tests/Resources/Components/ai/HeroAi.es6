@@ -1,6 +1,7 @@
 'use strict';
 'atomic component';
 
+import * as triggerEvent from 'atomicTriggerEvent';
 import CustomJSComponent from 'CustomJSComponent';
 
 export default class HeroAi extends CustomJSComponent {
@@ -51,5 +52,10 @@ export default class HeroAi extends CustomJSComponent {
         this.DEBUG('Killed!');
         this.scene.Level.deregisterActor(this);
         this.scene.Level.gameOver();
+    }
+
+    onAttack(targetNode) {
+        this.DEBUG(`Attacked ${targetNode.name}`);
+        triggerEvent.trigger(targetNode, 'onHit', this, this.node);
     }
 }

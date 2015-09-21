@@ -10,7 +10,8 @@ export const entities = {
         Entity: {
             blocksPath: true,
             blocksLight: false,
-            bumpable: true
+            bumpable: true,
+            attackable: true
         }
     },
 
@@ -40,7 +41,8 @@ export const entities = {
         },
         EventSound: {
             eventMap: {
-                onMoveStart: 'Sounds/footstep02.ogg'
+                onMoveStart: 'Sounds/footstep02.ogg',
+                onAttack: 'Sounds/knifeSlice.ogg'
             }
         },
         HeroAi: { },
@@ -83,7 +85,12 @@ export const entities = {
         },
         MonsterAi: { },
         Health: {
-            life: 1
+            life: 5
+        },
+        EventSound: {
+            eventMap: {
+                onAttack: 'Sounds/knifeSlice.ogg'
+            }
         }
     },
 

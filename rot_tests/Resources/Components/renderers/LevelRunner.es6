@@ -52,6 +52,17 @@ export default class LevelRunner extends CustomJSComponent {
         this.scheduler = new ROT.Scheduler.Simple();
         this.engine = new ROT.Engine(this.scheduler);
         this.engine.start();
+
+        const view = new Atomic.UIView();
+        const layout = new Atomic.UIWidget();
+        layout.rect = [0, Atomic.graphics.height - 50, Atomic.graphics.width, Atomic.graphics.height];
+        layout.load("Ui/hud.ui.txt");
+        view.addChild(layout);
+        this.ui = {
+            health: layout.getWidget('txtHealth'),
+            enemies: layout.getWidget('txtRemaining')
+        };
+        this.updateUi();
     }
 
     getTileAt(pos) {
@@ -85,10 +96,11 @@ export default class LevelRunner extends CustomJSComponent {
         this.enemiesRemaining = 0;
         this.mapData.iterateEntities((entity) => {
             // TODO this is a naive way of determining monsters, but is good enough for this example
-            if (entity.blueprint.MonsterAi) {
+            if (entity.node.getJSComponent('MonsterAi') !== null) {
                 this.enemiesRemaining++;
             }
         });
+        this.updateUi();
     }
 
     createHero(pos) {
@@ -108,7 +120,7 @@ export default class LevelRunner extends CustomJSComponent {
     }
 
     pause(val) {
-        if (typeof(val) === 'undefined' || val) {
+        if (typeof (val) === 'undefined' || val) {
             this.engine.lock();
         } else {
             this.engine.unlock();
@@ -130,12 +142,21 @@ export default class LevelRunner extends CustomJSComponent {
 
     incTurn() {
         this.turns++;
+        this.updateUi();
     }
 
     killEnemy() {
         this.enemiesRemaining--;
-        if (this.enemiesRemaining ===0) {
+        this.updateUi();
+        if (this.enemiesRemaining === 0) {
             this.gameWon();
+        }
+    }
+
+    updateUi() {
+        if (this.ui) {
+            this.ui.enemies.setText(this.enemiesRemaining);
+            this.ui.health.setText(this.hero.node.getJSComponent('Health').life);
         }
     }
 

@@ -41,6 +41,7 @@ export default class GridMover extends CustomJSComponent {
                     this.moving = false;
                     this.DEBUG('At position.  Stopping');
                     triggerEvent.trigger(this.node, 'onMoveComplete');
+                    triggerEvent.trigger(this.node, 'onTurnTaken', this, this.node);
                 }
             }
 
@@ -48,12 +49,22 @@ export default class GridMover extends CustomJSComponent {
                 this.onTryMove(this.queuedVector);
             }
         }
+
+        if (this.bumping) {
+            if (this.t < 1) {
+                this.t = Math.min(this.t + timeStep / (this.speed * .1), 1); // Sweeps from 0 to 1 in time seconds
+            } else {
+                this.bumping = false;
+                this.DEBUG('done bumping');
+                triggerEvent.trigger(this.node, 'onTurnTaken', this, this.node);
+            }
+        }
     }
 
     onTryMove(vector2D) {
 
         // implement a way of queuing up actions
-        if (this.moving) {
+        if (this.moving || this.bumping) {
             if (this.scene.Level.turnBased) {
                 this.queuedVector = vector2D;
             }
@@ -89,7 +100,9 @@ export default class GridMover extends CustomJSComponent {
                     blocked = true;
                 }
 
-                if (entity.entityComponent.bumpable) {
+                if (entity.entityComponent.attackable) {
+                    triggerEvent.trigger(this.node, 'onAttack', entity.node);
+                } else if (entity.entityComponent.bumpable) {
                     triggerEvent.trigger(entity.node, 'onBump', this, this.node);
                 }
             }
@@ -98,17 +111,16 @@ export default class GridMover extends CustomJSComponent {
         if (blocked) {
             this.DEBUG('Blocked by entity');
             triggerEvent.trigger(this.node, 'onMoveBlocked', mapPos, newMapPos);
-            return;
+            this.bumping = true;
+        } else {
+            this.setMapPosition(newMapPos);
+
+            this.movementVector = vector2D;
+            this.startPos = this.node.position2D;
+            this.DEBUG(`Moving to ${this.targetPos} from ${this.startPos}, vector = ${vector2D}`);
+
+            this.moving = true;
+            triggerEvent.trigger(this.node, 'onMoveStart', mapPos, newMapPos);
         }
-
-        this.setMapPosition(newMapPos);
-
-        this.movementVector = vector2D;
-        this.startPos = this.node.position2D;
-        this.DEBUG(`Moving to ${this.targetPos} from ${this.startPos}, vector = ${vector2D}`);
-
-        this.moving = true;
-        triggerEvent.trigger(this.node, 'onMoveStart', mapPos, newMapPos);
-        triggerEvent.trigger(this.node, 'onTurnTaken', this, this.node);
     }
 }

@@ -11,8 +11,9 @@ export default class MonsterAi extends CustomJSComponent {
 
     inspectorFields = {
         debug: true,
-        chaseEnemy: false,
-        deathEffect: 'death_effect'
+        chaseEnemy: true,
+        deathEffect: 'death_effect',
+        sightRadius: 4
     };
 
     start() {
@@ -77,8 +78,12 @@ export default class MonsterAi extends CustomJSComponent {
         });
 
         path.shift(); // remove current position
+
+        // TODO ideally we would want to scan the sight radius, but for now we are just going to see if 
+        // we are in range of the hero
+
         // get a direction vector
-        if (path.length) {
+        if (path.length < this.sightRadius && path.length > 0) {
             this.DEBUG(`Path to target has ${path.length} steps.`);
             this.DEBUG(path);
             let target = path.shift();
@@ -100,5 +105,10 @@ export default class MonsterAi extends CustomJSComponent {
         this.scene.Level.killEnemy();
         triggerEvent.trigger(this.node, 'onDestroy');
         Atomic.destroy(this.node);
+    }
+
+    onAttack(targetNode) {
+        this.DEBUG(`Attacked ${targetNode.name}`);
+        triggerEvent.trigger(targetNode, 'onHit', this, this.node);
     }
 }

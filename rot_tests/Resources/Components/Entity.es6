@@ -8,6 +8,7 @@ export default class Entity extends CustomJSComponent {
         blocksPath: false,
         blocksLight: false,
         bumpable: false,
+        attackable: false,
         fovRemember: false,
         seen: false
     };

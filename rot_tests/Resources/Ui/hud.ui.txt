@@ -1,0 +1,9 @@
+WindowInfo
+	title HUD
+TBLayout: axis: y, distribution-position: bottom
+	TBLayout: axis: x, distribution-position: left
+		TBTextField: text: "Enemies Remaining: "
+		TBTextField: text: "0", id: "txtRemaining"
+	TBLayout: axis: x, distribution-position: right
+		TBTextField: text: "Health: "
+		TBTextField: text: "0", id: "txtHealth"
