@@ -47,6 +47,8 @@ export default class LevelRunner extends CustomJSComponent {
     /** # of enemies remaining in level */
     enemiesRemaining = 99;
 
+    isGameOver = false;
+
     start() {
         this.scene.Level = this;
         this.scheduler = new ROT.Scheduler.Simple();
@@ -161,11 +163,13 @@ export default class LevelRunner extends CustomJSComponent {
     }
 
     gameWon() {
+        this.isGameOver = true;
         this.engine.lock();
         console.log('YOU WIN!');
     }
 
     gameOver() {
+        this.isGameOver = true;
         this.engine.lock();
         console.log('Game Over!');
     }

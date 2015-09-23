@@ -1,4 +1,6 @@
 'use strict';
+import * as utils from './utils';
+
 export default class MapData {
 
     constructor(width, height, defaultValue = {
@@ -85,7 +87,7 @@ export default class MapData {
     getRandomEmptyPosition() {
         let seek = true;
         while (seek) {
-            let pos = [randomNumber(this.width), randomNumber(this.height)];
+            let pos = [utils.randomNumber(this.width), utils.randomNumber(this.height)];
             if (this.isEmpty(pos[0], pos[1])) {
                 return pos;
             }
@@ -148,7 +150,7 @@ export default class MapData {
         return {
             x: x,
             y: y,
-            blueprint: blueprintArr[randomNumber(blueprintArr.length)]
+            blueprint: blueprintArr[utils.randomNumber(blueprintArr.length)]
         };
     }
 
@@ -184,14 +186,3 @@ function createEmptyMap(width, height, defaultValue = {
     return arr;
 }
 
-function randomNumber(min = 0, max = -1) {
-
-    let newMax = max,
-        newMin = min;
-    if (max < min) {
-        newMax = min;
-        newMin = 0;
-    }
-
-    return Math.floor(Math.random() * newMax) + newMin;
-}

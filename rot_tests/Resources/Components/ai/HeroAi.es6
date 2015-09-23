@@ -58,4 +58,8 @@ export default class HeroAi extends CustomJSComponent {
         this.DEBUG(`Attacked ${targetNode.name}`);
         triggerEvent.trigger(targetNode, 'onHit', this, this.node);
     }
+
+    onHealthChanged() {
+        this.scene.Level.updateUi();
+    }
 }

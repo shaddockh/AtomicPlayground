@@ -3,6 +3,11 @@ export const levelGenerators = {
 
     baseLevelGenerator: {
         //LevelRenderer2D: {}
+        CreatureGenerator: {
+            debug: true,
+            creatureCount: [3,5],
+            creatureList: ['fred']
+        }
     },
 
     levelGeneratorDigger: {
@@ -12,28 +17,18 @@ export const levelGenerators = {
             roomWidth: [2, 2] /* room minimum and maximum width */
         }
     },
-    baseLevelGenerator2: {
-        LevelGenerator: {
-            width: 80,
-            height: 25,
-            strategy: 'Digger',
-            iterations: 1,
-            strategyOptions: {
 
-            }
-        }
-    },
     levelGeneratorUniform: {
         inherits: 'baseLevelGenerator',
         LevelRenderer2D: { },
         ROTUniform: { }
     },
+
     levelGeneratorRogue: {
         inherits: 'baseLevelGenerator',
         LevelRenderer2D: { },
         ROTRogue: { }
     },
-
 
     // Maze Generators
     levelGeneratorDividedMaze: {
@@ -91,7 +86,7 @@ export const levelGenerators = {
         },
         LevelRunner: {
             debug: true,
-            turnBased: true,
+            turnBased: false,
             useFov: true
         }
     }

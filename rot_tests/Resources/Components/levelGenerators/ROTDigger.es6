@@ -45,60 +45,11 @@ export default class ROTDigger extends BaseLevelGenerator {
             this.mapData.setTile(x, y, MapData.buildTile(MapData.TILE_FLOOR));
         });
 
-        // See if there are any rooms
-        //if (builder.getRooms) {
-        //let rooms = builder.getRooms();
-        //for (let i = 0, iLen = rooms.length; i < iLen; i++) {
-        //rooms[i].getDoors((x, y) => {
-        ////map[x][y] = 'tile_floor_c';
-        //});
-        //}
-        //}
-
         this.processEdges();
 
         this.placeDoors(builder.getRooms());
 
-        this.placeCreatures();
+        this.placeCreatures(builder.getRooms());
     }
 
-    placeDoors(rooms) {
-        // TOOD: move this out into it's own generator ( a door generator or something )
-        for (let rIndex = 0; rIndex < rooms.length; rIndex++) {
-            rooms[rIndex].getDoors((x, y) => {
-                let tile = this.mapData.getTile(x, y);
-                let doorbp = '';
-                switch (tile.edge) {
-                    case 1: 
-                    case 2:
-                    case 12:
-                        doorbp = 'door_ew';
-                        break;
-
-                    case 3:
-                    case 4:
-                    case 8:
-                        doorbp = 'door_ns';
-                        break;
-
-                    default:
-                        console.log(`Unknown edge type for a door: ${tile.edge}`);
-                }
-                let entity = MapData.buildEntity(doorbp);
-                this.mapData.addEntityAtPosition(x, y, entity); 
-            });
-        }
-    }
-
-    placeCreatures() {
-        // TODO: Hard Coded!  Definitely move to blueprints
-        const numCreatures = 5,
-              creatureTypes = ['fred'];
-
-        for (let i = 0; i < numCreatures; i++) {
-            let [x,y] = this.mapData.getRandomEmptyPosition();
-            let entity = MapData.buildRandomEntity(creatureTypes);
-            this.mapData.addEntityAtPosition(x, y, entity);
-        }
-    }
 }

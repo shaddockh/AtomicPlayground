@@ -2,7 +2,8 @@
 // 'noatomic component'; -- don't want to expose to the editor since this is more like an abstract base class
 import * as triggerEvent from 'atomicTriggerEvent';
 import MapData from 'MapData';
-export default class BaseLevelGenerator extends Atomic.JSComponent {
+import CustomJSComponent from 'CustomJSComponent';
+export default class BaseLevelGenerator extends CustomJSComponent {
     inspectorFields = {
         width: 80,
         height: 25
@@ -100,5 +101,41 @@ export default class BaseLevelGenerator extends Atomic.JSComponent {
             }
         });
 
+    }
+
+    placeDoors(rooms) {
+        // TOOD: move this out into it's own generator ( a door generator or something )
+        for (let rIndex = 0; rIndex < rooms.length; rIndex++) {
+            rooms[rIndex].getDoors((x, y) => {
+                let tile = this.mapData.getTile(x, y);
+                let doorbp = '';
+                switch (tile.edge) {
+                    case 1: 
+                    case 2:
+                    case 12:
+                    case 13:
+                        doorbp = 'door_ew';
+                        break;
+
+                    case 3:
+                    case 4:
+                    case 8:
+                        doorbp = 'door_ns';
+                        break;
+
+                    default:
+                        doorbp = 'door_unkown';
+                        console.log(`Unknown edge type for a door: ${tile.edge}`);
+                }
+                if (this.mapData.isEmpty(x,y)) {
+                    let entity = MapData.buildEntity(doorbp);
+                    this.mapData.addEntityAtPosition(x, y, entity); 
+                }
+            });
+        }
+    }
+
+    placeCreatures(roomData) {
+        triggerEvent.trigger(this.node, 'onBuildCreatures', this.mapData, roomData);
     }
 }

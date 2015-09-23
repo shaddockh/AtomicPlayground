@@ -54,29 +54,31 @@ export default class PlayerInputHandler extends Atomic.JSComponent {
     }
 
     update( /*timeStep*/ ) {
-        let action = this.getCurrentAction();
-        if (action !== PlayerActions.NO_ACTION) {
-            switch (action) {
-            case PlayerActions.MOVE_LEFT:
-                this.DEBUG('Processing Action: move left');
-                triggerEvent.trigger(this.node, "onTryMove", [-1, 0]);
-                break;
-            case PlayerActions.MOVE_RIGHT:
-                this.DEBUG('Processing Action: move right');
-                triggerEvent.trigger(this.node, "onTryMove", [1, 0]);
-                break;
-            case PlayerActions.MOVE_UP:
-                this.DEBUG('Processing Action: move up');
-                triggerEvent.trigger(this.node, "onTryMove", [0, 1]);
-                break;
-            case PlayerActions.MOVE_DOWN:
-                this.DEBUG('Processing Action: move down');
-                triggerEvent.trigger(this.node, "onTryMove", [0, -1]);
-                break;
-            case PlayerActions.SKIP_TURN:
-                this.DEBUG('Processing Action: skip turn');
-                triggerEvent.trigger(this.node, "onSkipTurn");
-                break;
+        if (!this.scene.Level.isGameOver) {
+            let action = this.getCurrentAction();
+            if (action !== PlayerActions.NO_ACTION) {
+                switch (action) {
+                case PlayerActions.MOVE_LEFT:
+                    this.DEBUG('Processing Action: move left');
+                    triggerEvent.trigger(this.node, "onTryMove", [-1, 0]);
+                    break;
+                case PlayerActions.MOVE_RIGHT:
+                    this.DEBUG('Processing Action: move right');
+                    triggerEvent.trigger(this.node, "onTryMove", [1, 0]);
+                    break;
+                case PlayerActions.MOVE_UP:
+                    this.DEBUG('Processing Action: move up');
+                    triggerEvent.trigger(this.node, "onTryMove", [0, 1]);
+                    break;
+                case PlayerActions.MOVE_DOWN:
+                    this.DEBUG('Processing Action: move down');
+                    triggerEvent.trigger(this.node, "onTryMove", [0, -1]);
+                    break;
+                case PlayerActions.SKIP_TURN:
+                    this.DEBUG('Processing Action: skip turn');
+                    triggerEvent.trigger(this.node, "onSkipTurn");
+                    break;
+                }
             }
         }
     }

@@ -28,15 +28,11 @@ export default class ROTDividedMaze extends BaseLevelGenerator {
             this.mapData.setTile(x, y, MapData.buildTile(MapData.TILE_FLOOR));
         });
 
-        // See if there are any rooms
-        //if (builder.getRooms) {
-        //let rooms = builder.getRooms();
-        //for (let i = 0, iLen = rooms.length; i < iLen; i++) {
-        //rooms[i].getDoors((x, y) => {
-        ////map[x][y] = 'tile_floor_c';
-        //});
-        //}
-        //}
         this.processEdges();
+
+        // no rooms
+        // this.placeDoors(builder.getRooms());
+
+        this.placeCreatures(null);
     }
 }

@@ -13,6 +13,8 @@ export default class Health extends CustomJSComponent {
 
     onHit(attackerComponent, attackerNode) {
         this.life--;
+        // send a notification that health has changed
+        triggerEvent.trigger(this.node, 'onHealthChanged', this, this.node);
         this.DEBUG(`Bumped by: ${attackerComponent.node.name} `);
         this.DEBUG(`Life reduced.  Current Life: ${this.life} `);
         if (this.life <= 0) {

@@ -140,6 +140,14 @@ export const entities = {
             closedSprite: 'Sprites/door_ew_c.png'
         }
     },
+    door_unkown: {
+        inherits: 'door',
+        Door: {
+            open: false,
+            openSprite: 'Sprites/door_ew_o.png',
+            closedSprite: 'Sprites/door_ew_o.png'
+        }
+    },
 
 
     /* EFFECTS */
