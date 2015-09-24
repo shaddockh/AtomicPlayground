@@ -136,6 +136,11 @@ export default class BaseLevelGenerator extends CustomJSComponent {
     }
 
     placeCreatures(roomData) {
-        triggerEvent.trigger(this.node, 'onBuildCreatures', this.mapData, roomData);
+        triggerEvent.trigger(this.node, 'onPlaceCreatures', this.mapData, roomData);
+    }
+
+    placeItems(roomData) {
+        triggerEvent.trigger(this.node, 'onPlaceItems', this.mapData, roomData);
+
     }
 }

@@ -57,7 +57,6 @@ export default class Door extends CustomJSComponent {
                 let sound = Atomic.cache.getResource("Sound", this.openSound);
                 soundSource.play(sound);
                 soundSource.setAutoRemove(true);
-
             }
         }
     }

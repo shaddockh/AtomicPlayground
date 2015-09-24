@@ -23,4 +23,9 @@ export default class Health extends CustomJSComponent {
         }
     }
 
+    onAdjustHealth(health) {
+        this.life += health;
+        triggerEvent.trigger(this.node, 'onHealthChanged', this, this.node);
+    }
+
 }

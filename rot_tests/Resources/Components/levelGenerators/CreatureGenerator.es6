@@ -23,5 +23,5 @@ export default class CreatureGenerator extends CustomJSComponent {
         }
     }
 
-    onBuildCreatures = this.buildCreatures;
+    onPlaceCreatures = this.buildCreatures;
 }

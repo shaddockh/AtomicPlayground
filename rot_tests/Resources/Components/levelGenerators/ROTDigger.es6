@@ -48,8 +48,8 @@ export default class ROTDigger extends BaseLevelGenerator {
         this.processEdges();
 
         this.placeDoors(builder.getRooms());
-
         this.placeCreatures(builder.getRooms());
+        this.placeItems(builder.getRooms());
     }
 
 }

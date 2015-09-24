@@ -4,9 +4,12 @@ export const levelGenerators = {
     baseLevelGenerator: {
         //LevelRenderer2D: {}
         CreatureGenerator: {
-            debug: true,
             creatureCount: [3,5],
             creatureList: ['fred']
+        },
+        ItemGenerator: {
+            itemCount: [3,5],
+            itemList: ['health_potion']
         }
     },
 

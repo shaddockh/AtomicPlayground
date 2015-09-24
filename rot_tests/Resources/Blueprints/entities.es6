@@ -94,6 +94,26 @@ export const entities = {
         }
     },
 
+    /* ITEMS */
+
+    health_potion: {
+        Entity: {
+            blocksPath: false,
+            blocksLight: false,
+            bumpable: true,
+            fovRemember: false
+        },
+        StaticSprite2D: {
+            sprite: 'Sprites/Potion_00.png',
+            orderInLayer: 10
+        },
+        Potion: {
+            debug: true,
+            addHealth: 5,
+            drinkSound:null
+        }
+    },
+
     /* INTERACTIVE OBJECT */
     door: {
         Entity: {
