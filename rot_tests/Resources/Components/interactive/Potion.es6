@@ -10,8 +10,7 @@ export default class Potion extends CustomJSComponent {
     inspectorFields = {
         debug: false,
         addHealth: 0,
-        //drinkSound: ['Sound',null]
-        drinkSound: null
+        drinkSound: ['Sound']
     };
 
     start() {

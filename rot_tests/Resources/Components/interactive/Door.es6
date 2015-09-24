@@ -10,10 +10,10 @@ export default class Door extends CustomJSComponent {
     inspectorFields = {
         debug: false,
         open: false,
-        openSprite: 'Sprites/door_ns_o.png',
-        closedSprite: 'Sprites/door_ns_c.png',
-        openSound: 'Sounds/doorOpen_1.ogg',
-        closeSound: null
+        openSprite: ['Sprite2D', 'Sprites/door_ns_o.png'],
+        closedSprite: ['Sprite2D', 'Sprites/door_ns_c.png'],
+        openSound: ['Sound', 'Sounds/doorOpen_1.ogg'],
+        closeSound: ['Sound']
     };
 
     start() {

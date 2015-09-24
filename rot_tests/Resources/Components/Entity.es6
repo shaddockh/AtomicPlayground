@@ -9,14 +9,16 @@ export default class Entity extends CustomJSComponent {
         blocksLight: false,
         bumpable: false,
         attackable: false,
-        fovRemember: false,
-        seen: false
+        fovRemember: false
     };
 
     /** once seen, don't hide when leaving field of view */
     fovRemember = false;
 
     mapEntity = null;
+
+    /** has this entity been seen by the player yet? */
+    seen = false;
 
     getPosition() {
         return [this.mapEntity.x, this.mapEntity.y];
