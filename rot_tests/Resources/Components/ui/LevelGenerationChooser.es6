@@ -27,16 +27,22 @@ export default class LevelGenerationChooser extends Atomic.JSComponent {
                 case 'run:level':
                     this.runLevel.apply(this, messages);
                     break;
+                case 'show:levelgen':
+                    this.showLevelGen.apply(this, messages);
+                    break;
             }
         });
 
+        this.showLevelGen();
+    }
+
+    showLevelGen() {
         let blueprints = [];
         blueprintCatalog.find(blueprint => {
             if (blueprint.inherits === 'baseLevelGenerator') {
                 blueprints.push(blueprint);
             }
         });
-
         uiChannel.sendMessage('show:levelgen', blueprints);
     }
 

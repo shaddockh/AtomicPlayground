@@ -2,8 +2,12 @@
 import 'vendor';
 import 'Blueprints/blueprints'; // Load all the blueprints into the catalog
 import 'Ui/ui'; // Let the ui system register itself
+import channel from 'channels';
 
-import { nodeBuilder } from 'atomic-blueprintLib';
+import {
+    nodeBuilder
+}
+from 'atomic-blueprintLib';
 
 nodeBuilder.setDebug(false);
 // Add the vendor scripts to the global namespace
@@ -39,9 +43,23 @@ physicsWorld.drawShape = true;
 physicsWorld.allowSleeping = true;
 physicsWorld.warmStarting = true;
 physicsWorld.autoClearForces = true;
-physicsWorld.gravity = [0,0];
+physicsWorld.gravity = [0, 0];
 
-nodeBuilder.createChild(scene, 'uiLevelGenerationChooser');
+let currentLevelGen = null;
+channel('game').subscribe((topic) => {
+    switch (topic) {
+    case 'shutdown:game':
+        Atomic.engine.exit();
+        break;
+    case 'launch:levelgen':
+        if (!currentLevelGen) {
+            currentLevelGen = nodeBuilder.createChild(scene, 'uiLevelGenerationChooser');
+        }
+        break;
+    }
+});
+
+channel('game').sendMessage('launch:levelgen');
 
 // called per frame
 export function update(timeStep) {

@@ -5,6 +5,9 @@ import * as triggerEvent from 'atomicTriggerEvent';
 //import { nodeBuilder } from 'atomic-blueprintLib';
 import MapData from 'MapData';
 import ROT from 'rot-js';
+import channel from 'channels';
+
+const uiChannel = channel('ui');
 
 /**
  * Level runner component. This component is in charge of running a particular
@@ -55,15 +58,7 @@ export default class LevelRunner extends CustomJSComponent {
         this.engine = new ROT.Engine(this.scheduler);
         this.engine.start();
 
-        const view = new Atomic.UIView();
-        const layout = new Atomic.UIWidget();
-        layout.rect = [0, Atomic.graphics.height - 50, Atomic.graphics.width, Atomic.graphics.height];
-        layout.load("Ui/hud.ui.txt");
-        view.addChild(layout);
-        this.ui = {
-            health: layout.getWidget('txtHealth'),
-            enemies: layout.getWidget('txtRemaining')
-        };
+        uiChannel.sendMessage('show:hud');
         this.updateUi();
     }
 
@@ -156,22 +151,26 @@ export default class LevelRunner extends CustomJSComponent {
     }
 
     updateUi() {
-        if (this.ui) {
-            this.ui.enemies.setText(this.enemiesRemaining);
-            this.ui.health.setText(this.hero.node.getJSComponent('Health').life);
-        }
+        uiChannel.sendMessage('bind:hud', {
+            enemiesRemaining: this.enemiesRemaining,
+            health: this.hero.node.getJSComponent('Health').life
+        });
     }
 
     gameWon() {
         this.isGameOver = true;
         this.engine.lock();
-        console.log('YOU WIN!');
+        uiChannel.sendMessage('show:endgame', {
+            endGameReason: 'You killed all the enemies!'
+        });
     }
 
     gameOver() {
         this.isGameOver = true;
         this.engine.lock();
-        console.log('Game Over!');
+        uiChannel.sendMessage('show:endgame', {
+            endGameReason: 'You died.'
+        });
     }
 
 }

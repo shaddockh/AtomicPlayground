@@ -1,6 +1,7 @@
 WindowInfo
 	title Level Generator
 TBLayout: axis: y, distribution-position: top, size: available
+	TBTextField: text: "Select a Generator to build a level with:"
 	TBLayout: axis: y, distribution: gravity
 		TBSelectList: id: "selGenerators", value: 0, gravity: all
 			lp: height: 400
