@@ -10,7 +10,8 @@ export default class Potion extends CustomJSComponent {
     inspectorFields = {
         debug: false,
         addHealth: 0,
-        drinkSound: ['Sound']
+        drinkSound: ['Sound'],
+        drinkMessage: 'You feel healthier!'
     };
 
     start() {
@@ -31,6 +32,7 @@ export default class Potion extends CustomJSComponent {
             soundSource.setAutoRemove(true);
         }
 
+        triggerEvent.trigger(bumperNode, 'onLogAction', this.drinkMessage);
         triggerEvent.trigger(this.node, 'onDestroy');
         Atomic.destroy(this.node);
     }

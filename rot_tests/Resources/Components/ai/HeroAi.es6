@@ -24,6 +24,7 @@ export default class HeroAi extends CustomJSComponent {
 
     onSkipTurn() {
         this.scene.Level.incTurn();
+        triggerEvent.trigger(this.node, 'onLogAction', 'Waiting...');
         this.scene.Level.pause(false);
         this.DEBUG('Unpausing action.');
     }
@@ -54,9 +55,25 @@ export default class HeroAi extends CustomJSComponent {
         this.scene.Level.gameOver();
     }
 
+    onHit(hitter, hitterNode) {
+        const entityComponent = hitterNode.getJSComponent('Entity');
+        triggerEvent.trigger(this.node, 'onLogAction', `You are attacked by ${entityComponent.screenName}`);
+    }
+
     onAttack(targetNode) {
+        const entityComponent = targetNode.getJSComponent('Entity');
         this.DEBUG(`Attacked ${targetNode.name}`);
         triggerEvent.trigger(targetNode, 'onHit', this, this.node);
+        triggerEvent.trigger(this.node, 'onLogAction', `You attack ${entityComponent.screenName}`);
+    }
+
+    onHandleBump(targetNode) {
+        const entityComponent = targetNode.getJSComponent('Entity');
+        if (entityComponent.attackable) {
+            triggerEvent.trigger(this.node, 'onAttack', targetNode);
+        } else if (entityComponent.bumpable) {
+            triggerEvent.trigger(targetNode, 'onBump', this, this.node);
+        }
     }
 
     onHealthChanged() {

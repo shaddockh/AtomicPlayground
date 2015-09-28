@@ -18,6 +18,9 @@ export const entities = {
 
     hero: {
         inherits: 'actor',
+        Entity: {
+            screenName: 'Hero'
+        },
         StaticSprite2D: {
             sprite: 'Sprites/hero_0.png',
             orderInLayer: 12
@@ -39,6 +42,8 @@ export const entities = {
         GridMover: {
             speed: 3
         },
+        // Make sure our actions are reported to the log
+        ActionLogger: {},
         EventSound: {
             eventMap: {
                 onMoveStart: 'Sounds/footstep02.ogg',
@@ -74,7 +79,7 @@ export const entities = {
     fred: {
         inherits: 'actor',
         Entity: {
-            debug: true
+            screenName: 'a rat'
         },
         GridMover: {
             speed: 3

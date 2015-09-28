@@ -43,9 +43,8 @@ export default class ROTUniform extends BaseLevelGenerator {
         });
 
         this.processEdges();
-
         this.placeDoors(builder.getRooms());
-
         this.placeCreatures(builder.getRooms());
+        this.placeItems(builder.getRooms());
     }
 }

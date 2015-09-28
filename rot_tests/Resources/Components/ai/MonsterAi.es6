@@ -10,7 +10,7 @@ import { vec2 } from 'gl-matrix';
 export default class MonsterAi extends CustomJSComponent {
 
     inspectorFields = {
-        debug: true,
+        debug: false,
         chaseEnemy: true,
         deathEffect: 'death_effect',
         sightRadius: 4
@@ -96,12 +96,15 @@ export default class MonsterAi extends CustomJSComponent {
         }
     }
 
-    onDie(/*killerComponent, killerNode*/) {
+    onDie(killerComponent, killerNode) {
         this.DEBUG('Killed!');
         this.scene.Level.deregisterActor(this);
         if (this.deathEffect) {
            this.scene.LevelRenderer.addVisualEffect(this.deathEffect, this.node.position2D); 
         }
+
+        const entityComponent = this.node.getJSComponent('Entity');
+        triggerEvent.trigger(killerNode, 'onLogAction', `${entityComponent.screenName} dies.`);
         this.scene.Level.killEnemy();
         triggerEvent.trigger(this.node, 'onDestroy');
         Atomic.destroy(this.node);
@@ -110,5 +113,13 @@ export default class MonsterAi extends CustomJSComponent {
     onAttack(targetNode) {
         this.DEBUG(`Attacked ${targetNode.name}`);
         triggerEvent.trigger(targetNode, 'onHit', this, this.node);
+    }
+
+    onHandleBump(targetNode) {
+        const entityComponent = targetNode.getJSComponent('Entity');
+        // just attack, don't allow for picking up items or other bump actions
+        if (entityComponent.attackable) {
+            triggerEvent.trigger(this.node, 'onAttack', targetNode);
+        }
     }
 }

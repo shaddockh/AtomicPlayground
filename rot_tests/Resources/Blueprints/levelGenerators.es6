@@ -13,18 +13,18 @@ export const levelGenerators = {
         }
     },
 
+    levelGeneratorUniform: {
+        inherits: 'baseLevelGenerator',
+        LevelRenderer2D: { },
+        ROTUniform: { }
+    },
+
     levelGeneratorDigger: {
         inherits: 'baseLevelGenerator',
         LevelRenderer2D: { },
         ROTDigger: {
             roomWidth: [2, 2] /* room minimum and maximum width */
         }
-    },
-
-    levelGeneratorUniform: {
-        inherits: 'baseLevelGenerator',
-        LevelRenderer2D: { },
-        ROTUniform: { }
     },
 
     levelGeneratorRogue: {

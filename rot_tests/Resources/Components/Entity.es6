@@ -9,7 +9,8 @@ export default class Entity extends CustomJSComponent {
         blocksLight: false,
         bumpable: false,
         attackable: false,
-        fovRemember: false
+        fovRemember: false,
+        screenName: 'entity'
     };
 
     /** once seen, don't hide when leaving field of view */

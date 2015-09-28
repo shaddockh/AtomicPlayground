@@ -87,26 +87,22 @@ export default class GridMover extends CustomJSComponent {
         this.DEBUG(`Moving to: ${newMapPos}`);
 
         // check to see if we are blocked
+        let blocked = false;
         if (this.scene.Level.getTileAt(newMapPos).terrainType !== MapData.TILE_FLOOR) {
             this.DEBUG('Blocked by terrain');
-            triggerEvent.trigger(this.node, 'onMoveBlocked', mapPos, newMapPos);
-            return;
+            triggerEvent.trigger(this.node, 'onLogAction', 'Blocked.');
+            blocked = true;
+        } else {
+            this.scene.Level.iterateEntitiesAt(newMapPos, (entity) => {
+                if (entity.entityComponent) {
+                    if (entity.entityComponent.blocksPath) {
+                        blocked = true;
+                    }
+
+                    triggerEvent.trigger(this.node, 'onHandleBump', entity.node);
+                }
+            });
         }
-
-        let blocked = false;
-        this.scene.Level.iterateEntitiesAt(newMapPos, (entity) => {
-            if (entity.entityComponent) {
-                if (entity.entityComponent.blocksPath) {
-                    blocked = true;
-                }
-
-                if (entity.entityComponent.attackable) {
-                    triggerEvent.trigger(this.node, 'onAttack', entity.node);
-                } else if (entity.entityComponent.bumpable) {
-                    triggerEvent.trigger(entity.node, 'onBump', this, this.node);
-                }
-            }
-        });
 
         if (blocked) {
             this.DEBUG('Blocked by entity');

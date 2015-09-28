@@ -1,4 +1,5 @@
 import CustomUIWindow from './CustomUIWindow';
+import channel from 'channels';
 
 export default class Hud extends CustomUIWindow {
 
@@ -19,10 +20,18 @@ export default class Hud extends CustomUIWindow {
 
         this.health = wnd.getWidget('txtHealth');
         this.enemies = wnd.getWidget('txtRemaining');
+
+        channel('ui').sendMessage('show:log');
+
     }
 
     bindModel(model) {
         this.health.setText(model.health);
         this.enemies.setText(model.enemiesRemaining);
+    }
+
+    closeWindow() {
+        super.closeWindow();
+        channel('ui').sendMessage('hide:log');
     }
 }

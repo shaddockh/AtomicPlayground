@@ -59,6 +59,7 @@ export default class LevelRunner extends CustomJSComponent {
         this.engine.start();
 
         uiChannel.sendMessage('show:hud');
+        uiChannel.sendMessage('log:addmessage', 'Welcome to the dungeon.');
         this.updateUi();
     }
 

@@ -2,6 +2,7 @@ import channel from 'channels';
 import Hud from './hud.ui';
 import LevelGenSelector from './levelgen_selector.ui';
 import EndGameUi from './endgame.ui';
+import LogUi from './log.ui';
 
 const baseUi = new Atomic.UIView();
 const windowRefs = {};
@@ -30,6 +31,10 @@ function handleChannelMessages(topic, ...messageParms) {
 
     case 'show:endgame':
         launchWindow('endgame', new EndGameUi(baseUi), messageParms);
+        break;
+
+    case 'show:log':
+        launchWindow('log', new LogUi(baseUi), messageParms);
         break;
     }
 }
