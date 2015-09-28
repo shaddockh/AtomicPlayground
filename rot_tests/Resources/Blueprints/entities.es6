@@ -115,7 +115,7 @@ export const entities = {
         Potion: {
             debug: true,
             addHealth: 5,
-            drinkSound:null
+            drinkSound:'Sounds/bottle.ogg'
         }
     },
 

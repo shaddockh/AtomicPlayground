@@ -24,6 +24,7 @@ export default class Potion extends CustomJSComponent {
         }
 
         if (this.drinkSound) {
+            console.log('drink');
             let soundSource = this.node.createComponent("SoundSource");
             soundSource.soundType = Atomic.SOUND_EFFECT;
             soundSource.gain = 0.75;
@@ -33,8 +34,16 @@ export default class Potion extends CustomJSComponent {
         }
 
         triggerEvent.trigger(bumperNode, 'onLogAction', this.drinkMessage);
-        triggerEvent.trigger(this.node, 'onDestroy');
-        Atomic.destroy(this.node);
+    }
+
+    update(/* timeStep */) {
+        let soundSource = this.node.getComponent("SoundSource");
+        if (soundSource ) {
+            if (!soundSource.isPlaying()) {
+                triggerEvent.trigger(this.node, 'onDestroy');
+                Atomic.destroy(this.node);
+            }
+        }
     }
 
 }
