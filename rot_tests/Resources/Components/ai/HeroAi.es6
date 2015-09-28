@@ -63,8 +63,8 @@ export default class HeroAi extends CustomJSComponent {
     onAttack(targetNode) {
         const entityComponent = targetNode.getJSComponent('Entity');
         this.DEBUG(`Attacked ${targetNode.name}`);
-        triggerEvent.trigger(targetNode, 'onHit', this, this.node);
         triggerEvent.trigger(this.node, 'onLogAction', `You attack ${entityComponent.screenName}`);
+        triggerEvent.trigger(targetNode, 'onHit', this, this.node);
     }
 
     onHandleBump(targetNode) {

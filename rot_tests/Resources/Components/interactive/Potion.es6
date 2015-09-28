@@ -24,7 +24,6 @@ export default class Potion extends CustomJSComponent {
         }
 
         if (this.drinkSound) {
-            console.log('drink');
             let soundSource = this.node.createComponent("SoundSource");
             soundSource.soundType = Atomic.SOUND_EFFECT;
             soundSource.gain = 0.75;
