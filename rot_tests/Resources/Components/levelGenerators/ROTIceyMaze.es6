@@ -37,5 +37,6 @@ export default class ROTIceyMaze extends BaseLevelGenerator {
         // this.placeDoors(builder.getRooms());
 
         this.placeCreatures(null);
+        this.placeItems();
     }
 }

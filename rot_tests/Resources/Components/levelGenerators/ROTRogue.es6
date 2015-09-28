@@ -41,5 +41,6 @@ export default class ROTRogue extends BaseLevelGenerator {
         // this.placeDoors(builder.getRooms());
 
         this.placeCreatures(null);
+        this.placeItems();
     }
 }

@@ -34,5 +34,6 @@ export default class ROTDividedMaze extends BaseLevelGenerator {
         // this.placeDoors(builder.getRooms());
 
         this.placeCreatures(null);
+        this.placeItems();
     }
 }
