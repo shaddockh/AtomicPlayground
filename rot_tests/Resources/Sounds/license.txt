@@ -12,3 +12,19 @@
 	Credit (Kenney or www.kenney.nl) would be nice but is not mandatory.
 
 ###############################################################################
+
+
+Other sounds:
+bite-small2.ogg
+bottle.ogg
+swing.ogg
+
+http://opengameart.org/content/rpg-sound-pack
+
+RPG Sound Pack
+Author: 
+artisticdude
+Thursday, May 19, 2011 - 13:48
+
+License(s): 
+CC0

@@ -33,6 +33,8 @@ export default class Potion extends CustomJSComponent {
             soundSource.setAutoRemove(true);
         }
 
+        // Not sure how to make a sprite invisible, so just make it too small to see
+        this.node.scale2D = [0,0];
         triggerEvent.trigger(bumperNode, 'onLogAction', this.drinkMessage);
     }
 

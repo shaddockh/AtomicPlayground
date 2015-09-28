@@ -94,7 +94,7 @@ export const entities = {
         },
         EventSound: {
             eventMap: {
-                onAttack: 'Sounds/knifeSlice.ogg'
+                onAttack: 'Sounds/bite-small2.ogg'
             }
         }
     },
