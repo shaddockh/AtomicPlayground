@@ -7,7 +7,7 @@ import { vec2 } from 'gl-matrix';
 
 export default class GridMover extends CustomJSComponent {
     inspectorFields = {
-        debug: true,
+        debug: false,
         speed: 1,
         smoothMovement: true
     };
@@ -35,10 +35,12 @@ export default class GridMover extends CustomJSComponent {
                 triggerEvent.trigger(this.node, 'onMoveComplete');
             } else {
                 if (this.t < 1) {
-                    this.t = Math.min(this.t + timeStep / (this.speed * .1), 1); // Sweeps from 0 to 1 in time seconds
-                    this.node.position2D = vec2.lerp(vec2.create(), this.startPos, this.targetPos, this.t);
+                    let newT = Math.min(this.t + timeStep / (this.speed * .05), 1); // Sweeps from 0 to 1 in time seconds
+                    this.node.position2D = vec2.lerp(vec2.create(), this.startPos, this.targetPos, newT);
+                    this.t = newT;
                 } else {
                     this.moving = false;
+                    this.node.position2D = this.targetPos;
                     this.DEBUG('At position.  Stopping');
                     triggerEvent.trigger(this.node, 'onMoveComplete');
                     triggerEvent.trigger(this.node, 'onTurnTaken', this, this.node);

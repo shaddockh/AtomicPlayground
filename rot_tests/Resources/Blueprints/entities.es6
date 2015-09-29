@@ -26,7 +26,7 @@ export const entities = {
             orderInLayer: 12
         },
         PlayerInputHandler: {
-            debug: true
+            debug: false
         },
         PointLight2D: {
             castShadows: true,
@@ -35,10 +35,12 @@ export const entities = {
             color: [0.9, 0.7, 0.5, 0.7],
             backtrace: true
         },
-        LightFlicker: {
-            baseRange: 2,
-            speed: 0.2
-        },
+        /*
+         *LightFlicker: {
+         *    baseRange: 2,
+         *    speed: 0.2
+         *},
+         */
         GridMover: {
             speed: 3
         },
@@ -113,7 +115,7 @@ export const entities = {
             orderInLayer: 10
         },
         Potion: {
-            debug: true,
+            debug: false,
             addHealth: 5,
             drinkSound:'Sounds/bottle.ogg'
         }
@@ -139,7 +141,7 @@ export const entities = {
             size: [16 * Atomic.PIXEL_SIZE, 16 * Atomic.PIXEL_SIZE]
         },
         Door: {
-            debug: true,
+            debug: false,
             openSound: 'Sounds/doorOpen_1.ogg'
         }
         // works, but it's too dynamic :p ... not good for editing in the editor
@@ -182,7 +184,7 @@ export const entities = {
             orderInLayer: 100
         },
         GraphicEffect: {
-            debug: true,
+            debug: false,
             duration: 3,
             useZoom: true,
             zoomTo: 10,

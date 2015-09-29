@@ -5,7 +5,7 @@ import * as triggerEvent from 'atomicTriggerEvent';
 
 export default class Health extends CustomJSComponent {
     inspectorFields = {
-        debug: true,
+        debug: false,
         life: 1
     };
 

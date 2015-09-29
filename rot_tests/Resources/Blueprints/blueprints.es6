@@ -1,8 +1,8 @@
 import {blueprintCatalog} from 'atomic-blueprintLib';
-import {tiles} from 'blueprints/tiles';
-import {ui} from 'blueprints/ui';
-import {levelGenerators} from 'blueprints/levelGenerators';
-import {entities} from 'blueprints/entities';
+import {tiles} from 'Blueprints/tiles';
+import {ui} from 'Blueprints/ui';
+import {levelGenerators} from 'Blueprints/levelGenerators';
+import {entities} from 'Blueprints/entities';
 
 
 blueprintCatalog.loadBlueprints(tiles, loader);

@@ -2,7 +2,7 @@
  * Very minimalist message channel.  Will send topic and message to any subscriber
  */
 class MessageChannel {
-    debug = true;
+    debug = false;
 
     constructor(name) {
         this.name = name;
@@ -48,7 +48,7 @@ class MessageChannel {
                 handled = true;
             }
         }
-        if (!handled) {
+        if (!handled && this.debug) {
             console.log(`message was not handled on channel ${this.name}: ${topic}`);
         }
     }

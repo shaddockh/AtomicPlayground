@@ -16,7 +16,7 @@ import CustomJSComponent from 'CustomJSComponent';
  */
 export default class Health extends CustomJSComponent {
     inspectorFields = {
-        debug: true,
+        debug: false,
 
         life: 1,
         eventMap: {}

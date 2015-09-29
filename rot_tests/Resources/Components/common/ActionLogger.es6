@@ -6,7 +6,7 @@ const uiChannel = channel('ui');
 
 export default class ActionLogger extends CustomJSComponent {
     inspectorFields = {
-        debug: true
+        debug: false
     };
 
     start() {}

@@ -35,6 +35,10 @@ Atomic.totalTime = 0;
 let zone = scene.createComponent("Zone");
 zone.ambientColor = [.1, .1, .1, 0];
 
+// Put some limits on the renderer
+Atomic.engine.setMaxFps(30);
+Atomic.engine.vSync = true;
+
 // set up physics
 scene.createComponent("DebugRenderer");
 //scene.createComponent("Renderer2D");

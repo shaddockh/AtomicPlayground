@@ -1,5 +1,5 @@
 'use strict';
-
+var debug = false;
 /*global Duktape:true */
 // Replace the built in modSearch routine with our own, but keep 
 // a reference to the original one that we will call in case a module
@@ -9,16 +9,24 @@ Duktape.modSearch = (function (origModSearch, vendorMap) {
         if (vendorMap[id]) {
             var result = vendorMap[id];
 
-            print('Loading vendor module: ' + id);
+            if (debug) {
+                console.log('Loading vendor module: ' + id);
+            }
             // Let's map the exports from the module to the exports 
             for (var exp in result) {
+                if (debug) {
+                    console.log('mapping export: ' + exp);
+                }
                 exports[exp] = result[exp];
             }
         } else {
+            if (debug) {
+                console.log('Loading other module: ' + id);
+            }
             return origModSearch(id, require, exports, module);
         }
     };
-})(Duktape.modSearch, {
+}(Duktape.modSearch, {
     'rot-js': require('rot-js'),
     'atomic-blueprintLib': require('atomic-blueprintLib')
-});
+}));

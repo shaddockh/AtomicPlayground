@@ -12,7 +12,7 @@ from 'gl-matrix';
 export default class PhysicsMover extends CustomJSComponent {
     inspectorFields = {
         speed: 1,
-        debug: true
+        debug: false
     };
 
     start() {
