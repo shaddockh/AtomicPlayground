@@ -54,7 +54,7 @@ export default class PlayerInputHandler extends Atomic.JSComponent {
     }
 
     update( /*timeStep*/ ) {
-        if (!this.scene.Level.isGameOver) {
+        if (!this.scene.Level.isGameOver && this.scene.Level.isWaitingForAction) {
             let action = this.getCurrentAction();
             if (action !== PlayerActions.NO_ACTION) {
                 switch (action) {

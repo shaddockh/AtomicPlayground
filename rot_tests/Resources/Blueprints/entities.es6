@@ -26,7 +26,7 @@ export const entities = {
             orderInLayer: 12
         },
         PlayerInputHandler: {
-            debug: false
+            debug: true
         },
         PointLight2D: {
             castShadows: true,
@@ -42,7 +42,9 @@ export const entities = {
          *},
          */
         GridMover: {
-            speed: 3
+            debug: true,
+            speed: 0.5,
+            constantMotion: true
         },
         // Make sure our actions are reported to the log
         ActionLogger: {},
@@ -84,7 +86,7 @@ export const entities = {
             screenName: 'a rat'
         },
         GridMover: {
-            speed: 3
+            speed: 1
         },
         StaticSprite2D: {
             sprite: 'Sprites/rodent0_10.png',

@@ -3,13 +3,32 @@
 import CustomJSComponent from 'CustomJSComponent';
 import MapData from 'MapData';
 import * as triggerEvent from 'atomicTriggerEvent';
-import { vec2 } from 'gl-matrix';
+import {
+    vec2
+}
+from 'gl-matrix';
+// added
+vec2.limit = function (out, v, high) {
+    let x = v[0],
+        y = v[1];
+
+    let len = x * x + y * y;
+
+    if (len > high * high && len > 0) {
+        out[0] = x;
+        out[1] = y;
+        vec2.normalize(out, out);
+        vec2.scale(out, out, high);
+    }
+    return out;
+};
 
 export default class GridMover extends CustomJSComponent {
     inspectorFields = {
         debug: false,
+        // need speed to be 1 tile per speed per second.
         speed: 1,
-        smoothMovement: true
+        smoothMovement: true // jump from tile to tile or smoothly move between them
     };
 
     getMapPosition() {
@@ -35,15 +54,18 @@ export default class GridMover extends CustomJSComponent {
                 triggerEvent.trigger(this.node, 'onMoveComplete');
             } else {
                 if (this.t < 1) {
-                    let newT = Math.min(this.t + timeStep / (this.speed * .05), 1); // Sweeps from 0 to 1 in time seconds
-                    this.node.position2D = vec2.lerp(vec2.create(), this.startPos, this.targetPos, newT);
+                    let newT = Math.min(this.t + timeStep / (this.speed * this.scene.LevelRenderer.cellUnitSize), 1); // Sweeps from 0 to 1 in time seconds
+                    let newPosition = vec2.lerp(vec2.create(), this.startPos, this.targetPos, newT);
+                    this.node.position2D = newPosition;
                     this.t = newT;
                 } else {
                     this.moving = false;
                     this.node.position2D = this.targetPos;
                     this.DEBUG('At position.  Stopping');
                     triggerEvent.trigger(this.node, 'onMoveComplete');
-                    triggerEvent.trigger(this.node, 'onTurnTaken', this, this.node);
+                    if (this.incrementTurn) {
+                        triggerEvent.trigger(this.node, 'onTurnTaken', this, this.node);
+                    }
                 }
             }
 
@@ -74,33 +96,31 @@ export default class GridMover extends CustomJSComponent {
         }
         this.queuedVector = null;
 
-        this.adjustedSpeed = this.speed * this.scene.LevelRenderer.cellPixelSize;
-
         let unitSize = this.scene.LevelRenderer.cellUnitSize;
-        let pos = this.node.position2D;
-        this.startPos = pos;
-        this.targetPos = vec2.add(vec2.create(), pos, vec2.scale(vec2.create(), vector2D, unitSize));
+        this.startPos = this.node.position2D;
+        this.targetPos = vec2.add(vec2.create(), this.startPos, vec2.scale(vec2.create(), vector2D, unitSize));
         this.t = 0;
 
         // see if we can move into the next space
         let mapPos = this.getMapPosition();
         let newMapPos = vec2.add(vec2.create(), mapPos, vector2D);
-        this.DEBUG(`Current position: ${mapPos}`);
-        this.DEBUG(`Moving to: ${newMapPos}`);
+        this.DEBUG(`Current position: ${mapPos[0]},${mapPos[1]}`);
+        this.DEBUG(`Moving to: ${newMapPos[0]},${newMapPos[1]}`);
 
         // check to see if we are blocked
         let blocked = false;
+        this.incrementTurn = true;
         if (this.scene.Level.getTileAt(newMapPos).terrainType !== MapData.TILE_FLOOR) {
             this.DEBUG('Blocked by terrain');
             triggerEvent.trigger(this.node, 'onLogAction', 'Blocked.');
             blocked = true;
+            this.incrementTurn = false;
         } else {
             this.scene.Level.iterateEntitiesAt(newMapPos, (entity) => {
                 if (entity.entityComponent) {
                     if (entity.entityComponent.blocksPath) {
                         blocked = true;
                     }
-
                     triggerEvent.trigger(this.node, 'onHandleBump', entity.node);
                 }
             });

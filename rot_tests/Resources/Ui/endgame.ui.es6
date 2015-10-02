@@ -20,6 +20,7 @@ export default class EndGameUi extends CustomUIWindow {
 
         wnd.getWidget('btnGenerate').onClick = () => {
             this.closeWindow();
+            channel('ui').sendMessage('hide:hud');
             channel('level').sendMessage('show:levelgen');
         };
 

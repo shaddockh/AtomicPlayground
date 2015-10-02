@@ -50,17 +50,23 @@ export default class LevelRunner extends CustomJSComponent {
     /** # of enemies remaining in level */
     enemiesRemaining = 99;
 
+    /** Indicates whether the game is over or not */
     isGameOver = false;
+
+    /** Indicates whether it's the player's turn or not */
+    isWaitingForAction = false;
 
     start() {
         this.scene.Level = this;
         this.scheduler = new ROT.Scheduler.Simple();
         this.engine = new ROT.Engine(this.scheduler);
+
         this.engine.start();
 
         uiChannel.sendMessage('show:hud');
         uiChannel.sendMessage('log:addmessage', 'Welcome to the dungeon.');
         this.updateUi();
+        this.isWaitingForAction = true;
     }
 
     getTileAt(pos) {
@@ -120,17 +126,21 @@ export default class LevelRunner extends CustomJSComponent {
     pause(val) {
         if (typeof (val) === 'undefined' || val) {
             this.engine.lock();
+            this.isWaitingForAction = false;
         } else {
             this.engine.unlock();
+            this.isWaitingForAction = true;
         }
     }
 
-    update( /* timestep */ ) {
-        // ROT will handle scheduling movements
-        //this.actors.forEach((actor) => {
-        //actor.act();
-        //});
-    }
+    /*
+     *update( [> timestep <] ) {
+     *    // ROT will handle scheduling movements
+     *    //this.actors.forEach((actor) => {
+     *    //actor.act();
+     *    //});
+     *}
+     */
 
     updateFov(position) {
         if (this.useFov) {
@@ -161,6 +171,7 @@ export default class LevelRunner extends CustomJSComponent {
     gameWon() {
         this.isGameOver = true;
         this.engine.lock();
+        this.isWaitingForAction = false;
         uiChannel.sendMessage('show:endgame', {
             endGameReason: 'You killed all the enemies!'
         });
@@ -169,6 +180,7 @@ export default class LevelRunner extends CustomJSComponent {
     gameOver() {
         this.isGameOver = true;
         this.engine.lock();
+        this.isWaitingForAction = false;
         uiChannel.sendMessage('show:endgame', {
             endGameReason: 'You died.'
         });
