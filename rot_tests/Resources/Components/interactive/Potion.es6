@@ -46,5 +46,4 @@ export default class Potion extends CustomJSComponent {
             }
         }
     }
-
 }

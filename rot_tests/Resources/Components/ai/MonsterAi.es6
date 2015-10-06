@@ -13,7 +13,9 @@ export default class MonsterAi extends CustomJSComponent {
         debug: false,
         chaseEnemy: true,
         deathEffect: 'death_effect',
-        sightRadius: 4
+        sightRadius: 4,
+        trackingRadius: 8,
+        isHunting: false
     };
 
     start() {
@@ -26,7 +28,7 @@ export default class MonsterAi extends CustomJSComponent {
         let pos = this.node.getJSComponent("Entity").getPosition();
 
         // See if we are trying to get to ourselves
-        if (vec2.dist(point,pos) === 0) {
+        if (vec2.dist(point, pos) === 0) {
             return true;
         }
         if (this.scene.Level.getTileAt(point).terrainType !== MapData.TILE_FLOOR) {
@@ -58,7 +60,6 @@ export default class MonsterAi extends CustomJSComponent {
     act() {
         if (!this.chaseEnemy) {
             return;
-
         }
         let hero = this.scene.Level.mapData.filterEntities((entity) => {
             return entity.blueprint === 'hero';
@@ -70,7 +71,6 @@ export default class MonsterAi extends CustomJSComponent {
             topology: 4
         });
 
-        //this.dumpNode(this.node);
         let path = [];
         let pos = this.node.getJSComponent("Entity").getPosition();
         astar.compute(pos[0], pos[1], (x, y) => {
@@ -83,16 +83,19 @@ export default class MonsterAi extends CustomJSComponent {
         // we are in range of the hero
 
         // get a direction vector
-        if (path.length < this.sightRadius && path.length > 0) {
+        if (!this.isHunting && path.length < this.sightRadius && path.length > 0) {
+            this.isHunting = true;
+            this.DEBUG('Ai - Act -- sees enemy');
+        }
+
+        if (this.isHunting && path.length < this.trackingRadius && path.length > 0) {
+            this.DEBUG('Ai - Act -- hunting enemy');
             this.DEBUG(`Path to target has ${path.length} steps.`);
-            this.DEBUG(path);
             let target = path.shift();
             let dir = vec2.sub(vec2.create(), target, pos);
             vec2.normalize(dir, dir);
 
             triggerEvent.trigger(this.node, "onTryMove", dir);
-        } else {
-            this.DEBUG('Could not reach target.');
         }
     }
 
@@ -100,7 +103,7 @@ export default class MonsterAi extends CustomJSComponent {
         this.DEBUG('Killed!');
         this.scene.Level.deregisterActor(this);
         if (this.deathEffect) {
-           this.scene.LevelRenderer.addVisualEffect(this.deathEffect, this.node.position2D); 
+            this.scene.LevelRenderer.addVisualEffect(this.deathEffect, this.node.position2D);
         }
 
         const entityComponent = this.node.getJSComponent('Entity');
@@ -113,6 +116,7 @@ export default class MonsterAi extends CustomJSComponent {
     onAttack(targetNode) {
         this.DEBUG(`Attacked ${targetNode.name}`);
         triggerEvent.trigger(targetNode, 'onHit', this, this.node);
+        triggerEvent.trigger(this.node, 'onActionComplete', this, this.node);
     }
 
     onHandleBump(targetNode) {

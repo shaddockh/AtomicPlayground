@@ -20,6 +20,7 @@ export default class Hud extends CustomUIWindow {
 
         this.health = wnd.getWidget('txtHealth');
         this.enemies = wnd.getWidget('txtRemaining');
+        this.turnCount = wnd.getWidget('txtTurnCount');
 
         channel('ui').sendMessage('show:log');
 
@@ -28,6 +29,7 @@ export default class Hud extends CustomUIWindow {
     bindModel(model) {
         this.health.setText(model.health);
         this.enemies.setText(model.enemiesRemaining);
+        this.turnCount.setText(model.turnCount);
     }
 
     closeWindow() {

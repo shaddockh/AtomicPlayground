@@ -164,7 +164,8 @@ export default class LevelRunner extends CustomJSComponent {
     updateUi() {
         uiChannel.sendMessage('bind:hud', {
             enemiesRemaining: this.enemiesRemaining,
-            health: this.hero.node.getJSComponent('Health').life
+            health: this.hero.node.getJSComponent('Health').life,
+            turnCount: this.turns
         });
     }
 

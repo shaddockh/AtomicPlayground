@@ -18,6 +18,7 @@ export const entities = {
 
     hero: {
         inherits: 'actor',
+        TriggerDebug:{},
         Entity: {
             screenName: 'Hero'
         },
@@ -42,8 +43,8 @@ export const entities = {
          *},
          */
         GridMover: {
-            debug: true,
-            speed: 0.5,
+            debug: false,
+            speed: 1.5,
             constantMotion: true
         },
         // Make sure our actions are reported to the log
@@ -54,7 +55,9 @@ export const entities = {
                 onAttack: 'Sounds/knifeSlice.ogg'
             }
         },
-        HeroAi: { },
+        HeroAi: {
+            debug: true
+        },
         Health: {
             life: 10
         }
@@ -92,7 +95,9 @@ export const entities = {
             sprite: 'Sprites/rodent0_10.png',
             orderInLayer: 12
         },
-        MonsterAi: { },
+        MonsterAi: { 
+            debug: false
+        },
         Health: {
             life: 5
         },

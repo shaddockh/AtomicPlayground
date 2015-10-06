@@ -19,6 +19,11 @@ export default class PlayerInputHandler extends Atomic.JSComponent {
         debug: false
     };
 
+    /**
+     * Are we idle, waiting for an action?
+     */
+    idle = true;
+
     /* beautify preserve:start */
     keymap = {
         [PlayerActions.MOVE_LEFT]: [Atomic.KEY_LEFT, Atomic.KEY_H, Atomic.KEY_A],
@@ -53,10 +58,15 @@ export default class PlayerInputHandler extends Atomic.JSComponent {
         return PlayerActions.NO_ACTION;
     }
 
+    onActionComplete() {
+        this.idle = true;
+    }
+
     update( /*timeStep*/ ) {
-        if (!this.scene.Level.isGameOver && this.scene.Level.isWaitingForAction) {
+        if (!this.scene.Level.isGameOver && this.scene.Level.isWaitingForAction && this.idle) {
             let action = this.getCurrentAction();
             if (action !== PlayerActions.NO_ACTION) {
+                this.idle = false;
                 switch (action) {
                 case PlayerActions.MOVE_LEFT:
                     this.DEBUG('Processing Action: move left');
@@ -77,6 +87,9 @@ export default class PlayerInputHandler extends Atomic.JSComponent {
                 case PlayerActions.SKIP_TURN:
                     this.DEBUG('Processing Action: skip turn');
                     triggerEvent.trigger(this.node, "onSkipTurn");
+                    break;
+                default:
+                    this.idle = true;
                     break;
                 }
             }

@@ -108,28 +108,28 @@ export default class BaseLevelGenerator extends CustomJSComponent {
         for (let rIndex = 0; rIndex < rooms.length; rIndex++) {
             rooms[rIndex].getDoors((x, y) => {
                 let tile = this.mapData.getTile(x, y);
-                let doorbp = '';
+                let doorbp = null;
                 switch (tile.edge) {
                     case 1: 
                     case 2:
-                    case 12:
-                    case 13:
                         doorbp = 'door_ew';
                         break;
 
                     case 3:
                     case 4:
                     case 8:
+                    case 12:
                         doorbp = 'door_ns';
                         break;
 
                     default:
-                        doorbp = 'door_unkown';
                         console.log(`Unknown edge type for a door: ${tile.edge}`);
                 }
                 if (this.mapData.isEmpty(x,y)) {
-                    let entity = MapData.buildEntity(doorbp);
-                    this.mapData.addEntityAtPosition(x, y, entity); 
+                    if (doorbp) {
+                        let entity = MapData.buildEntity(doorbp);
+                        this.mapData.addEntityAtPosition(x, y, entity); 
+                    }
                 }
             });
         }

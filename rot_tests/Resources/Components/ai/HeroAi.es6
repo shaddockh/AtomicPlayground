@@ -22,31 +22,32 @@ export default class HeroAi extends CustomJSComponent {
         this.DEBUG('Pausing action.');
     }
 
-    onSkipTurn() {
-        this.scene.Level.incTurn();
-        triggerEvent.trigger(this.node, 'onLogAction', 'Waiting...');
-        this.scene.Level.pause(false);
-        this.DEBUG('Unpausing action.');
-    }
 
     onTurnTaken() {
         this.scene.Level.incTurn();
+        this.scene.Level.updateFov(this.getPosition());
         this.scene.Level.pause(false);
         this.DEBUG('Unpausing action.');
+        triggerEvent.trigger(this.node, 'onActionComplete', this, this.node);
     }
 
     getPosition() {
         return this.node.getJSComponent('Entity').getPosition();
     }
 
+    // Action Handlers
+
     onMoveComplete() {
-        this.scene.Level.incTurn();
-        this.scene.Level.updateFov(this.getPosition());
+        triggerEvent.trigger(this.node, 'onTurnTaken', this, this.node);
     }
 
     onActionComplete() {
-        this.scene.Level.incTurn();
-        this.scene.Level.updateFov(this.getPosition());
+        // noop
+    }
+
+    onSkipTurn() {
+        triggerEvent.trigger(this.node, 'onLogAction', 'Waiting...');
+        triggerEvent.trigger(this.node, 'onTurnTaken', this, this.node);
     }
 
     onDie(/*killerComponent, killerNode*/) {
@@ -65,6 +66,9 @@ export default class HeroAi extends CustomJSComponent {
         this.DEBUG(`Attacked ${targetNode.name}`);
         triggerEvent.trigger(this.node, 'onLogAction', `You attack ${entityComponent.screenName}`);
         triggerEvent.trigger(targetNode, 'onHit', this, this.node);
+        // move will handle the turn taken
+        // TODO: need to clean up the whole turn taking logic somehow, it could get really messy really quickly.
+        // triggerEvent.trigger(this.node, 'onTurnTaken', this, this.node);
     }
 
     onHandleBump(targetNode) {
@@ -73,6 +77,7 @@ export default class HeroAi extends CustomJSComponent {
             triggerEvent.trigger(this.node, 'onAttack', targetNode);
         } else if (entityComponent.bumpable) {
             triggerEvent.trigger(targetNode, 'onBump', this, this.node);
+            triggerEvent.trigger(this.node, 'onActionComplete', this, this.node);
         }
     }
 

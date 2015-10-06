@@ -3,25 +3,7 @@
 import CustomJSComponent from 'CustomJSComponent';
 import MapData from 'MapData';
 import * as triggerEvent from 'atomicTriggerEvent';
-import {
-    vec2
-}
-from 'gl-matrix';
-// added
-vec2.limit = function (out, v, high) {
-    let x = v[0],
-        y = v[1];
-
-    let len = x * x + y * y;
-
-    if (len > high * high && len > 0) {
-        out[0] = x;
-        out[1] = y;
-        vec2.normalize(out, out);
-        vec2.scale(out, out, high);
-    }
-    return out;
-};
+import { vec2 } from 'gl-matrix';
 
 export default class GridMover extends CustomJSComponent {
     inspectorFields = {
@@ -30,6 +12,20 @@ export default class GridMover extends CustomJSComponent {
         speed: 1,
         smoothMovement: true // jump from tile to tile or smoothly move between them
     };
+
+    postMoveActions = [];
+
+    queuePostMoveAction(action) {
+        this.postMoveActions.push(action);
+    }
+
+    executePostMoveActions() {
+        while (this.postMoveActions.length) {
+            // pull the actions off the queue and run it
+            let action = this.postMoveActions.shift();
+            action();
+        }
+    }
 
     getMapPosition() {
         return this.node.getJSComponent("Entity").getPosition();
@@ -46,56 +42,42 @@ export default class GridMover extends CustomJSComponent {
     }
 
     update(timeStep) {
-        if (this.moving) {
-            if (!this.smoothMovement) {
-                this.node.position2D = this.targetPos;
-                this.moving = false;
-                this.DEBUG('At position.  Stopping');
-                triggerEvent.trigger(this.node, 'onMoveComplete');
-            } else {
-                if (this.t < 1) {
-                    let newT = Math.min(this.t + timeStep / (this.speed * this.scene.LevelRenderer.cellUnitSize), 1); // Sweeps from 0 to 1 in time seconds
-                    let newPosition = vec2.lerp(vec2.create(), this.startPos, this.targetPos, newT);
-                    this.node.position2D = newPosition;
-                    this.t = newT;
-                } else {
-                    this.moving = false;
-                    this.node.position2D = this.targetPos;
-                    this.DEBUG('At position.  Stopping');
-                    triggerEvent.trigger(this.node, 'onMoveComplete');
-                    if (this.incrementTurn) {
-                        triggerEvent.trigger(this.node, 'onTurnTaken', this, this.node);
-                    }
-                }
-            }
 
-            if (!this.moving && this.queuedVector) {
-                this.onTryMove(this.queuedVector);
-            }
-        }
+        // Let's keep track of our delay
+        if (this.moving || this.bumping || this.blocked) {
 
-        if (this.bumping) {
+            // We don't want to do anything except update our position while we are still inside the delay
             if (this.t < 1) {
-                this.t = Math.min(this.t + timeStep / (this.speed * .1), 1); // Sweeps from 0 to 1 in time seconds
-            } else {
+                this.t = Math.min(this.t + timeStep / (this.speed * this.scene.LevelRenderer.cellUnitSize), 1); // Sweeps from 0 to 1 in time seconds
+                if (this.moving && this.smoothMovement) {
+                    this.node.position2D = vec2.lerp(vec2.create(), this.startPos, this.targetPos, this.t);
+                }
+                // Let's bail until the next cycle
+                return;
+            }
+
+            // We are now outside of our delay, let's finish up the action
+            if (this.t >= 1) {
+
+                if (this.moving) {
+                    this.node.position2D = this.targetPos;
+                }
+                this.executePostMoveActions();
+
+                // Reset everything
+                this.moving = false;
                 this.bumping = false;
-                this.DEBUG('done bumping');
-                triggerEvent.trigger(this.node, 'onTurnTaken', this, this.node);
+                this.blocked = false;
             }
         }
     }
 
     onTryMove(vector2D) {
-
-        // implement a way of queuing up actions
-        if (this.moving || this.bumping) {
-            if (this.scene.Level.turnBased) {
-                this.queuedVector = vector2D;
-            }
+        if (this.moving || this.bumping || this.blocked) {
             return;
         }
-        this.queuedVector = null;
 
+        this.DEBUG('Entering Move');
         let unitSize = this.scene.LevelRenderer.cellUnitSize;
         this.startPos = this.node.position2D;
         this.targetPos = vec2.add(vec2.create(), this.startPos, vec2.scale(vec2.create(), vector2D, unitSize));
@@ -107,38 +89,51 @@ export default class GridMover extends CustomJSComponent {
         this.DEBUG(`Current position: ${mapPos[0]},${mapPos[1]}`);
         this.DEBUG(`Moving to: ${newMapPos[0]},${newMapPos[1]}`);
 
+        this.moving = true;
         // check to see if we are blocked
-        let blocked = false;
-        this.incrementTurn = true;
+
+        // First see if we are blocked by terrain
         if (this.scene.Level.getTileAt(newMapPos).terrainType !== MapData.TILE_FLOOR) {
-            this.DEBUG('Blocked by terrain');
-            triggerEvent.trigger(this.node, 'onLogAction', 'Blocked.');
-            blocked = true;
-            this.incrementTurn = false;
+            // Queue up an action to notify the player that the move is blocked
+            this.queuePostMoveAction(() => {
+                this.DEBUG('Blocked by terrain');
+                triggerEvent.trigger(this.node, 'onLogAction', 'Blocked.');
+                triggerEvent.trigger(this.node, 'onMoveBlocked', mapPos, newMapPos);
+                triggerEvent.trigger(this.node, 'onMoveComplete');
+            });
+
+            this.blocked = true;
+            this.moving = false;
         } else {
             this.scene.Level.iterateEntitiesAt(newMapPos, (entity) => {
+                // We are going to bump the top level entity
                 if (entity.entityComponent) {
                     if (entity.entityComponent.blocksPath) {
-                        blocked = true;
+                        this.blocked = true;
+                        this.moving = false;
+                        this.queuePostMoveAction(() => {
+                            this.DEBUG('Blocked by Entity');
+                            triggerEvent.trigger(this.node, 'onMoveBlocked', mapPos, newMapPos);
+                            triggerEvent.trigger(this.node, 'onMoveComplete');
+                        });
                     }
                     triggerEvent.trigger(this.node, 'onHandleBump', entity.node);
+                    return false;
                 }
             });
         }
 
-        if (blocked) {
-            this.DEBUG('Blocked by entity');
-            triggerEvent.trigger(this.node, 'onMoveBlocked', mapPos, newMapPos);
-            this.bumping = true;
-        } else {
-            this.setMapPosition(newMapPos);
-
+        if (this.moving) {
             this.movementVector = vector2D;
             this.startPos = this.node.position2D;
             this.DEBUG(`Moving to ${this.targetPos} from ${this.startPos}, vector = ${vector2D}`);
 
-            this.moving = true;
             triggerEvent.trigger(this.node, 'onMoveStart', mapPos, newMapPos);
+            // Queue up an action to notify that we are done moving.
+            this.setMapPosition(newMapPos);
+            this.queuePostMoveAction(() => {
+                triggerEvent.trigger(this.node, 'onMoveComplete');
+            });
         }
     }
 }

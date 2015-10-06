@@ -1,3 +1,7 @@
+2015-10-04
+---
+* Cleaning up the code in order to wrap up this example
+
 2015-09-19
 ---
 * integrated the ROT visibility calcs
