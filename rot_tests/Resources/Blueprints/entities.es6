@@ -18,7 +18,6 @@ export const entities = {
 
     hero: {
         inherits: 'actor',
-        TriggerDebug:{},
         Entity: {
             screenName: 'Hero'
         },
@@ -85,6 +84,7 @@ export const entities = {
 
     fred: {
         inherits: 'actor',
+        TriggerDebug:{},
         Entity: {
             screenName: 'a rat'
         },
@@ -96,7 +96,7 @@ export const entities = {
             orderInLayer: 12
         },
         MonsterAi: { 
-            debug: false
+            debug: true
         },
         Health: {
             life: 5

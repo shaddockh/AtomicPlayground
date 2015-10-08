@@ -20,6 +20,7 @@ export default class MonsterAi extends CustomJSComponent {
 
     start() {
         if (this.scene.Level) {
+            this.DEBUG('Registering self with scheduler');
             this.scene.Level.registerActor(this);
         }
     }
@@ -57,7 +58,11 @@ export default class MonsterAi extends CustomJSComponent {
         }
     }
 
+    /** Pointer to be called when the action is complete.  The complete promise will overwrite this */
+    onActionComplete = null;
+
     act() {
+        this.DEBUG('contemplating action.');
         if (!this.chaseEnemy) {
             return;
         }
@@ -85,17 +90,34 @@ export default class MonsterAi extends CustomJSComponent {
         // get a direction vector
         if (!this.isHunting && path.length < this.sightRadius && path.length > 0) {
             this.isHunting = true;
-            this.DEBUG('Ai - Act -- sees enemy');
+            this.DEBUG('enemy seen.  switching to hunting.');
         }
 
         if (this.isHunting && path.length < this.trackingRadius && path.length > 0) {
-            this.DEBUG('Ai - Act -- hunting enemy');
-            this.DEBUG(`Path to target has ${path.length} steps.`);
+            this.DEBUG(`hunting enemy located ${path.length} steps away.`);
             let target = path.shift();
             let dir = vec2.sub(vec2.create(), target, pos);
             vec2.normalize(dir, dir);
 
             triggerEvent.trigger(this.node, "onTryMove", dir);
+
+            // we are returning a 'thenable' which tells the scheduler to not move on to the next actor
+            // until this actor has completed.  This is overriding the onTurnTaken event on this class with
+            // the callback passed to the then method, which means that when this class gets an onTurnTaken
+            // event, it will resolve the then.
+            // See: http://ondras.github.io/rot.js/manual/#timing/engine for some more information.
+            return {
+                then: (cb) => {
+                    this.DEBUG('starting action');
+                    this.onActionComplete = (() => {
+                        this.DEBUG('action complete.');
+                        // Unhook the onActionComplete event
+                        this.onActionComplete = null;
+                        // Call the callback, notifying the scheduler that we are done
+                        cb();
+                    });
+                }
+            };
         }
     }
 
@@ -116,7 +138,8 @@ export default class MonsterAi extends CustomJSComponent {
     onAttack(targetNode) {
         this.DEBUG(`Attacked ${targetNode.name}`);
         triggerEvent.trigger(targetNode, 'onHit', this, this.node);
-        triggerEvent.trigger(this.node, 'onActionComplete', this, this.node);
+        // handled in onMoveComplete -- note that this won't work for actors that attack without moving.
+        //triggerEvent.trigger(this.node, 'onActionComplete', this, this.node);
     }
 
     onHandleBump(targetNode) {
@@ -126,4 +149,9 @@ export default class MonsterAi extends CustomJSComponent {
             triggerEvent.trigger(this.node, 'onAttack', targetNode);
         }
     }
+
+    onMoveComplete() {
+        triggerEvent.trigger(this.node, 'onActionComplete', this, this.node);
+    }
+
 }

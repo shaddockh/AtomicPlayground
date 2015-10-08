@@ -14,20 +14,39 @@ export default class HeroAi extends CustomJSComponent {
         if (this.scene.Level) {
             this.scene.Level.registerActor(this);
             this.scene.Level.updateFov(this.getPosition(), this.sightRadius);
+            this.scene.Level.pause(false);
         }
     }
 
-    act() {
-        this.scene.Level.pause(true);
-        this.DEBUG('Pausing action.');
-    }
+    /** Pointer to be called when the action is complete.  The complete promise will overwrite this */
+    onActionComplete = null;
 
+    act() {
+        // we are returning a 'thenable' which tells the scheduler to not move on to the next actor
+        // until this actor has completed.  This is overriding the onTurnTaken event on this class with
+        // the callback passed to the then method, which means that when this class gets an onTurnTaken
+        // event, it will resolve the then.
+        // See: http://ondras.github.io/rot.js/manual/#timing/engine for some more information.
+        let self = this;
+        return {
+            then: (resolve) => {
+                this.DEBUG('starting action.');
+                this.onActionComplete = (() => {
+                    this.DEBUG('action complete.');
+                    // unhook the onActionComplete event
+                    this.onActionComplete = null;
+                    // call the callback, notifying the scheduler that we are done
+                    resolve();
+                });
+            }
+        };
+    }
 
     onTurnTaken() {
         this.scene.Level.incTurn();
         this.scene.Level.updateFov(this.getPosition());
-        this.scene.Level.pause(false);
-        this.DEBUG('Unpausing action.');
+        //this.scene.Level.pause(false);
+        //this.DEBUG('Unpausing action.');
         triggerEvent.trigger(this.node, 'onActionComplete', this, this.node);
     }
 
@@ -41,16 +60,12 @@ export default class HeroAi extends CustomJSComponent {
         triggerEvent.trigger(this.node, 'onTurnTaken', this, this.node);
     }
 
-    onActionComplete() {
-        // noop
-    }
-
     onSkipTurn() {
         triggerEvent.trigger(this.node, 'onLogAction', 'Waiting...');
         triggerEvent.trigger(this.node, 'onTurnTaken', this, this.node);
     }
 
-    onDie(/*killerComponent, killerNode*/) {
+    onDie( /*killerComponent, killerNode*/ ) {
         this.DEBUG('Killed!');
         this.scene.Level.deregisterActor(this);
         this.scene.Level.gameOver();
