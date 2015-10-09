@@ -22,7 +22,7 @@ export default class PlayerInputHandler extends Atomic.JSComponent {
     /**
      * Are we idle, waiting for an action?
      */
-    idle = true;
+    idle = false;
 
     /* beautify preserve:start */
     keymap = {
@@ -58,12 +58,15 @@ export default class PlayerInputHandler extends Atomic.JSComponent {
         return PlayerActions.NO_ACTION;
     }
 
-    onActionComplete() {
+    /**
+     * On the start of our turn, we want to start listening for player commands
+     */
+    onActionBegin() {
         this.idle = true;
     }
 
     update( /*timeStep*/ ) {
-        if (!this.scene.Level.isGameOver && this.scene.Level.isWaitingForAction && this.idle) {
+        if (!this.scene.Level.isGameOver && this.idle) {
             let action = this.getCurrentAction();
             if (action !== PlayerActions.NO_ACTION) {
                 this.idle = false;

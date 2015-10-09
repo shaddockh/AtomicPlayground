@@ -12,9 +12,12 @@ export default class HeroAi extends CustomJSComponent {
 
     start() {
         if (this.scene.Level) {
+            this.DEBUG('Registering self with scheduler');
             this.scene.Level.registerActor(this);
+
+            // TODO: we need to unlock the engine here for some reason.  It would be better if there were a less invasive way
+            this.scene.Level.engine.unlock();
             this.scene.Level.updateFov(this.getPosition(), this.sightRadius);
-            this.scene.Level.pause(false);
         }
     }
 
@@ -22,12 +25,14 @@ export default class HeroAi extends CustomJSComponent {
     onActionComplete = null;
 
     act() {
+        this.DEBUG('contemplating action.');
+        triggerEvent.trigger(this.node, 'onActionBegin', this, this.node);
+
         // we are returning a 'thenable' which tells the scheduler to not move on to the next actor
         // until this actor has completed.  This is overriding the onTurnTaken event on this class with
         // the callback passed to the then method, which means that when this class gets an onTurnTaken
         // event, it will resolve the then.
         // See: http://ondras.github.io/rot.js/manual/#timing/engine for some more information.
-        let self = this;
         return {
             then: (resolve) => {
                 this.DEBUG('starting action.');

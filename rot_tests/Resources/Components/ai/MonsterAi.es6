@@ -49,15 +49,6 @@ export default class MonsterAi extends CustomJSComponent {
         return canWalk;
     }
 
-    dumpNode(node) {
-        console.log('NODE JS COMPONENTS:');
-        let components = node.getComponents('JSComponent');
-        for (let x = 0; x < components.length; x++) {
-            let component = components[x];
-            console.log('Component: ' + component.componentName);
-        }
-    }
-
     /** Pointer to be called when the action is complete.  The complete promise will overwrite this */
     onActionComplete = null;
 

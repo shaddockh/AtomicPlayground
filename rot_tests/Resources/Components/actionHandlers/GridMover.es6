@@ -27,12 +27,8 @@ export default class GridMover extends CustomJSComponent {
         }
     }
 
-    getMapPosition() {
-        return this.node.getJSComponent("Entity").getPosition();
-    }
-
-    setMapPosition(pos) {
-        this.node.getJSComponent("Entity").setPosition(pos);
+    get entity() {
+        return this.node.getJSComponent('Entity');
     }
 
     start() {
@@ -84,7 +80,7 @@ export default class GridMover extends CustomJSComponent {
         this.t = 0;
 
         // see if we can move into the next space
-        let mapPos = this.getMapPosition();
+        let mapPos = this.entity.getPosition();
         let newMapPos = vec2.add(vec2.create(), mapPos, vector2D);
         this.DEBUG(`Current position: ${mapPos[0]},${mapPos[1]}`);
         this.DEBUG(`Moving to: ${newMapPos[0]},${newMapPos[1]}`);
@@ -130,8 +126,8 @@ export default class GridMover extends CustomJSComponent {
 
             triggerEvent.trigger(this.node, 'onMoveStart', mapPos, newMapPos);
             // Queue up an action to notify that we are done moving.
-            this.setMapPosition(newMapPos);
             this.queuePostMoveAction(() => {
+                this.entity.setPosition(newMapPos);
                 triggerEvent.trigger(this.node, 'onMoveComplete');
             });
         }

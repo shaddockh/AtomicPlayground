@@ -53,20 +53,47 @@ export default class LevelRunner extends CustomJSComponent {
     /** Indicates whether the game is over or not */
     isGameOver = false;
 
-    /** Indicates whether it's the player's turn or not */
-    isWaitingForAction = false;
+    /** queued actions .. happen on the next update cycle */
+    queuedActions = [];
 
-    start() {
-        this.scene.Level = this;
+    constructor() {
+        super();
+        console.log('YYYYYYYYY');
         this.scheduler = new ROT.Scheduler.Simple();
         this.engine = new ROT.Engine(this.scheduler);
+    }
 
-        this.engine.start();
+    start() {
 
+        console.log('WWWWWWWWWW');
+        this.scene.Level = this;
         uiChannel.sendMessage('show:hud');
         uiChannel.sendMessage('log:addmessage', 'Welcome to the dungeon.');
+        this.createHero(this.mapData.getRandomEmptyPosition());
+
+        triggerEvent.trigger(this.node, 'onRender', this.mapData);
+
+        this.enemiesRemaining = 0;
+        this.mapData.iterateEntities((entity) => {
+            // TODO this is a naive way of determining monsters, but is good enough for this example
+            if (entity.node.getJSComponent('MonsterAi') !== null) {
+                this.enemiesRemaining++;
+            }
+        });
         this.updateUi();
-        this.isWaitingForAction = true;
+
+        this.queuedActions.push(() => {
+            console.log('starting engine');
+            this.engine.start();
+            this.engine.unlock();
+        });
+    }
+
+    update( /* timestep */ ) {
+        while (this.queuedActions.length) {
+            let action = this.queuedActions.shift();
+            action();
+        }
     }
 
     getTileAt(pos) {
@@ -93,18 +120,6 @@ export default class LevelRunner extends CustomJSComponent {
         this.DEBUG(`LevelRunner: onSetMapData called Dimensions - ${mapData.width} x ${mapData.height}`);
         this.mapData = mapData;
 
-        this.createHero(mapData.getRandomEmptyPosition());
-
-        triggerEvent.trigger(this.node, 'onRender', mapData);
-
-        this.enemiesRemaining = 0;
-        this.mapData.iterateEntities((entity) => {
-            // TODO this is a naive way of determining monsters, but is good enough for this example
-            if (entity.node.getJSComponent('MonsterAi') !== null) {
-                this.enemiesRemaining++;
-            }
-        });
-        this.updateUi();
     }
 
     createHero(pos) {
@@ -122,25 +137,6 @@ export default class LevelRunner extends CustomJSComponent {
     deregisterActor(ai) {
         this.scheduler.remove(ai);
     }
-
-    pause(val) {
-        if (typeof (val) === 'undefined' || val) {
-            this.engine.lock();
-            this.isWaitingForAction = false;
-        } else {
-            this.engine.unlock();
-            this.isWaitingForAction = true;
-        }
-    }
-
-    /*
-     *update( [> timestep <] ) {
-     *    // ROT will handle scheduling movements
-     *    //this.actors.forEach((actor) => {
-     *    //actor.act();
-     *    //});
-     *}
-     */
 
     updateFov(position) {
         if (this.useFov) {
@@ -172,7 +168,6 @@ export default class LevelRunner extends CustomJSComponent {
     gameWon() {
         this.isGameOver = true;
         this.engine.lock();
-        this.isWaitingForAction = false;
         uiChannel.sendMessage('show:endgame', {
             endGameReason: 'You killed all the enemies!'
         });
@@ -181,7 +176,6 @@ export default class LevelRunner extends CustomJSComponent {
     gameOver() {
         this.isGameOver = true;
         this.engine.lock();
-        this.isWaitingForAction = false;
         uiChannel.sendMessage('show:endgame', {
             endGameReason: 'You died.'
         });
