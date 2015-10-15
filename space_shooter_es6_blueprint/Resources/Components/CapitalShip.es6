@@ -1,55 +1,44 @@
 'use strict';
+"atomic component";
+
 import * as blueprintLib from 'blueprintLib';
 
-var game = Atomic.game;
-var node = self.node;
-var scene = game.scene;
+const SpaceGame = Globals.SpaceGame;
+export default class CapitalShip extends Atomic.JSComponent {
 
-var SpaceGame = Globals.SpaceGame;
-
-var defaultBlueprint = { };
-
-// Initialize the blueprint here for elements that need to happen prior to start
-var blueprint = node.getComponentBlueprint(self, defaultBlueprint);
-/**
- * Perform any setup required before the first start iteration
- */
-(function() {
-}());
-
-// using start to initialize the script component
-function start() {
-    node.roll(180);
-}
-
-function die() {
-    SpaceGame.capitalShipDestroyed();
-
-    for (var i = 0; i < 16; i++) {
-        var pos = node.position2D;
-        pos[0] += SpaceGame.random(-2, 2);
-        pos[1] += SpaceGame.random(-2, 2);
-
-        var explosion = blueprintLib.createChildAtPosition(game.scene, 'explosion', pos);
-
-        var randomSize = SpaceGame.random(4, 8);
-        explosion.scale2D = [randomSize, randomSize];
+    // using start to initialize the script component
+    start() {
+        this.node.roll(180);
     }
-    SpaceGame.win();
-}
 
-self.onDie = function() {
-    die();
-};
+    die() {
+        SpaceGame.capitalShipDestroyed();
 
-self.onHit = function (pos) {
-    blueprintLib.createChildAtPosition(game.scene, 'explosion', pos);
-    var explosion = blueprintLib.createChildAtPosition(game.scene, 'explosion', pos);
-    explosion.scale2D = [2.0, 2.0];
-};
+        for (var i = 0; i < 16; i++) {
+            var pos = this.node.position2D;
+            pos[0] += SpaceGame.random(-2, 2);
+            pos[1] += SpaceGame.random(-2, 2);
 
+            var explosion = blueprintLib.createChildAtPosition(this.node.scene, 'explosion', pos);
 
-// update function called per frame with delta time
-function update(timeStep) {
+            var randomSize = SpaceGame.random(4, 8);
+            explosion.scale2D = [randomSize, randomSize];
+        }
+        SpaceGame.win();
+    }
 
+    onDie() {
+        this.die();
+    }
+
+    onHit(pos) {
+        blueprintLib.createChildAtPosition(this.node.scene, 'explosion', pos);
+        var explosion = blueprintLib.createChildAtPosition(this.node.scene, 'explosion', pos);
+        explosion.scale2D = [2.0, 2.0];
+    }
+
+    // update function called per frame with delta time
+    update(timeStep) {
+
+    }
 }

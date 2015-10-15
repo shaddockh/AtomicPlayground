@@ -1,37 +1,24 @@
 // Health component
 'use strict';
+'atomic component';
 
-var game = Atomic.game;
-var node = self.node;
+import * as triggerEvent from 'atomicTriggerEvent';
 
-var SpaceGame = Globals.SpaceGame;
+const SpaceGame = Globals.SpaceGame;
+export default class Health extends Atomic.JSComponent {
 
-var defaultBlueprint = {
-    health: 1,
-};
+    inspectorFields = {
+        health: 1,
+    };
 
-// Initialize the blueprint here for elements that need to happen prior to start
-var blueprint = node.getComponentBlueprint(self, defaultBlueprint);
-/**
- * Perform any setup required before the first start iteration
- */
-(function() {
-    self.health = blueprint.health;
-}());
+    // using start to initialize the script component
+    //start() {}
 
-// using start to initialize the script component
-function start() {
-}
-
-self.onHit = function () {
-    self.health--;
-
-    //var explosion = EntityBuilder.buildChildEntity(game.scene, 'explosion');
-    //explosion.Position.setPosition(node.worldPosition2D);
-
-    if (self.health <= 0) {
-    //SpaceGame.removeEnemy(self);
-      self.node.trigger('onDie');
+    onHit() {
+        this.health--;
+        if (this.health <= 0) {
+            triggerEvent.trigger(this.node, 'onDie');
+        }
+        return true;
     }
-    return true;
-};
+}

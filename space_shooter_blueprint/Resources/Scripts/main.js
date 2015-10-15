@@ -1,24 +1,29 @@
-
 // Set up a globals ojbect that we can reference since
 // I'm not entirely sure how the module system works
 Globals = {};
 // This script is the main entry point of the game
 var blueprintLib = require('blueprintLib');
-require("AtomicGame");
 
-Atomic.game.init(start, update);
+// create a 2D scene
+var scene = new Atomic.Scene();
+scene.createComponent("Octree");
 
-// called at the start of play
-function start() {
+var cameraNode = scene.createChild("Camera");
+cameraNode.position = [0.0, 0.0, -10.0];
 
-    var game = Atomic.game;
+var camera = cameraNode.createComponent("Camera");
+camera.orthographic = true;
+camera.orthoSize = Atomic.graphics.height * Atomic.PIXEL_SIZE;
 
-    // create a 2D scene
-    game.createScene2D();
+var viewport = null;
 
-    // create the game component
-    var comp = blueprintLib.createChild(game.scene, 'spaceGame');
-}
+viewport = new Atomic.Viewport(scene, camera);
+Atomic.renderer.setViewport(0, viewport);
+
+Atomic.renderer.textureFilterMode = Atomic.FILTER_NEAREST;
+
+// create the game component
+var comp = blueprintLib.createChild(scene, 'spaceGame');
 
 // called per frame
-function update(timeStep) {}
+exports.update = function update(timeStep) {};

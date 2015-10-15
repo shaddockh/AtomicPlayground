@@ -1,8 +1,72 @@
-'use strict';
-
 // This script is the main entry point of the game
-// Oddly, we have to make sure we bring in the vendor script before we start building up the game.  
-// Babel js will always move imports above user code, so it was trying to import ROT before it had been loaded by Atomic.script
-import 'AtomicGame';
-Atomic.script('vendor');
-Atomic.script('startup');
+import 'vendor';
+import 'Blueprints/blueprints'; // Load all the blueprints into the catalog
+import 'Ui/ui'; // Let the ui system register itself
+import channel from 'channels';
+
+import {
+    nodeBuilder
+}
+from 'atomic-blueprintLib';
+
+nodeBuilder.setDebug(false);
+// Add the vendor scripts to the global namespace
+
+// create a 2D scene
+let scene = new Atomic.Scene();
+scene.createComponent("Octree");
+
+let cameraNode = scene.createChild("Camera");
+cameraNode.position = [0.0, 0.0, -10.0];
+
+let camera = cameraNode.createComponent("Camera");
+camera.orthographic = true;
+camera.orthoSize = Atomic.graphics.height * Atomic.PIXEL_SIZE;
+
+let viewport = null;
+
+viewport = new Atomic.Viewport(scene, camera);
+Atomic.renderer.setViewport(0, viewport);
+
+Atomic.renderer.textureFilterMode = Atomic.FILTER_NEAREST;
+Atomic.totalTime = 0;
+
+// set up lighting zone
+let zone = scene.createComponent("Zone");
+zone.ambientColor = [.1, .1, .1, 0];
+
+// Put some limits on the renderer
+Atomic.engine.setMaxFps(30);
+Atomic.engine.vSync = true;
+
+// set up physics
+scene.createComponent("DebugRenderer");
+//scene.createComponent("Renderer2D");
+let physicsWorld = scene.createComponent("PhysicsWorld2D");
+physicsWorld.drawShape = true;
+physicsWorld.allowSleeping = true;
+physicsWorld.warmStarting = true;
+physicsWorld.autoClearForces = true;
+physicsWorld.gravity = [0, 0];
+
+let currentLevelGen = null;
+channel('game').subscribe((topic) => {
+    switch (topic) {
+    case 'shutdown:game':
+        Atomic.engine.exit();
+        break;
+    case 'launch:levelgen':
+        if (!currentLevelGen) {
+            currentLevelGen = nodeBuilder.createChild(scene, 'uiLevelGenerationChooser');
+        }
+        break;
+    }
+});
+
+channel('game').sendMessage('launch:levelgen');
+
+// called per frame
+export function update(timeStep) {
+    Atomic.totalTime += timeStep;
+    //physicsWorld.drawDebugGeometry();
+}

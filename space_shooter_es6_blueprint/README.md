@@ -1,16 +1,15 @@
 # Space Shooter example with blueprints
 
-This is a deep modification of the space shooter example locatated at: https://github.com/AtomicGameEngine/AtomicExamples/tree/master/SpaceGame
+This is a deep modification of the space shooter example located at: https://github.com/AtomicGameEngine/AtomicExamples/tree/master/SpaceGame
 
 The main goal for this is to test out whether the blueprint system would work for a more real-world example.  Not everything is optimized, but the concept looks like it's viable.
 
 To Build:
 * cd to the space_shooter_es6_blueprint root directory
-* npm install
-* npm install -g gulp   (if you don't have gulp installed)
-* gulp
+* ```npm install -g babel```
+* ```babel -d . **/*.es6```
+*  if you wish to have babel compile your .es6 files while you edit them, use: ```babel -d . **/*.es6 -w```
 
-Your project should be built in the /build subdirectory.  This is the directory you would need to load into the Atomic Editor to run.
 
 The major changes include:
 * converting it all to es6 and transpiling it with BabelJs
@@ -19,13 +18,44 @@ The major changes include:
 # Notes
 * Converting to es6 made the code seem a little cleaner looking.  I'm still new to es6, but figured that since it's now an approved standard, it would be time to start using it.  It all transpiles to pure js, so if you are more comfortable looking at that, just build the project and browse the build folder.
 * I needed to create a couple new components to make the blueprints more generic.  **Health** for example is now part of a component and when it reaches zero, will trigger an onDie event on the node it's attached to
-* The blueprint system now handles auto-event wiring.  What this means is that when a node is created by the blueprint system, it is given a **trigger** method that can be called.
+* I needed to implement my own form of event system as the built in atomic system wasn't working quite right.  In order to handle this, I added a new trigger method that basically walks the components on the passed 
+in node and will auto-call any function that matches the name of the event being called.
 ```
-node.trigger('onDie', params);
+import * as triggerSys from 'atomicTriggerEvent';
+...
+triggerSys.trigger(node, 'onDie', params...);
 ```
 trigger will then look at all components attached to the node and if any have an 'onDie' method on them, it will call it.  This helps when a component just needs to send a message to a node and doesn't know or care how it is handled.
-There is an event system built into the Atomic Engine, but from what I can tell it doesn't support user events, just engine events.
 * all of the blueprints are located under Modules/blueprints.es6
 * made the scarab spaceships have 2 health and louse spaceships have 1 health.  All components are the same between the two, it's just a matter of different settings in the blueprints.
 * made the spaceships reference the name of a blueprint for the bullet, allowing for more customizations of enemies by giving them different kinds of bullets with different effects if so desired.  
-* There is still a little too much boilerplate involved in creating blueprint based components.  I'm currently looking into es7 decorators to help solve that problem which would make the code cleaner and more consistent if it works..not sure yet.
+
+* take a look at ```.babelrc``` for the options that are in effect.  es7 Class Properties are enabled to make the ```inspectorFields``` nicer to look at and to align the code more to how it looks in TypeScript so that it's easier to port between the two languages.  Ideally, any es6 code should be able to be used in Typescript without much, if any, modification.
+
+How to use inspector fields in ES6 code without resorting to Class Properties:
+```
+export default class MyClass {
+  constructor() {
+     this.inspectorFields = {
+          myCustomValue: 42
+    };
+  }
+  myFunction() {
+     console.log(this.myCustomValue);
+  }
+
+}
+```
+
+Using them with Class Properties:
+```
+export default class MyClass {
+  inspectorFields = {
+     myCustomValue: 42
+  };
+  
+  myFunction() {
+     console.log(this.myCustomValue);
+  }
+}
+```

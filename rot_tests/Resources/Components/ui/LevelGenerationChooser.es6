@@ -1,108 +1,79 @@
-var game = Atomic.game;
-var ui = game.ui;
-var root = ui.getRoot();
+'atomic component';
+import {
+    nodeBuilder, blueprintCatalog
+}
+from 'atomic-blueprintLib';
+import * as triggerEvent from 'atomicTriggerEvent';
+import channel from 'channels';
 
-import {nodeBuilder, blueprintCatalog} from 'atomic-blueprintLib';
+const uiChannel = channel('ui');
+const levelChannel = channel('level');
 
-var dialog;
-var generatorNode;
-var buttonDef;
+export default class LevelGenerationChooser extends Atomic.JSComponent {
 
-function loadScene(element, buttonDef) {
-    if (generatorNode) {
-        generatorNode.trigger('onClear');
-
-        Atomic.destroy(generatorNode);
-        generatorNode = null;
+    constructor() {
+        super();
+        this.generatorNode = null;
+        this.runNode = null;
+        this.runButton = null;
     }
-    generatorNode = nodeBuilder.createChild(game.scene, buttonDef.builderBlueprint);
-}
 
-self.onMouseClick = function (element) {
-    var handler = buttonDef[element.name];
-    if (handler.builderBlueprint) {
-        loadScene(element, handler);
+    start() {
+        this.channelId = levelChannel.subscribe((topic, ...messages) => {
+            switch (topic) {
+                case 'preview:level':
+                    this.previewLevel.apply(this, messages);
+                    break;
+                case 'run:level':
+                    this.runLevel.apply(this, messages);
+                    break;
+                case 'show:levelgen':
+                    this.showLevelGen.apply(this, messages);
+                    break;
+            }
+        });
+
+        this.showLevelGen();
     }
-};
 
-function start() {
-    build();
-    self.listenToEvent(null, "UIMouseClick", self.onMouseClick);
-}
+    showLevelGen() {
+        let blueprints = [];
+        blueprintCatalog.find(blueprint => {
+            if (blueprint.inherits === 'baseLevelGenerator') {
+                blueprints.push(blueprint);
+            }
+        });
+        uiChannel.sendMessage('show:levelgen', blueprints);
+    }
 
-/**
- * Create a button with the provided text and id
- */
-function createButton(text, id) {
-    print(`Creating button ${id}`);
-    var button = new Atomic.Button();
-    button.setName(id);
-    button.setMinHeight(38);
+    previewLevel(builderName) {
+        this.clearGeneratedContent();
+        this.generatorNode = nodeBuilder.createChild(this.node.scene, builderName);
+    }
 
-    var buttonText = new Atomic.Text();
+    runLevel() {
+        let mapData = triggerEvent.trigger(this.generatorNode, 'onGetMapData');
+        // we are getting an array back, so grab the first element
+        mapData = mapData[0];
+        this.clearGeneratedContent();
+        this.runNode = nodeBuilder.createChild(this.node.scene, 'customLevelRunner');
+        triggerEvent.trigger(this.runNode, 'onSetMapData', mapData);
+    }
 
-    buttonText.text = text;
-    var font = game.cache.getResource("Font", "Fonts/Anonymous Pro.ttf");
-
-    buttonText.setFont(font, 10);
-    buttonText.color = [1, 1, 0, 1];
-
-    buttonText.horizontalAlignment = Atomic.HA_CENTER;
-    buttonText.verticalAlignment = Atomic.VA_CENTER;
-    button.addChild(buttonText);
-
-    button.setStyleAuto();
-    return button;
-}
-
-function build() {
-
-    let btnId = 0;
-    buttonDef = {};
-    blueprintCatalog.find(blueprint => {
-        if (blueprint.inherits === 'baseLevelGenerator') {
-            buttonDef['btn' + blueprint.name] = {
-                text: blueprint.LevelGenerator.strategy,
-                builderBlueprint: blueprint.name
-            };
-            return true;
+    clearGeneratedContent() {
+        if (this.generatorNode) {
+            // Tell the generator node to remove all it's children
+            // TODO: think of a better way
+            triggerEvent.trigger(this.generatorNode, 'onClear');
+            Atomic.destroy(this.generatorNode);
+            this.generatorNode = null;
         }
-    });
-
-    var uiStyle = game.cache.getResource("XMLFile", "UI/DefaultStyle.xml");
-    root.defaultStyle = uiStyle;
-
-    dialog = new Atomic.Window();
-    root.addChild(dialog);
-
-    dialog.setMinSize(250, 192);
-
-    dialog.setAlignment(Atomic.HA_LEFT, Atomic.VA_TOP);
-
-    dialog.setLayout(Atomic.LM_VERTICAL, 6, [6, 6, 6, 6]);
-    dialog.setName("Window");
-
-    var titleBar = new Atomic.UIElement();
-    titleBar.setMinSize(0, 24);
-    titleBar.setVerticalAlignment(Atomic.VA_TOP);
-    titleBar.setLayoutMode(Atomic.LM_HORIZONTAL);
-
-    // Create the Window title Text
-    var windowTitle = new Atomic.Text();
-    windowTitle.setName("WindowTitle");
-    windowTitle.setText("Generate Level Using:");
-    titleBar.addChild(windowTitle);
-
-    dialog.addChild(titleBar);
-
-    dialog.movable = true;
-    dialog.resizeable = true;
-
-    dialog.setStyleAuto();
-    titleBar.setStyleAuto();
-    windowTitle.setStyleAuto();
-
-    for (let btnId in buttonDef) {
-        dialog.addChild(createButton(buttonDef[btnId].text, btnId));
+        if (this.runNode) {
+            // Tell the generator node to remove all it's children
+            // TODO: think of a better way
+            triggerEvent.trigger(this.runNode, 'onClear');
+            Atomic.destroy(this.runNode);
+            this.runNode = null;
+        }
     }
 }

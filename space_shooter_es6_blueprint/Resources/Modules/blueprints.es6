@@ -1,12 +1,10 @@
-export const blueprints = {
+export default {
     actor_base: {
-        Position: {},
         Health: {
             health: 1
         },
-        Aspect: {
-            spriteName: '',
-            spriteSheet: 'Sprites/spacegame_sheet.xml',
+        SpriteSheet: {
+            spriteSheet: 'Sprites/spacegame_sheet.xml'
         }
     },
 
@@ -15,7 +13,7 @@ export const blueprints = {
         Health: {
             health: 10
         },
-        Aspect: {
+        SpriteSheet: {
             spriteName: 'spaceship_mantis'
         },
         Player: {
@@ -31,7 +29,7 @@ export const blueprints = {
         Health: {
             health: 40
         },
-        Aspect: {
+        SpriteSheet: {
             spriteName: 'spaceship_locust'
         },
         AI: {
@@ -44,7 +42,7 @@ export const blueprints = {
     enemy_base: {
         inherits: 'actor_base',
         Enemy: {},
-        Aspect: {
+        SpriteSheet: {
             spriteName: 'spaceship_scarab',
         },
         AI: {
@@ -59,7 +57,7 @@ export const blueprints = {
         Health: {
             health: 2
         },
-        Aspect: {
+        SpriteSheet: {
             spriteName: 'spaceship_scarab'
         }
     },
@@ -69,24 +67,24 @@ export const blueprints = {
         Health: {
             health: 1
         },
-        Aspect: {
+        SpriteSheet: {
             spriteName: 'spaceship_louse',
         }
     },
 
     explosion: {
-        Position: {},
-        Aspect: {
-            spriteSheet: 'Sprites/explosions_sheet.xml',
+        scale2D: [1.5,1.5],
+        StaticSprite2D: {
             orderInLayer: 200
         },
-        Explosion: {}
+        Explosion: {
+            spriteSheet: 'Sprites/explosions_sheet.xml'
+        }
     },
 
     playerBullet: {
-        Position: {},
-        Aspect: {
-            spriteTexture: 'Sprites/blue_beam.png'
+        StaticSprite2D: {
+            sprite: 'Sprites/blue_beam.png'
         },
         Bullet: {
             isPlayer: true,
@@ -96,9 +94,8 @@ export const blueprints = {
     },
 
     enemyBullet: {
-        Position: {},
-        Aspect: {
-            spriteTexture: 'Sprites/green_beam.png'
+        StaticSprite2D: {
+            sprite: 'Sprites/green_beam.png'
         },
         Bullet: {
             isPlayer: false,
@@ -108,13 +105,11 @@ export const blueprints = {
     },
 
     background: {
-        Position: {
-            spawnPosition: [0, 12]
-        },
-        Aspect: {
-            spriteTexture: 'Sprites/space_background.png',
-            orderInLayer: -200,
-            scale: [1.5, 1.5]
+        position2D: [0,12],
+        scale2D: [1.5, 1.5],
+        StaticSprite2D: {
+            sprite: 'Sprites/space_background.png',
+            orderInLayer: -200
         },
         Space: {
             speed: 0.75

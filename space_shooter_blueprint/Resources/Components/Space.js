@@ -1,26 +1,17 @@
 'use strict';
 
-var game = Atomic.game;
-var node = self.node;
+module.exports.component = function (self) {
+    var node = self.node;
 
+    var inspectorFields = {
+        speed: 0.75
+    };
 
-var defaultBlueprint = {
-    speed: 0.75
+    self.start = function start() {
+
+    };
+
+    self.update = function update(timeStep) {
+        node.translate([0, -timeStep * self.speed, 0]);
+    };
 };
-
-// Initialize the blueprint here for elements that need to happen prior to start
-var blueprint = node.getComponentBlueprint(self, defaultBlueprint);
-/**
- * Perform any setup required before the first start iteration
- */
-(function () {
-    self.speed = blueprint.speed;
-}());
-
-function start() {
-
-}
-
-function update(timeStep) {
-    node.translate([0, -timeStep * self.speed, 0]);
-}
