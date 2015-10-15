@@ -50,9 +50,12 @@ export default class MapData {
         }
     }
 
+    /**
+     * Iterates over a list of entities from the top down
+     */
     iterateEntitiesAt(x, y, callback) {
         let entities = this.getEntitiesAt(x, y);
-        for (let i = 0, iEnd = entities.length; i < iEnd; i++) {
+        for (let i = entities.length - 1, iEnd = 0; i >= iEnd; i--) {
             let cont = callback(entities[i]);
             if (typeof(cont) !== 'undefined' && !cont) {
                 return;

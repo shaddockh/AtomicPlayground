@@ -23,6 +23,7 @@ export default class Hud extends CustomUIWindow {
         this.turnCount = wnd.getWidget('txtTurnCount');
 
         channel('ui').sendMessage('show:log');
+        channel('ui').sendMessage('show:instructions');
 
     }
 

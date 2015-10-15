@@ -1,6 +1,7 @@
 'use strict';
 'atomic component';
 import * as triggerEvent from 'atomicTriggerEvent';
+import * as metrics from 'metricsGatherer';
 //import { nodeBuilder } from 'atomic-blueprintLib';
 //import MapData from 'MapData';
 
@@ -11,6 +12,7 @@ class PlayerActions {
     static MOVE_UP = 3;
     static MOVE_DOWN = 4;
     static SKIP_TURN = 5;
+    static DUMP_METRICS = 6;
 }
 
 export default class PlayerInputHandler extends Atomic.JSComponent {
@@ -30,7 +32,8 @@ export default class PlayerInputHandler extends Atomic.JSComponent {
         [PlayerActions.MOVE_RIGHT]: [Atomic.KEY_RIGHT, Atomic.KEY_L, Atomic.KEY_D],
         [PlayerActions.MOVE_UP]: [Atomic.KEY_UP, Atomic.KEY_K, Atomic.KEY_W],
         [PlayerActions.MOVE_DOWN]: [Atomic.KEY_DOWN, Atomic.KEY_J, Atomic.KEY_S],
-        [PlayerActions.SKIP_TURN]: [Atomic.KEY_SPACE]
+        [PlayerActions.SKIP_TURN]: [Atomic.KEY_SPACE],
+        [PlayerActions.DUMP_METRICS]: [Atomic.KEY_0]
     };
     /* beautify preserve:end */
 
@@ -91,6 +94,12 @@ export default class PlayerInputHandler extends Atomic.JSComponent {
                     this.DEBUG('Processing Action: skip turn');
                     triggerEvent.trigger(this.node, "onSkipTurn");
                     break;
+                case PlayerActions.DUMP_METRICS:
+                    this.DEBUG('Processing Action: dump metrics');
+                    metrics.dumpMetrics();
+                    this.idle = true;
+                    break;
+
                 default:
                     this.idle = true;
                     break;

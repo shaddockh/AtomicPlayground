@@ -49,8 +49,16 @@ export default class MonsterAi extends CustomJSComponent {
         return canWalk;
     }
 
-    /** Pointer to be called when the action is complete.  The complete promise will overwrite this */
-    onActionComplete = null;
+    setTurnResolver(resolver) {
+        this.resolveTurn = resolver;
+    }
+
+    onActionComplete() {
+        // call the callback, notifying the scheduler that we are done
+        if (this.resolveTurn) {
+            this.resolveTurn();
+        }
+    }
 
     act() {
         this.DEBUG('contemplating action.');
@@ -98,17 +106,23 @@ export default class MonsterAi extends CustomJSComponent {
             // event, it will resolve the then.
             // See: http://ondras.github.io/rot.js/manual/#timing/engine for some more information.
             return {
-                then: (cb) => {
-                    this.DEBUG('starting action');
-                    this.onActionComplete = (() => {
-                        this.DEBUG('action complete.');
-                        // Unhook the onActionComplete event
-                        this.onActionComplete = null;
-                        // Call the callback, notifying the scheduler that we are done
-                        cb();
-                    });
+                then: (resolve) => {
+                    this.DEBUG('starting action.');
+                    this.setTurnResolver(resolve);
                 }
             };
+            //return {
+                //then: (resolve) => {
+                    //this.DEBUG('starting action');
+                    //this.onActionComplete = (() => {
+                        //this.DEBUG('action complete.');
+                        //// Unhook the onActionComplete event
+                        //this.onActionComplete = null;
+                        //// Call the callback, notifying the scheduler that we are done
+                        //resolve();
+                    //});
+                //}
+            //};
         }
     }
 

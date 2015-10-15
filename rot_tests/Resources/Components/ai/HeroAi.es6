@@ -22,7 +22,7 @@ export default class HeroAi extends CustomJSComponent {
     }
 
     /** Pointer to be called when the action is complete.  The complete promise will overwrite this */
-    onActionComplete = null;
+    //onActionComplete = null;
 
     act() {
         this.DEBUG('contemplating action.');
@@ -36,15 +36,22 @@ export default class HeroAi extends CustomJSComponent {
         return {
             then: (resolve) => {
                 this.DEBUG('starting action.');
-                this.onActionComplete = (() => {
-                    this.DEBUG('action complete.');
-                    // unhook the onActionComplete event
-                    this.onActionComplete = null;
-                    // call the callback, notifying the scheduler that we are done
-                    resolve();
-                });
+                this.setTurnResolver(resolve);
             }
         };
+    }
+
+    onActionComplete() {
+        // call the callback, notifying the scheduler that we are done
+        if (this.resolveTurn) {
+            this.DEBUG('resolving action');
+            this.resolveTurn();
+        }
+    }
+
+    setTurnResolver(resolver) {
+        this.DEBUG('Setting turn resolver');
+        this.resolveTurn = resolver;
     }
 
     onTurnTaken() {

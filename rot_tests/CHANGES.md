@@ -1,3 +1,10 @@
+2015-10-14
+---
+* Added an instructions screen
+* hooked in some metrics to be able to isolate slowdowns on the web side (unsuccessful as of yet)
+* modified the turn handler to use promises to indicate when a turn is complete
+* misc. tuning
+
 2015-10-04
 ---
 * Cleaning up the code in order to wrap up this example

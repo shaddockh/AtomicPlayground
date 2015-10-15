@@ -1,4 +1,7 @@
 /*eslint no-var:0*/
+var DEBUG = true;
+
+var metrics = require('./metricsGatherer');
 
 /**
  * Calling this will walk the components in the provided node and if the component has the eventName as function
@@ -11,6 +14,9 @@
  * @return {Array} an array of all the results, if there are any, otherwise an empty array
  */
 function trigger(node, eventName) {
+    if (DEBUG) {
+        metrics.start(eventName);
+    }
     var components = node.getComponents('JSComponent');
     var results = [];
     var args, argsAny;
@@ -36,6 +42,9 @@ function trigger(node, eventName) {
         if (typeof (r) !== 'undefined') {
             results.push(r);
         }
+    }
+    if (DEBUG) {
+        metrics.stop(eventName);
     }
     return results;
 }

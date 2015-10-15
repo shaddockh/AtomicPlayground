@@ -102,7 +102,7 @@ export default class GridMover extends CustomJSComponent {
             this.moving = false;
         } else {
             this.scene.Level.iterateEntitiesAt(newMapPos, (entity) => {
-                // We are going to bump the top level entity
+                // We are going to bump the top level entity if it's bumpable
                 if (entity.entityComponent) {
                     if (entity.entityComponent.blocksPath) {
                         this.blocked = true;
@@ -113,8 +113,13 @@ export default class GridMover extends CustomJSComponent {
                             triggerEvent.trigger(this.node, 'onMoveComplete');
                         });
                     }
-                    triggerEvent.trigger(this.node, 'onHandleBump', entity.node);
-                    return false;
+                    if (entity.entityComponent.bumpable) {
+                        // Let's exit the loop since we only want to deal with the first entity
+                        triggerEvent.trigger(this.node, 'onHandleBump', entity.node);
+                        return false;
+                    } else {
+                        return true;
+                    }
                 }
             });
         }

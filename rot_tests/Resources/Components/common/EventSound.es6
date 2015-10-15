@@ -14,7 +14,7 @@ import CustomJSComponent from 'CustomJSComponent';
  *   onClose: 'Sounds/customsound2.ogg'
  * }
  */
-export default class Health extends CustomJSComponent {
+export default class EventSound extends CustomJSComponent {
     inspectorFields = {
         debug: false,
 

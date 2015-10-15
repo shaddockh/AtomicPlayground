@@ -26,7 +26,7 @@ export const entities = {
             orderInLayer: 12
         },
         PlayerInputHandler: {
-            debug: true
+            debug: false
         },
         PointLight2D: {
             castShadows: true,
@@ -43,7 +43,7 @@ export const entities = {
          */
         GridMover: {
             debug: false,
-            speed: 1.5,
+            speed: 0.25,
             constantMotion: true
         },
         // Make sure our actions are reported to the log
@@ -55,7 +55,7 @@ export const entities = {
             }
         },
         HeroAi: {
-            debug: true
+            debug: false
         },
         Health: {
             life: 10
@@ -84,19 +84,19 @@ export const entities = {
 
     fred: {
         inherits: 'actor',
-        TriggerDebug:{},
+        /* TriggerDebug:{}, */
         Entity: {
             screenName: 'a rat'
         },
         GridMover: {
-            speed: 1
+            speed: 0.25
         },
         StaticSprite2D: {
             sprite: 'Sprites/rodent0_10.png',
             orderInLayer: 12
         },
         MonsterAi: { 
-            debug: true
+            debug: false
         },
         Health: {
             life: 5

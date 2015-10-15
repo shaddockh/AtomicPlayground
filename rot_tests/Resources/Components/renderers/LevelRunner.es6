@@ -53,19 +53,14 @@ export default class LevelRunner extends CustomJSComponent {
     /** Indicates whether the game is over or not */
     isGameOver = false;
 
-    /** queued actions .. happen on the next update cycle */
-    queuedActions = [];
-
     constructor() {
         super();
-        console.log('YYYYYYYYY');
         this.scheduler = new ROT.Scheduler.Simple();
         this.engine = new ROT.Engine(this.scheduler);
     }
 
     start() {
 
-        console.log('WWWWWWWWWW');
         this.scene.Level = this;
         uiChannel.sendMessage('show:hud');
         uiChannel.sendMessage('log:addmessage', 'Welcome to the dungeon.');
@@ -82,19 +77,11 @@ export default class LevelRunner extends CustomJSComponent {
         });
         this.updateUi();
 
-        this.queuedActions.push(() => {
-            console.log('starting engine');
-            this.engine.start();
-            this.engine.unlock();
-        });
+        this.engine.start();
     }
 
-    update( /* timestep */ ) {
-        while (this.queuedActions.length) {
-            let action = this.queuedActions.shift();
-            action();
-        }
-    }
+    // update( /* timestep */ ) {
+    // }
 
     getTileAt(pos) {
         // yes...this looks strange, but we are getting a Float32Array in here, not an array, so destructuring doesn't work

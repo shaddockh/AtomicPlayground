@@ -103,6 +103,7 @@ export default class LevelRenderer2D extends CustomJSComponent {
 
     updateFov(viewerPos, radius, mapData) {
 
+        // First time
         if (!this.fov) {
             this.fov = new ROT.FOV.PreciseShadowcasting((x, y) => {
             //this.fov = new ROT.FOV.RecursiveShadowcasting((x, y) => {
