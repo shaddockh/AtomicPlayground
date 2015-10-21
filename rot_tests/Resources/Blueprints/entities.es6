@@ -1,7 +1,8 @@
 export const entities = {
 
     entity_base: {
-        Entity: { }
+        Entity: { },
+        MessageDispatcher: {}
     },
 
     /** ACTORS */

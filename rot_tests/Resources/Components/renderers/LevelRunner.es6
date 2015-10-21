@@ -95,6 +95,17 @@ export default class LevelRunner extends CustomJSComponent {
         return this.mapData.getEntitiesAt(x, y);
     }
 
+    getEntitiesInRadius(pos, radius) {
+        // yes...this looks strange, but we are getting a Float32Array in here, not an array, so destructuring doesn't work
+        let [x, y] = [pos[0], pos[1]];
+        let boundsX = [x-radius, x+radius];
+        let boundsY = [y-radius, y+radius];
+        return this.mapData.filterEntities((entity) => {
+            return entity.x >= boundsX[0] && entity.x <= boundsX[1] 
+                && entity.y >= boundsY[0] && entity.y <= boundsY[1];
+        });
+    }
+
     iterateEntitiesAt(pos, callback) {
         // yes...this looks strange, but we are getting a Float32Array in here, not an array, so destructuring doesn't work
         let [x, y] = [pos[0], pos[1]];

@@ -3,6 +3,7 @@
 
 import * as triggerEvent from 'atomicTriggerEvent';
 import CustomJSComponent from 'CustomJSComponent';
+import * as metrics from 'metricsGatherer';
 
 export default class HeroAi extends CustomJSComponent {
 
@@ -45,7 +46,9 @@ export default class HeroAi extends CustomJSComponent {
         // call the callback, notifying the scheduler that we are done
         if (this.resolveTurn) {
             this.DEBUG('resolving action');
+            metrics.start('resolveTurn');
             this.resolveTurn();
+            metrics.stop('resolveTurn');
         }
     }
 
@@ -55,8 +58,14 @@ export default class HeroAi extends CustomJSComponent {
     }
 
     onTurnTaken() {
+
+        metrics.start('incTurn');
         this.scene.Level.incTurn();
+        metrics.stop('incTurn');
+
+        metrics.start('updateFov');
         this.scene.Level.updateFov(this.getPosition());
+        metrics.stop('updateFov');
         //this.scene.Level.pause(false);
         //this.DEBUG('Unpausing action.');
         triggerEvent.trigger(this.node, 'onActionComplete', this, this.node);

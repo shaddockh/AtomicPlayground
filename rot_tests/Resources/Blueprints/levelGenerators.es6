@@ -84,6 +84,7 @@ export const levelGenerators = {
     },
 
     customLevelRunner: {
+        MessageDispatcher: {},
         LevelRenderer2D: {
             debug: false
         },

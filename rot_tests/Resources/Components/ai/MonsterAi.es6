@@ -65,9 +65,15 @@ export default class MonsterAi extends CustomJSComponent {
         if (!this.chaseEnemy) {
             return;
         }
-        let hero = this.scene.Level.mapData.filterEntities((entity) => {
+
+        var position = this.node.getJSComponent('Entity').getPosition();
+        let nearbyEntities = this.scene.Level.getEntitiesInRadius(position, this.trackingRadius);
+        let hero = nearbyEntities.filter((entity) => {
             return entity.blueprint === 'hero';
         }).pop();
+
+        // no hero in radius..go back to sleep
+        if (!hero) { return; }
 
         let playerPos = hero.entityComponent.getPosition();
 

@@ -17,30 +17,36 @@ function trigger(node, eventName) {
     if (DEBUG) {
         metrics.start(eventName);
     }
-    var components = node.getComponents('JSComponent');
     var results = [];
-    var args, argsAny;
-    for (var c = 0, cLen = components.length; c < cLen; c++) {
-        var component = components[c];
-        var r;
+    var dispatcher = node.getJSComponent('MessageDispatcher');
+    // TODO: bug/feature?  getJSComponent will recurse to children
+    if (dispatcher && dispatcher.node === node) {
+        results = dispatcher.dispatchMessage.apply(dispatcher, Array.prototype.slice.call(arguments, 1));
+    } else {
+        var components = node.getComponents('JSComponent');
+        var args, argsAny;
+        for (var c = 0, cLen = components.length; c < cLen; c++) {
+            var component = components[c];
+            var r;
 
-        // Look for the named event
-        if (component && typeof component[eventName] === 'function') {
-            // only populate args the first time we need it
-            args = args || Array.prototype.slice.call(arguments, 2);
-            r = component[eventName].apply(component, args);
-        }
+            // Look for the named event
+            if (component && typeof component[eventName] === 'function') {
+                // only populate args the first time we need it
+                args = args || Array.prototype.slice.call(arguments, 2);
+                r = component[eventName].apply(component, args);
+            }
 
-        // See if there is an "onAny" event
-        if (component && typeof component['onAny'] === 'function') {
-            //o only populate argsAny the first time we need it
-            argsAny = argsAny || [eventName].concat(Array.prototype.slice.call(arguments, 2));
-            r = component['onAny'].apply(component, argsAny);
-        }
+            // See if there is an "onAny" event
+            if (component && typeof component['onAny'] === 'function') {
+                //o only populate argsAny the first time we need it
+                argsAny = argsAny || [eventName].concat(Array.prototype.slice.call(arguments, 2));
+                r = component['onAny'].apply(component, argsAny);
+            }
 
-        // Capture the results
-        if (typeof (r) !== 'undefined') {
-            results.push(r);
+            // Capture the results
+            if (typeof (r) !== 'undefined') {
+                results.push(r);
+            }
         }
     }
     if (DEBUG) {
