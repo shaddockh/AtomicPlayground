@@ -68,7 +68,6 @@ export default class MessageDispatcher extends CustomJSComponent {
         results = results.concat(this._processHandlers(this._getHandlerList('onAny'), anyArgs));
 
         metrics.stop('dispatchMessage');
-        console.log(msg + ' - results length: ' + results.length);
         return results;
     }
 

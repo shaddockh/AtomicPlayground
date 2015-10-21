@@ -138,7 +138,7 @@ export default class LevelRenderer2D extends CustomJSComponent {
 
         }
 
-        this.DEBUG('Calculating FOV');
+        this.DEBUG('Calculating FOV for radius ' + radius);
         this.fov.compute(viewerPos[0], viewerPos[1], radius, (x, y, distFromCenter, visibility) => {
             if (mapData.inBounds(x, y)) {
                 let tile = mapData.getTile(x, y);

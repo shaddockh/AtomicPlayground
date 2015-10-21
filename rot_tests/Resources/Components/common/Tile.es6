@@ -8,6 +8,7 @@ export default class Tile extends CustomJSComponent {
     };
 
     mapEntity = null;
+    currentVisibility = null;
 
     /**
      * Updates whether this tile is in the field of view of the player
@@ -18,7 +19,11 @@ export default class Tile extends CustomJSComponent {
         if (visibility == 1) {
             this.mapEntity.seen = true;
         }
-        this.node.getComponent('StaticSprite2D').setAlpha( this.mapEntity.seen ? 1.0 : visibility);
+        // Cache the current visibility so that we don't mess with alpha ever update
+        if (this.currentVisibility === null || this.currentVisibility !== visibility) {
+            this.node.getComponent('StaticSprite2D').setAlpha( this.mapEntity.seen ? 1.0 : visibility);
+            this.currentVisibility = visibility;
+        }
     }
 
     setMapReference(mapEntity) {

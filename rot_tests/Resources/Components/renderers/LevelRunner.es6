@@ -23,7 +23,7 @@ export default class LevelRunner extends CustomJSComponent {
         mapData: null,
         turnBased: true,
         useFov: true,
-        fovRadius: 50
+        fovRadius: 15
     };
 
     /** The hero node */

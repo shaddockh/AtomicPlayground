@@ -59,20 +59,33 @@ export default class HeroAi extends CustomJSComponent {
 
     onTurnTaken() {
 
-        metrics.start('incTurn');
-        this.scene.Level.incTurn();
-        metrics.stop('incTurn');
+        this.deferAction(()=>{
+            metrics.start('incTurn');
+            this.scene.Level.incTurn();
+            metrics.stop('incTurn');
 
-        metrics.start('updateFov');
-        this.scene.Level.updateFov(this.getPosition());
-        metrics.stop('updateFov');
-        //this.scene.Level.pause(false);
-        //this.DEBUG('Unpausing action.');
+            metrics.start('updateFov');
+            this.scene.Level.updateFov(this.getPosition());
+            metrics.stop('updateFov');
+        });
+
         triggerEvent.trigger(this.node, 'onActionComplete', this, this.node);
     }
 
     getPosition() {
         return this.node.getJSComponent('Entity').getPosition();
+    }
+
+    deferredActions = [];
+    deferAction(action) {
+        this.deferredActions.push(action);
+    }
+
+    update() {
+        while (this.deferredActions.length) {
+            let action = this.deferredActions.pop();
+            action();
+        }
     }
 
     // Action Handlers
