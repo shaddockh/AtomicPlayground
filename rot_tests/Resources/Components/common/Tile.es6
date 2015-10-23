@@ -19,7 +19,12 @@ export default class Tile extends CustomJSComponent {
         if (visibility == 1) {
             this.mapEntity.seen = true;
         }
-        // Cache the current visibility so that we don't mess with alpha ever update
+
+        if (this.mapEntity.seen) {
+            visibility = 1;
+        }
+
+        // Cache the current visibility so that we don't mess with alpha every update
         if (this.currentVisibility === null || this.currentVisibility !== visibility) {
             this.node.getComponent('StaticSprite2D').setAlpha( this.mapEntity.seen ? 1.0 : visibility);
             this.currentVisibility = visibility;
