@@ -58,12 +58,13 @@ export default class GridMover extends CustomJSComponent {
                 if (this.moving) {
                     this.node.position2D = this.targetPos;
                 }
-                this.executePostMoveActions();
 
                 // Reset everything
                 this.moving = false;
                 this.bumping = false;
                 this.blocked = false;
+
+                this.executePostMoveActions();
             }
         }
     }
@@ -89,7 +90,7 @@ export default class GridMover extends CustomJSComponent {
         // check to see if we are blocked
 
         // First see if we are blocked by terrain
-        if (this.scene.Level.getTileAt(newMapPos).terrainType !== MapData.TILE_FLOOR) {
+        if (!this.scene.Level.isValidPos(newMapPos) || this.scene.Level.getTileAt(newMapPos).terrainType !== MapData.TILE_FLOOR) {
             // Queue up an action to notify the player that the move is blocked
             this.queuePostMoveAction(() => {
                 this.DEBUG('Blocked by terrain');

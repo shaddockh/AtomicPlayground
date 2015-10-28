@@ -6,6 +6,7 @@ import MapData from 'MapData';
 import * as triggerEvent from 'atomicTriggerEvent';
 import ROT from 'rot-js';
 import { vec2 } from 'gl-matrix';
+import * as metrics from 'metricsGatherer';
 
 export default class MonsterAi extends CustomJSComponent {
 
@@ -61,74 +62,81 @@ export default class MonsterAi extends CustomJSComponent {
     }
 
     act() {
-        this.DEBUG('contemplating action.');
-        if (!this.chaseEnemy) {
-            return;
-        }
+        metrics.start('MonsterAi');
+        try {
+            this.DEBUG('contemplating action.');
+            if (!this.chaseEnemy) {
+                return;
+            }
 
-        var position = this.node.getJSComponent('Entity').getPosition();
-        let nearbyEntities = this.scene.Level.getEntitiesInRadius(position, this.trackingRadius);
-        let hero = nearbyEntities.filter((entity) => {
-            return entity.blueprint === 'hero';
-        }).pop();
+            var position = this.node.getJSComponent('Entity').getPosition();
+            let nearbyEntities = this.scene.Level.getEntitiesInRadius(position, this.trackingRadius);
+            let hero = nearbyEntities.filter((entity) => {
+                return entity.blueprint === 'hero';
+            }).pop();
 
-        // no hero in radius..go back to sleep
-        if (!hero) { return; }
+            // no hero in radius..go back to sleep
+            if (!hero) {
+                return;
+            }
 
-        let playerPos = hero.entityComponent.getPosition();
+            let playerPos = hero.entityComponent.getPosition();
 
-        const astar = new ROT.Path.AStar(playerPos[0], playerPos[1], (x, y) => this.canWalk([x, y]), {
-            topology: 4
-        });
+            const astar = new ROT.Path.AStar(playerPos[0], playerPos[1], (x, y) => this.canWalk([x, y]), {
+                topology: 4
+            });
 
-        let path = [];
-        let pos = this.node.getJSComponent("Entity").getPosition();
-        astar.compute(pos[0], pos[1], (x, y) => {
-            path.push([x, y]);
-        });
+            let path = [];
+            let pos = this.node.getJSComponent("Entity").getPosition();
+            astar.compute(pos[0], pos[1], (x, y) => {
+                path.push([x, y]);
+            });
 
-        path.shift(); // remove current position
+            path.shift(); // remove current position
 
-        // TODO ideally we would want to scan the sight radius, but for now we are just going to see if 
-        // we are in range of the hero
+            // TODO ideally we would want to scan the sight radius, but for now we are just going to see if 
+            // we are in range of the hero
 
-        // get a direction vector
-        if (!this.isHunting && path.length < this.sightRadius && path.length > 0) {
-            this.isHunting = true;
-            this.DEBUG('enemy seen.  switching to hunting.');
-        }
+            // get a direction vector
+            if (!this.isHunting && path.length < this.sightRadius && path.length > 0) {
+                this.isHunting = true;
+                this.DEBUG('enemy seen.  switching to hunting.');
+            }
 
-        if (this.isHunting && path.length < this.trackingRadius && path.length > 0) {
-            this.DEBUG(`hunting enemy located ${path.length} steps away.`);
-            let target = path.shift();
-            let dir = vec2.sub(vec2.create(), target, pos);
-            vec2.normalize(dir, dir);
+            if (this.isHunting && path.length < this.trackingRadius && path.length > 0) {
+                this.DEBUG(`hunting enemy located ${path.length} steps away.`);
+                let target = path.shift();
+                let dir = vec2.sub(vec2.create(), target, pos);
+                vec2.normalize(dir, dir);
 
-            triggerEvent.trigger(this.node, "onTryMove", dir);
+                triggerEvent.trigger(this.node, "onTryMove", dir);
 
-            // we are returning a 'thenable' which tells the scheduler to not move on to the next actor
-            // until this actor has completed.  This is overriding the onTurnTaken event on this class with
-            // the callback passed to the then method, which means that when this class gets an onTurnTaken
-            // event, it will resolve the then.
-            // See: http://ondras.github.io/rot.js/manual/#timing/engine for some more information.
-            return {
-                then: (resolve) => {
-                    this.DEBUG('starting action.');
-                    this.setTurnResolver(resolve);
-                }
-            };
-            //return {
+                // we are returning a 'thenable' which tells the scheduler to not move on to the next actor
+                // until this actor has completed.  This is overriding the onTurnTaken event on this class with
+                // the callback passed to the then method, which means that when this class gets an onTurnTaken
+                // event, it will resolve the then.
+                // See: http://ondras.github.io/rot.js/manual/#timing/engine for some more information.
+                return {
+                    then: (resolve) => {
+                        this.DEBUG('starting action.');
+                        this.setTurnResolver(resolve);
+                    }
+                };
+                //return {
                 //then: (resolve) => {
-                    //this.DEBUG('starting action');
-                    //this.onActionComplete = (() => {
-                        //this.DEBUG('action complete.');
-                        //// Unhook the onActionComplete event
-                        //this.onActionComplete = null;
-                        //// Call the callback, notifying the scheduler that we are done
-                        //resolve();
-                    //});
+                //this.DEBUG('starting action');
+                //this.onActionComplete = (() => {
+                //this.DEBUG('action complete.');
+                //// Unhook the onActionComplete event
+                //this.onActionComplete = null;
+                //// Call the callback, notifying the scheduler that we are done
+                //resolve();
+                //});
                 //}
-            //};
+                //};
+            }
+        } finally {
+            metrics.stop('MonsterAi');
         }
     }
 

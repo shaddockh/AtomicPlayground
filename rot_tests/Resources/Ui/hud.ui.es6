@@ -1,5 +1,5 @@
 import CustomUIWindow from './CustomUIWindow';
-import channel from 'channels';
+import { uiChannel } from 'gameChannels';
 
 export default class Hud extends CustomUIWindow {
 
@@ -22,8 +22,8 @@ export default class Hud extends CustomUIWindow {
         this.enemies = wnd.getWidget('txtRemaining');
         this.turnCount = wnd.getWidget('txtTurnCount');
 
-        channel('ui').sendMessage('show:log');
-        channel('ui').sendMessage('show:instructions');
+        uiChannel.sendMessage('show:log');
+        uiChannel.sendMessage('show:instructions');
 
     }
 
@@ -35,6 +35,6 @@ export default class Hud extends CustomUIWindow {
 
     closeWindow() {
         super.closeWindow();
-        channel('ui').sendMessage('hide:log');
+        uiChannel.sendMessage('hide:log');
     }
 }

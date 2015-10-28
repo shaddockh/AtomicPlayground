@@ -9,6 +9,14 @@ export default class OverviewCameraController extends Atomic.JSComponent {
         allowPan: true
     };
 
+    onRun() {
+        this.enabled = false;
+    }
+
+    onChoose() {
+        this.enabled = true;
+    }
+
     update() {
         if (this.allowZoom) {
             const wheel = Atomic.input.getMouseMoveWheel();

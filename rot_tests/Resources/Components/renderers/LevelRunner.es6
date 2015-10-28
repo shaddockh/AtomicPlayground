@@ -5,9 +5,7 @@ import * as triggerEvent from 'atomicTriggerEvent';
 //import { nodeBuilder } from 'atomic-blueprintLib';
 import MapData from 'MapData';
 import ROT from 'rot-js';
-import channel from 'channels';
-
-const uiChannel = channel('ui');
+import { uiChannel } from 'gameChannels';
 
 /**
  * Level runner component. This component is in charge of running a particular
@@ -78,6 +76,7 @@ export default class LevelRunner extends CustomJSComponent {
         this.updateUi();
 
         this.engine.start();
+        this.setCameraTarget(this.hero.node);
     }
 
     // update( /* timestep */ ) {
@@ -87,6 +86,12 @@ export default class LevelRunner extends CustomJSComponent {
         // yes...this looks strange, but we are getting a Float32Array in here, not an array, so destructuring doesn't work
         let [x, y] = [pos[0], pos[1]];
         return this.mapData.getTile(x, y);
+    }
+
+    isValidPos(pos) {
+        // yes...this looks strange, but we are getting a Float32Array in here, not an array, so destructuring doesn't work
+        let [x, y] = [pos[0], pos[1]];
+        return this.mapData.inBounds(x, y);
     }
 
     getEntitiesAt(pos) {
@@ -177,6 +182,10 @@ export default class LevelRunner extends CustomJSComponent {
         uiChannel.sendMessage('show:endgame', {
             endGameReason: 'You died.'
         });
+    }
+
+    setCameraTarget(targetNode) {
+        triggerEvent.trigger(this.node, 'onSetCameraTarget', targetNode);
     }
 
 }

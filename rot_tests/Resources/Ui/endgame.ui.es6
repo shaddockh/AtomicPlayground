@@ -1,5 +1,5 @@
 import CustomUIWindow from './CustomUIWindow';
-import channel from 'channels';
+import {uiChannel, levelChannel, gameChannel} from 'gameChannels';
 
 export default class EndGameUi extends CustomUIWindow {
 
@@ -20,13 +20,13 @@ export default class EndGameUi extends CustomUIWindow {
 
         wnd.getWidget('btnGenerate').onClick = () => {
             this.closeWindow();
-            channel('ui').sendMessage('hide:hud');
-            channel('level').sendMessage('show:levelgen');
+            uiChannel.sendMessage('hide:hud');
+            levelChannel.sendMessage('show:levelgen');
         };
 
         wnd.getWidget('btnExit').onClick = () => {
             this.closeWindow();
-            channel('game').sendMessage('shutdown:game');
+            gameChannel.sendMessage('shutdown:game');
         };
 
         if (model) {

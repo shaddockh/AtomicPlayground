@@ -1,4 +1,4 @@
-import channel from 'channels';
+import { uiChannel } from 'gameChannels';
 
 /**
  * wrapper to be used for ui windows.  Will handle loading up the layout and
@@ -12,7 +12,7 @@ export default class CustomUIWindow {
     constructor(uiView, layoutFilename) {
         this.layoutFilename = layoutFilename;
         this.uiView = uiView;
-        this.channelId = channel('ui').subscribe((topic, ...messageParms) => {
+        this.channelId = uiChannel.subscribe((topic, ...messageParms) => {
             if (topic in this.channelTopics) {
                 this.channelTopics[topic].apply(this, messageParms);
             }
@@ -34,6 +34,6 @@ export default class CustomUIWindow {
             this.window.die();
             this.window = null;
         }
-        channel('ui').unsubscribe(this.channelId);
+        uiChannel.unsubscribe(this.channelId);
     }
 }

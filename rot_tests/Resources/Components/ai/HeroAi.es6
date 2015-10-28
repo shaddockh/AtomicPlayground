@@ -92,6 +92,7 @@ export default class HeroAi extends CustomJSComponent {
 
     onMoveComplete() {
         triggerEvent.trigger(this.node, 'onTurnTaken', this, this.node);
+        this.scene.Level.setCameraTarget(this.node);
     }
 
     onSkipTurn() {

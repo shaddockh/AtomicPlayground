@@ -85,6 +85,7 @@ export const levelGenerators = {
 
     customLevelRunner: {
         MessageDispatcher: {},
+        TargetCameraController: {},
         LevelRenderer2D: {
             debug: false
         },

@@ -1,8 +1,7 @@
 'use strict';
 "atomic component";
 import CustomJSComponent from 'CustomJSComponent';
-import channel from 'channels';
-const uiChannel = channel('ui');
+import { uiChannel } from 'gameChannels';
 
 export default class ActionLogger extends CustomJSComponent {
     inspectorFields = {
