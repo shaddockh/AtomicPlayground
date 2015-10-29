@@ -23,7 +23,7 @@ export default class TargetCameraController extends Atomic.JSComponent {
         }
     }
 
-    update(timestep) {
+    update(/*timestep*/) {
         if (this.cameraTargetNode) {
             let [x, y, z] = this.cameraTargetNode.position;
 

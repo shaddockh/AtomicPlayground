@@ -137,6 +137,9 @@ export const entities = {
             bumpable: true,
             fovRemember: true
         },
+        ShadowTile: {
+            platformDisable: ['Web', 'HTML5']
+        },
         StaticSprite2D: {
             sprite: 'Sprites/door_ns_c.png',
             orderInLayer: 10

@@ -33,7 +33,8 @@ export default class MonsterAi extends CustomJSComponent {
         if (vec2.dist(point, pos) === 0) {
             return true;
         }
-        if (this.scene.Level.getTileAt(point).terrainType !== MapData.TILE_FLOOR) {
+
+        if (!this.scene.Level.isValidPos(point) || this.scene.Level.getTileAt(point).terrainType !== MapData.TILE_FLOOR) {
             return false;
         }
 
