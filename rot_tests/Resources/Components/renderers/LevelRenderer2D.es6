@@ -105,49 +105,68 @@ export default class LevelRenderer2D extends CustomJSComponent {
 
         // First time
         if (!this.fov) {
-            this.fov = new ROT.FOV.PreciseShadowcasting((x, y) => {
-            //this.fov = new ROT.FOV.RecursiveShadowcasting((x, y) => {
+            // run through and set everything to out of view
+            mapData.iterateMap((x,y,tile) => {
+                if (tile.terrainType !== MapData.TILE_NONE) {
+                    triggerEvent.trigger(tile.node, 'onUpdateFov', false );
+                }
+            });
+
+            const blockLightEntities = {};
+            mapData.iterateEntities(entity => {
+                triggerEvent.trigger(entity.node, 'onUpdateFov', false );
+                if (entity.entityComponent.blocksLight) {
+                    blockLightEntities[entity.x + ',' + entity.y] = true;
+                }
+            });
+
+            // TODO: PreciseShadowcasting is really too slow for web.  Probably need to switch based upon platform
+            // this.fov = new ROT.FOV.PreciseShadowcasting((x, y) => {
+            this.fov = new ROT.FOV.RecursiveShadowcasting((x, y) => {
                 // returns whether the point at x,y blocks light
                 if (mapData.inBounds(x, y)) {
                     if (mapData.getTile(x, y).blocksLight) {
                         return false;
                     } else {
-                        let canSee = true;
-                        mapData.iterateEntitiesAt(x, y, (entity) => {
-                            if (entity.entityComponent.blocksLight) {
-                                canSee = false;
-                                return false; //break out
-                            }
-                        });
-                        return canSee;
+                        if (blockLightEntities[x + ',' + y]) {
+                            return false;
+                        } else {
+                            return true;
+                        }
                     }
                 } else {
                     return false;
                 }
             });
 
-            // run through and set everything to out of view
-            mapData.iterateMap((x,y,tile) => {
-                if (tile.terrainType !== MapData.TILE_NONE) {
-                    triggerEvent.trigger(tile.node, 'onUpdateFov', false );
-                    mapData.iterateEntitiesAt(x, y, (entity) => {
-                        triggerEvent.trigger(entity.node, 'onUpdateFov', false );
-                    });
-                }
-            });
 
         }
 
-        this.DEBUG('Calculating FOV');
+        this.DEBUG('Calculating FOV for radius ' + radius);
+
+        // To optimize, create of a cache of all x,y pairs we are iterating over.  Afterwards
+        // iterate through all of  the entities on the map and any that are on a space specified
+        // by an item in the cache, update the visibility.  This is done instead of iterating
+        // all of the entities every time inside the inner loop for just the entities on a particular tile
+        //
+        // Another way of doing it would be to create a list of entities up front within the radius and
+        // use that in the innter loop
+        const cache = [];
         this.fov.compute(viewerPos[0], viewerPos[1], radius, (x, y, distFromCenter, visibility) => {
             if (mapData.inBounds(x, y)) {
                 let tile = mapData.getTile(x, y);
                 if (tile.terrainType !== MapData.TILE_NONE) {
                     triggerEvent.trigger(tile.node, 'onUpdateFov', visibility);
-                    mapData.iterateEntitiesAt(x, y, (entity) => {
-                        triggerEvent.trigger(entity.node, 'onUpdateFov', visibility);
-                    });
+                    cache[x + ',' + y] = visibility;
                 } 
+            }
+        });
+
+        let visibility;
+        mapData.iterateEntities(entity => {
+            visibility = cache[entity.x + ',' + entity.y];
+            if (typeof(visibility) !== 'undefined') {
+                triggerEvent.trigger(entity.node, 'onUpdateFov', visibility);
             }
         });
     }

@@ -1,5 +1,6 @@
 'use strict';
 import * as utils from './utils';
+import * as metrics from './metricsGatherer';
 
 export default class MapData {
 
@@ -54,22 +55,32 @@ export default class MapData {
      * Iterates over a list of entities from the top down
      */
     iterateEntitiesAt(x, y, callback) {
-        let entities = this.getEntitiesAt(x, y);
-        for (let i = entities.length - 1, iEnd = 0; i >= iEnd; i--) {
-            let cont = callback(entities[i]);
-            if (typeof(cont) !== 'undefined' && !cont) {
-                return;
+        metrics.start('mapdata.iterateEntitiesAt');
+        try {
+            let entities = this.getEntitiesAt(x, y);
+            for (let i = entities.length - 1, iEnd = 0; i >= iEnd; i--) {
+                let cont = callback(entities[i]);
+                if (typeof(cont) !== 'undefined' && !cont) {
+                    return;
+                }
             }
+        } finally {
+            metrics.stop('mapdata.iterateEntitiesAt');
         }
     }
 
     iterateEntities(callback) {
-        let entities = this.entities;
-        for (let x = 0, xEnd = entities.length; x < xEnd; x++) {
-            let cont = callback(entities[x]);
-            if (typeof(cont) !== 'undefined' && !cont) {
-                return;
+        metrics.start('mapdata.iterateEntities');
+        try {
+            let entities = this.entities;
+            for (let x = 0, xEnd = entities.length; x < xEnd; x++) {
+                let cont = callback(entities[x]);
+                if (typeof(cont) !== 'undefined' && !cont) {
+                    return;
+                }
             }
+        } finally {
+            metrics.stop('mapdata.iterateEntities');
         }
     }
 
@@ -119,17 +130,22 @@ export default class MapData {
      * return 'falsy' value in the callback to exit.
      */
     iterateMap(callback) {
-        let tiles = this.tiles;
-        let xEnd = this.width,
-            yEnd = this.height;
+        metrics.start('mapData.iterateMap');
+        try {
+            let tiles = this.tiles;
+            let xEnd = this.width,
+                yEnd = this.height;
 
-        for (let x = 0; x < xEnd; x++) {
-            for (let y = 0; y < yEnd; y++) {
-                let result = callback(x, y, tiles[x][y]);
-                if (typeof (result) !== 'undefined' && !result) {
-                    return;
+            for (let x = 0; x < xEnd; x++) {
+                for (let y = 0; y < yEnd; y++) {
+                    let result = callback(x, y, tiles[x][y]);
+                    if (typeof (result) !== 'undefined' && !result) {
+                        return;
+                    }
                 }
             }
+        } finally {
+            metrics.stop('mapData.iterateMap');
         }
     }
 

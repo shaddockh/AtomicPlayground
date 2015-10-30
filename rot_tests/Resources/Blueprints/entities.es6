@@ -1,7 +1,8 @@
 export const entities = {
 
     entity_base: {
-        Entity: { }
+        Entity: { },
+        MessageDispatcher: {}
     },
 
     /** ACTORS */
@@ -135,6 +136,9 @@ export const entities = {
             blocksLight: true,
             bumpable: true,
             fovRemember: true
+        },
+        ShadowTile: {
+            platformDisable: ['Web', 'HTML5']
         },
         StaticSprite2D: {
             sprite: 'Sprites/door_ns_c.png',

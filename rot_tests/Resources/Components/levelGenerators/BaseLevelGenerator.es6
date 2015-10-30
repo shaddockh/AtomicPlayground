@@ -110,20 +110,13 @@ export default class BaseLevelGenerator extends CustomJSComponent {
                 let tile = this.mapData.getTile(x, y);
                 let doorbp = null;
                 switch (tile.edge) {
-                    case 1: 
-                    case 2:
+                    case 12:
                         doorbp = 'door_ew';
                         break;
 
                     case 3:
-                    case 4:
-                    case 8:
-                    case 12:
                         doorbp = 'door_ns';
                         break;
-
-                    default:
-                        console.log(`Unknown edge type for a door: ${tile.edge}`);
                 }
                 if (this.mapData.isEmpty(x,y)) {
                     if (doorbp) {

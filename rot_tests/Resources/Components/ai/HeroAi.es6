@@ -3,6 +3,7 @@
 
 import * as triggerEvent from 'atomicTriggerEvent';
 import CustomJSComponent from 'CustomJSComponent';
+import * as metrics from 'metricsGatherer';
 
 export default class HeroAi extends CustomJSComponent {
 
@@ -45,7 +46,9 @@ export default class HeroAi extends CustomJSComponent {
         // call the callback, notifying the scheduler that we are done
         if (this.resolveTurn) {
             this.DEBUG('resolving action');
+            metrics.start('resolveTurn');
             this.resolveTurn();
+            metrics.stop('resolveTurn');
         }
     }
 
@@ -55,10 +58,17 @@ export default class HeroAi extends CustomJSComponent {
     }
 
     onTurnTaken() {
-        this.scene.Level.incTurn();
-        this.scene.Level.updateFov(this.getPosition());
-        //this.scene.Level.pause(false);
-        //this.DEBUG('Unpausing action.');
+
+        this.deferAction(()=>{
+            metrics.start('incTurn');
+            this.scene.Level.incTurn();
+            metrics.stop('incTurn');
+
+            metrics.start('updateFov');
+            this.scene.Level.updateFov(this.getPosition());
+            metrics.stop('updateFov');
+        });
+
         triggerEvent.trigger(this.node, 'onActionComplete', this, this.node);
     }
 
@@ -66,10 +76,23 @@ export default class HeroAi extends CustomJSComponent {
         return this.node.getJSComponent('Entity').getPosition();
     }
 
+    deferredActions = [];
+    deferAction(action) {
+        this.deferredActions.push(action);
+    }
+
+    update() {
+        while (this.deferredActions.length) {
+            let action = this.deferredActions.pop();
+            action();
+        }
+    }
+
     // Action Handlers
 
     onMoveComplete() {
         triggerEvent.trigger(this.node, 'onTurnTaken', this, this.node);
+        this.scene.Level.setCameraTarget(this.node);
     }
 
     onSkipTurn() {

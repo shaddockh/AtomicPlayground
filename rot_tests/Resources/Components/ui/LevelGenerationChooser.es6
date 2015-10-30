@@ -1,13 +1,7 @@
 'atomic component';
-import {
-    nodeBuilder, blueprintCatalog
-}
-from 'atomic-blueprintLib';
+import { nodeBuilder, blueprintCatalog } from 'atomic-blueprintLib';
 import * as triggerEvent from 'atomicTriggerEvent';
-import channel from 'channels';
-
-const uiChannel = channel('ui');
-const levelChannel = channel('level');
+import { uiChannel, levelChannel } from 'gameChannels';
 
 export default class LevelGenerationChooser extends Atomic.JSComponent {
 
@@ -21,15 +15,15 @@ export default class LevelGenerationChooser extends Atomic.JSComponent {
     start() {
         this.channelId = levelChannel.subscribe((topic, ...messages) => {
             switch (topic) {
-                case 'preview:level':
-                    this.previewLevel.apply(this, messages);
-                    break;
-                case 'run:level':
-                    this.runLevel.apply(this, messages);
-                    break;
-                case 'show:levelgen':
-                    this.showLevelGen.apply(this, messages);
-                    break;
+            case 'preview:level':
+                this.previewLevel.apply(this, messages);
+                break;
+            case 'run:level':
+                this.runLevel.apply(this, messages);
+                break;
+            case 'show:levelgen':
+                this.showLevelGen.apply(this, messages);
+                break;
             }
         });
 
@@ -44,6 +38,7 @@ export default class LevelGenerationChooser extends Atomic.JSComponent {
             }
         });
         uiChannel.sendMessage('show:levelgen', blueprints);
+        triggerEvent.trigger(this.node, 'onChoose');
     }
 
     previewLevel(builderName) {
@@ -58,6 +53,7 @@ export default class LevelGenerationChooser extends Atomic.JSComponent {
         this.clearGeneratedContent();
         this.runNode = nodeBuilder.createChild(this.node.scene, 'customLevelRunner');
         triggerEvent.trigger(this.runNode, 'onSetMapData', mapData);
+        triggerEvent.trigger(this.node, 'onRun');
     }
 
     clearGeneratedContent() {

@@ -1,4 +1,4 @@
-import channel from 'channels';
+import { levelChannel } from 'gameChannels';
 import CustomUIWindow from './CustomUIWindow';
 
 export default class LevelGenSelector extends CustomUIWindow {
@@ -29,7 +29,7 @@ export default class LevelGenSelector extends CustomUIWindow {
             if (eventData.type !== Atomic.UI_EVENT_TYPE_CLICK) {
                 return;
             }
-            channel('level').sendMessage('run:level', selectList.selectedItemID);
+            levelChannel.sendMessage('run:level', selectList.selectedItemID);
             this.runButton.setState(Atomic.UI_WIDGET_STATE_DISABLED, true);
             this.closeWindow();
         });
@@ -39,9 +39,8 @@ export default class LevelGenSelector extends CustomUIWindow {
             if (eventData.type !== Atomic.UI_EVENT_TYPE_CLICK) {
                 return;
             }
-            channel('level').sendMessage('preview:level', selectList.selectedItemID);
+            levelChannel.sendMessage('preview:level', selectList.selectedItemID);
             this.runButton.setState(Atomic.UI_WIDGET_STATE_DISABLED, false);
         });
     }
-
 }

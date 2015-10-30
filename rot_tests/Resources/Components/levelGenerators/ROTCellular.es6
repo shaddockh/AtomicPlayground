@@ -62,7 +62,7 @@ export default class ROTCellular extends BaseLevelGenerator {
         // no rooms
         // this.placeDoors(builder.getRooms());
 
-        this.placeCreatures(builder.getRooms());
+        this.placeCreatures();
         this.placeItems();
     }
 }

@@ -4,6 +4,7 @@ export const tiles = {
         Tile: {
             debug: false
         },
+        MessageDispatcher: {},
         StaticSprite2D: {
             blendMode: Atomic.BLEND_ALPHA,
             orderInLayer: 0,
@@ -122,12 +123,9 @@ export const tiles = {
     //TODO: need to batch together walls so we don't have 2000 collision objects
     tile_shadow_wall: {
         inherits: 'tile_base',
-        RigidBody2D: {
-            bodyType:Atomic.BT_STATIC,
-            castShadows: true
-        },
-        CollisionBox2D: {
-            size: [16 * Atomic.PIXEL_SIZE, 16 * Atomic.PIXEL_SIZE]
+        ShadowTile: {
+            // to resource intensive for web
+            platformDisable: ['Web', 'HTML5']
         }
     }
 

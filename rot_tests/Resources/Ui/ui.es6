@@ -1,4 +1,4 @@
-import channel from 'channels';
+import { uiChannel, gameChannel } from 'gameChannels';
 import Hud from './hud.ui';
 import LevelGenSelector from './levelgen_selector.ui';
 import EndGameUi from './endgame.ui';
@@ -7,17 +7,17 @@ import Instructions from './instructions.ui';
 
 const baseUi = new Atomic.UIView();
 const windowRefs = {};
-const channelId = channel('ui').subscribe(handleChannelMessages);
+const channelId = uiChannel.subscribe(handleChannelMessages);
 
-channel('game').subscribe((topic) => {
+gameChannel.subscribe((topic) => {
     if (topic === 'shutdown:game') {
-        channel('ui').unsubscribe(channelId);
+        uiChannel.unsubscribe(channelId);
     }
 });
 
 function launchWindow(name, windowInstance, messageParms) {
-        windowRefs[name] = windowInstance;
-        windowInstance.openWindow.apply(windowInstance, messageParms);
+    windowRefs[name] = windowInstance;
+    windowInstance.openWindow.apply(windowInstance, messageParms);
 }
 
 function handleChannelMessages(topic, ...messageParms) {
@@ -43,4 +43,3 @@ function handleChannelMessages(topic, ...messageParms) {
         break;
     }
 }
-
