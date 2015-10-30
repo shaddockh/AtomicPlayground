@@ -25,10 +25,11 @@ export default class TargetCameraController extends Atomic.JSComponent {
 
     update(/*timestep*/) {
         if (this.cameraTargetNode) {
-            let [x, y, z] = this.cameraTargetNode.position;
-
             this.camera.zoom = this.zoom;
-            this.cameraNode.position = [x - (this.camera.halfViewSize * this.camera.aspectRatio * this.zoom), y - this.camera.halfViewSize * this.zoom, z];
+
+            let [x, y, z] = this.cameraTargetNode.position;
+            this.cameraNode.position = [x - (this.camera.halfViewSize * this.camera.aspectRatio), y - this.camera.halfViewSize, z];
+
             if (!this.autoFollow) {
                 this.cameraTargetNode = null;
             }
