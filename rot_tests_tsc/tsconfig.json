@@ -1,0 +1,27 @@
+{
+    "compilerOptions": {
+        "noImplicitAny": false,
+        "target": "es5",
+        "module": "commonjs",
+        "outDir": "./build/Resources"
+    },
+    "filesGlob": [
+        "./**/*.ts"
+    ],
+    "files": [
+        "./lib/Atomic.d.ts",
+        "./lib/atomicTriggerEvent.d.ts",
+        "./lib/AtomicWork.d.ts",
+        "./lib/Editor.d.ts",
+        "./lib/gl-matrix.d.ts",
+        "./lib/metricsGatherer.d.ts",
+        "./lib/rot-js.d.ts",
+        "./lib/ToolCore.d.ts",
+        "./Resources/Components/ai/HeroAi.ts",
+        "./Resources/Components/ai/MonsterAi.ts",
+        "./Resources/Modules/CustomJSComponent.ts",
+        "./Resources/Modules/MapData.ts",
+        "./Resources/Modules/metricsGatherer.ts",
+        "./Resources/Modules/utils.ts"
+    ]
+}

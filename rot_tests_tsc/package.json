@@ -1,0 +1,27 @@
+{
+  "name": "rot_tests",
+  "version": "0.0.1",
+  "description": "Tests using ROT.js with AtomicEngine",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "AtomicGameEngine"
+  ],
+  "author": "Shaddock Heath",
+  "license": "ISC",
+  "devDependencies": {
+    "atomic-blueprintlib": "file:../atomic-blueprintlib",
+    "babelify": "^6.1.2",
+    "browserify": "^10.2.4",
+    "del": "^1.2.0",
+    "gulp-babel": "^5.1.0",
+    "gulp-eslint": "^1.0.0",
+    "gulp-replace": "^0.5.3",
+    "gulp-sourcemaps": "^1.5.2",
+    "rot-js": "git://github.com/shaddockh/rot.js.git#atomic-game-engine",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
+  }
+}

@@ -1,0 +1,20 @@
+WindowInfo
+	title Instructions
+TBLayout: axis: y, size: available
+	TBTextField: text: "Instructions"
+	TBEditField: multiline: 1, styling: 1, readonly: 1, gravity: all, text: "" \
+		"<u>Goal</u>\n" \
+		"To kill all the rats in the maze.\n\n" \
+		"<u>Keys</u>\n" \
+		"Move Left: A, H, Left Arrow\n" \
+		"Move Right: L, D, Right Arrow\n" \
+		"Move Down: J, S, Down Array\n" \
+		"Move Up: K, W, Up Arrow\n" \
+		"Attack: Move towards an enemy\n" \
+		"Wait a turn: Space\n" \
+		"(debug) Dump Metrics: 0\n\n" \
+		"<u>Mouse</u>\n" \
+		"Zoom: Scroll Wheel\n"
+		lp: height: 225
+	TBLayout: axis: x, distribution: gravity
+		TBButton: text: "Close", id: "btnClose"
