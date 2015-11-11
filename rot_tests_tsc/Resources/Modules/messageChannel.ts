@@ -18,7 +18,7 @@ export default class MessageChannel {
      * @param {function} callback the function to call when a message arrives
      * @return {int} the id of the subscription. Use this to unsubscribe later
      */
-    subscribe(callback:(topic: string, ...args) => void) {
+    subscribe(callback:(topic: string, ...messageArguments) => void):number {
         if (this.debug) {
             console.log(`subscribing to channel ${this.name}`);
         }

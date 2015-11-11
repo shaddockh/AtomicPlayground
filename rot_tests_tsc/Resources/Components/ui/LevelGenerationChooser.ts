@@ -19,16 +19,18 @@ class LevelGenerationChooser extends Atomic.JSComponent {
     }
 
     start() {
+        // NOTE: the fat arrow function doesn't work quite in the same way as babel, so need to capture 'this'
+        const that = this;
         this.channelId = levelChannel.subscribe((topic, ...messages) => {
             switch (topic) {
                 case 'preview:level':
-                    this.previewLevel.apply(this, messages);
+                    that.previewLevel.apply(that, messages);
                     break;
                 case 'run:level':
-                    this.runLevel.apply(this, messages);
+                    that.runLevel.apply(that, messages);
                     break;
                 case 'show:levelgen':
-                    this.showLevelGen.apply(this, messages);
+                    that.showLevelGen.apply(that, messages);
                     break;
             }
         });

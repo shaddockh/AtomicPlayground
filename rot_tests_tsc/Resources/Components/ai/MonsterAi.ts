@@ -22,11 +22,11 @@ class MonsterAi extends CustomJSComponent {
         isHunting: false
     };
 
-    chaseEnemy:boolean;
-    isHunting:boolean;
-    trackingRadius:number;
-    sightRadius:number;
-    deathEffect:string;
+    chaseEnemy: boolean;
+    isHunting: boolean;
+    trackingRadius: number;
+    sightRadius: number;
+    deathEffect: string;
 
     resolveTurn() {
         // nothing to do
@@ -34,8 +34,10 @@ class MonsterAi extends CustomJSComponent {
 
 
     start() {
-        this.DEBUG('Registering self with scheduler');
-        gameState.getCurrentLevel().registerActor(this);
+        if (gameState.getCurrentLevel()) {
+            this.DEBUG('Registering self with scheduler');
+            gameState.getCurrentLevel().registerActor(this);
+        }
     }
 
     canWalk(point) {
@@ -86,7 +88,7 @@ class MonsterAi extends CustomJSComponent {
             var position = this.node.getJSComponent<Entity>('Entity').getPosition();
             let nearbyEntities = gameState.getCurrentLevel().getEntitiesInRadius(position, this.trackingRadius);
             let hero = nearbyEntities.filter((entity) => {
-            return entity.blueprint === 'hero';
+                return entity.blueprint === 'hero';
             }).pop();
 
             // no hero in radius..go back to sleep
@@ -97,7 +99,7 @@ class MonsterAi extends CustomJSComponent {
             let playerPos = hero.entityComponent.getPosition();
 
             const astar = new ROT.Path.AStar(playerPos[0], playerPos[1], (x, y) => this.canWalk([x, y]), {
-            topology: 4
+                topology: 4
             });
 
             let path = [];
@@ -158,7 +160,7 @@ class MonsterAi extends CustomJSComponent {
         this.DEBUG('Killed!');
         gameState.getCurrentLevel().deregisterActor(this);
         if (this.deathEffect) {
-          gameState.getCurrentLevelRenderer().addVisualEffect(this.deathEffect, this.node.position2D);
+            gameState.getCurrentLevelRenderer().addVisualEffect(this.deathEffect, this.node.position2D);
         }
 
         const entityComponent = this.node.getJSComponent<Entity>('Entity');
