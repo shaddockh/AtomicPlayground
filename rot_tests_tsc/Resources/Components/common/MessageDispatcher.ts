@@ -6,7 +6,7 @@ import * as metrics from 'metricsGatherer';
 /**
  * This will cache trigger methods on a node
  */
-export default class MessageDispatcher extends CustomJSComponent {
+class MessageDispatcher extends CustomJSComponent {
     constructor() {
         super();
    }
@@ -72,3 +72,4 @@ export default class MessageDispatcher extends CustomJSComponent {
     }
 
 }
+export = MessageDispatcher;

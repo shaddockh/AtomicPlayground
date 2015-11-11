@@ -4,12 +4,12 @@ import ROT = require('rot-js');
 import { nodeBuilder } from 'atomic-blueprintLib';
 import MapData from '../../Modules/MapData';
 import * as triggerEvent from 'atomicTriggerEvent';
-import CustomJSComponent from '../../Modules/CustomJSComponent';
+import CustomJSComponent from 'CustomJSComponent';
 import gameState from '../../Modules/gameState';
-import Entity from '../common/Entity';
-import Tile from '../common/Tile';
+import Entity = require('../common/Entity'); // Need to use 'require' when pulling in a component because they are exported differently
+import Tile = require('../common/Tile'); // Need to use 'require' when pulling in a component because they are exported differently
 
-export default class LevelRenderer2D extends CustomJSComponent {
+class LevelRenderer2D extends CustomJSComponent {
 
     inspectorFields = {
         debug: false,
@@ -198,3 +198,4 @@ export default class LevelRenderer2D extends CustomJSComponent {
         //node.scale2D = [zoom, zoom];
     }
 }
+export = LevelRenderer2D;

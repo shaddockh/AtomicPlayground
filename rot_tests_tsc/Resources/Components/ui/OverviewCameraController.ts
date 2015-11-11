@@ -1,7 +1,6 @@
 'use strict';
 'atomic component';
-
-export default class OverviewCameraController extends Atomic.JSComponent {
+class OverviewCameraController extends Atomic.JSComponent {
     inspectorFields = {
         debug: false,
         allowZoom: true,
@@ -36,3 +35,5 @@ export default class OverviewCameraController extends Atomic.JSComponent {
         //}
     }
 }
+
+export = OverviewCameraController;

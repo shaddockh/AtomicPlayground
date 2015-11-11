@@ -4,8 +4,8 @@ import * as triggerEvent from 'atomicTriggerEvent';
 //import { nodeBuilder } from 'atomic-blueprintLib';
 //import MapData from 'MapData';
 
-import CustomJSComponent from '../../Modules/CustomJSComponent';
-export default class Potion extends CustomJSComponent {
+import CustomJSComponent from 'CustomJSComponent';
+class Potion extends CustomJSComponent {
 
     inspectorFields = {
         debug: false,
@@ -49,3 +49,4 @@ export default class Potion extends CustomJSComponent {
         }
     }
 }
+export = Potion;

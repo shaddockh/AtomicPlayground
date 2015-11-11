@@ -17,7 +17,7 @@ class PlayerActions {
     static DUMP_METRICS = 6;
 }
 
-export default class PlayerInputHandler extends CustomJSComponent {
+class PlayerInputHandler extends CustomJSComponent {
 
     inspectorFields = {
         debug: false
@@ -113,3 +113,4 @@ export default class PlayerInputHandler extends CustomJSComponent {
     }
 
 }
+export = PlayerInputHandler;

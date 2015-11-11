@@ -4,9 +4,9 @@ import * as triggerEvent from 'atomicTriggerEvent';
 //import { nodeBuilder } from 'atomic-blueprintLib';
 //import MapData from 'MapData';
 
-import Entity from '../common/Entity';
+import Entity = require('../common/Entity');
 import CustomJSComponent from '../../Modules/CustomJSComponent';
-export default class Door extends CustomJSComponent {
+class Door extends CustomJSComponent {
 
     inspectorFields = {
         debug: false,
@@ -82,3 +82,4 @@ export default class Door extends CustomJSComponent {
     }
 
 }
+export = Door;

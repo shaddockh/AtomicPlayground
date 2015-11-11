@@ -3,7 +3,7 @@
 'use strict';
 'atomic component';
 
-export default class LightFlicker extends Atomic.JSComponent {
+class LightFlicker extends Atomic.JSComponent {
 
     inspectorFields = {
         baseRange: 45,
@@ -80,3 +80,4 @@ export default class LightFlicker extends Atomic.JSComponent {
 
     }
 }
+export = LightFlicker;

@@ -1,6 +1,6 @@
 'use strict';
 'atomic component';
-import CustomJSComponent from '../../Modules/CustomJSComponent';
+import CustomJSComponent from 'CustomJSComponent';
 import gameState from '../../Modules/gameState';
 
 /**
@@ -8,7 +8,7 @@ import gameState from '../../Modules/gameState';
  * is what is provided in the triggerPlatforms property.  Can also fire a message if the
  * platform does not match.
  */
-export default class ShadowTile extends CustomJSComponent {
+class ShadowTile extends CustomJSComponent {
     inspectorFields = {
         platformDisable: ['HTML5'],
         debug: false
@@ -30,3 +30,4 @@ export default class ShadowTile extends CustomJSComponent {
         }
     }
 }
+export = ShadowTile;

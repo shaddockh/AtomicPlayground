@@ -3,7 +3,7 @@
 import CustomJSComponent from 'CustomJSComponent';
 import * as triggerEvent from 'atomicTriggerEvent';
 
-export default class Health extends CustomJSComponent {
+class Health extends CustomJSComponent {
     inspectorFields = {
         debug: false,
         life: 1
@@ -28,3 +28,4 @@ export default class Health extends CustomJSComponent {
     }
 
 }
+export = Health;

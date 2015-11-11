@@ -1,8 +1,8 @@
 'use strict';
 'atomic component';
 
-import CustomJSComponent from '../../Modules/CustomJSComponent';
-export default class SpriteSheet extends CustomJSComponent {
+import CustomJSComponent from 'CustomJSComponent';
+class SpriteSheet extends CustomJSComponent {
     inspectorFields = {
         debug: false,
         spriteSheet: null,
@@ -24,3 +24,4 @@ export default class SpriteSheet extends CustomJSComponent {
         }
     }
 }
+export = SpriteSheet;

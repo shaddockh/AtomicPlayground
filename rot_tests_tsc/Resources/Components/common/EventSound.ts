@@ -14,7 +14,7 @@ import CustomJSComponent from 'CustomJSComponent';
  *   onClose: 'Sounds/customsound2.ogg'
  * }
  */
-export default class EventSound extends CustomJSComponent {
+class EventSound extends CustomJSComponent {
     inspectorFields = {
         debug: false,
 
@@ -40,3 +40,4 @@ export default class EventSound extends CustomJSComponent {
         }
     }
 }
+export = EventSound;

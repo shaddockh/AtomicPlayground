@@ -1,14 +1,14 @@
 'use strict';
 'atomic component';
 /// <reference path="../../../typings/gl-matrix/gl-matrix.d.ts"/>
-import CustomJSComponent from '../../Modules/CustomJSComponent';
-import Entity from '../common/Entity';
+import CustomJSComponent from 'CustomJSComponent';
+import Entity = require('../common/Entity');
 import MapData from '../../Modules/MapData';
 import gameState from '../../Modules/gameState';
 import * as triggerEvent from 'atomicTriggerEvent';
 import {vec2} from 'gl-matrix';
 
-export default class GridMover extends CustomJSComponent {
+class GridMover extends CustomJSComponent {
     inspectorFields = {
         debug: false,
         // need speed to be 1 tile per speed per second.
@@ -156,3 +156,4 @@ export default class GridMover extends CustomJSComponent {
         }
     }
 }
+export = GridMover;

@@ -21,6 +21,7 @@
         "Resources/Components/actionHandlers/GridMover.ts",
         "Resources/Components/ai/HeroAi.ts",
         "Resources/Components/ai/MonsterAi.ts",
+        "Resources/Components/attic/PhysicsMover.ts",
         "Resources/Components/common/ActionLogger.ts",
         "Resources/Components/common/Entity.ts",
         "Resources/Components/common/EventSound.ts",

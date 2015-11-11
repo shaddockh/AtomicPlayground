@@ -3,7 +3,7 @@
 import CustomJSComponent from 'CustomJSComponent';
 import { uiChannel } from '../../Modules/gameChannels';
 
-export default class ActionLogger extends CustomJSComponent {
+class ActionLogger extends CustomJSComponent {
     inspectorFields = {
         debug: false
     };
@@ -12,3 +12,4 @@ export default class ActionLogger extends CustomJSComponent {
         uiChannel.sendMessage('log:addmessage', message, color);
     }
 }
+export = ActionLogger;

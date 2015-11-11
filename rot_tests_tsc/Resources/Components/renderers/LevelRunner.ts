@@ -16,7 +16,7 @@ import gameState from '../../Modules/gameState';
  *
  * This component, on startup, will register itself as scene.Level
  */
-export default class LevelRunner extends CustomJSComponent {
+class LevelRunner extends CustomJSComponent {
 
     inspectorFields = {
         debug: false,
@@ -192,3 +192,4 @@ export default class LevelRunner extends CustomJSComponent {
     }
 
 }
+export = LevelRunner;

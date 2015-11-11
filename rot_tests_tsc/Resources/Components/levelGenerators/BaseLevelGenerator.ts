@@ -2,7 +2,7 @@
 // 'noatomic component'; -- don't want to expose to the editor since this is more like an abstract base class
 import * as triggerEvent from 'atomicTriggerEvent';
 import MapData from '../../Modules/MapData';
-import CustomJSComponent from '../../Modules/CustomJSComponent';
+import CustomJSComponent from 'CustomJSComponent';
 
 export default class BaseLevelGenerator extends CustomJSComponent {
     inspectorFields = {

@@ -4,7 +4,7 @@ import ROT = require('rot-js');
 import MapData from '../../Modules/MapData';
 import BaseLevelGenerator from './BaseLevelGenerator';
 
-export default class ROTEllerMaze extends BaseLevelGenerator {
+class ROTEllerMaze extends BaseLevelGenerator {
 
     inspectorFields = {
         debug: false,
@@ -37,3 +37,4 @@ export default class ROTEllerMaze extends BaseLevelGenerator {
         this.placeItems();
     }
 }
+export = ROTEllerMaze;

@@ -4,7 +4,7 @@ import ROT = require('rot-js');
 import MapData from '../../Modules/MapData';
 import BaseLevelGenerator from './BaseLevelGenerator';
 
-export default class ROTCellular extends BaseLevelGenerator {
+class ROTCellular extends BaseLevelGenerator {
 
     inspectorFields = {
         debug: false,
@@ -73,3 +73,4 @@ export default class ROTCellular extends BaseLevelGenerator {
         this.placeItems();
     }
 }
+export = ROTCellular;

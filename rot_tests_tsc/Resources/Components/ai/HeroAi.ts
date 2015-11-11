@@ -1,12 +1,12 @@
 'use strict';
 'atomic component';
 import * as triggerEvent from 'atomicTriggerEvent';
-import CustomJSComponent from '../../Modules/CustomJSComponent';
-import Entity from '../common/Entity';
+import CustomJSComponent from 'CustomJSComponent';
+import Entity = require('../common/Entity');
 import * as metrics from 'metricsGatherer';
 import gameState from '../../Modules/gameState';
 
-export default class HeroAi extends CustomJSComponent {
+class HeroAi extends CustomJSComponent {
 
     inspectorFields = {
     debug: false,
@@ -140,3 +140,4 @@ export default class HeroAi extends CustomJSComponent {
       gameState.getCurrentLevel().updateUi();
     }
 }
+export = HeroAi;

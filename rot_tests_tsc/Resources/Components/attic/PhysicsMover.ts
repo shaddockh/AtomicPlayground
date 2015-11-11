@@ -1,37 +1,47 @@
 'use strict';
-"atomic component";
+'atomic component';
 import CustomJSComponent from 'CustomJSComponent';
-import MapData from 'MapData';
+import MapData from '../../Modules/MapData';
 import * as triggerEvent from 'atomicTriggerEvent';
-import {
-    vec2
-}
-from 'gl-matrix';
+import { vec2, GLM } from 'gl-matrix';
+import gameState from '../../Modules/gameState';
+import Entity = require('../common/Entity');
 
 /* NOTE! THIS IS BROKEN! -- just here for reference */
-export default class PhysicsMover extends CustomJSComponent {
+class PhysicsMover extends CustomJSComponent {
     inspectorFields = {
         speed: 1,
         debug: false
     };
 
+    private targetPos;
+    private startPos;
+    private moving:boolean;
+    private body:Atomic.RigidBody2D;
+    private queuedVector;
+    private t;
+    private adjustedSpeed;
+    private movementVector;
+
+    speed: number = 1;
+
     start() {
         this.targetPos = this.node.position2D;
         this.startPos = this.node.position2D;
         this.moving = false;
-        this.body = this.node.getComponent('RigidBody2D');
+        this.body = this.node.getComponent<Atomic.RigidBody2D>('RigidBody2D');
     }
 
     update(/*timeStep*/) {
         if (this.moving) {
             let pos = this.node.position2D;
-            let speed = (this.scene.LevelRenderer.cellPixelSize * Atomic.PIXEL_SIZE);
+            let speed = (gameState.getCurrentLevelRenderer().cellPixelSize * Atomic.PIXEL_SIZE);
             let dist = [Math.abs(this.targetPos[0] - pos[0]), Math.abs(this.targetPos[1] - pos[1])];
             // this may not work, but what I'm trying to do is if the actor has stopped and
             // we aren't at our target position, then something may have happened, so let's go
             // back to our start position
             let linearVel = this.body.linearVelocity;
-            if (linearVel[0] == 0 && linearVel[1] == 0) {
+            if (linearVel[0] === 0 && linearVel[1] === 0) {
                 if (Math.abs(this.targetPos[0] - pos[0]) > 0 || Math.abs(this.targetPos[1] - pos[1]) > 0) {
                     this.DEBUG(`Could not get to position.  Resetting to ${this.startPos}`);
 
@@ -53,28 +63,28 @@ export default class PhysicsMover extends CustomJSComponent {
     }
 
     getMapPosition() {
-        return this.node.getJSComponent("Entity").getPosition();
+        return this.node.getJSComponent<Entity>('Entity').getPosition();
     }
 
     setMapPosition(pos) {
-        this.node.getJSComponent("Entity").setPosition(pos);
+        this.node.getJSComponent<Entity>('Entity').setPosition(pos);
     }
 
     onTryMove(vector2D) {
 
         // implement a way of queuing up actions
         if (this.moving) {
-            if (this.scene.Level.turnBased) {
+            if (gameState.getCurrentLevel().turnBased) {
                 this.queuedVector = vector2D;
             }
             return;
         }
         this.queuedVector = null;
 
-        this.adjustedSpeed = this.speed * this.scene.LevelRenderer.cellPixelSize;
+        this.adjustedSpeed = this.speed * gameState.getCurrentLevelRenderer().cellPixelSize;
 
-        let unitSize = this.scene.LevelRenderer.cellUnitSize;
-        let pos = this.node.position2D;
+        let unitSize = gameState.getCurrentLevelRenderer().cellUnitSize;
+        let pos = <GLM.IArray>(this.node.position2D);
         this.startPos = pos;
         this.targetPos = vec2.add(vec2.create(), pos, vec2.scale(vec2.create(), vector2D, unitSize));
         this.t = 0;
@@ -85,13 +95,13 @@ export default class PhysicsMover extends CustomJSComponent {
         this.DEBUG(`Current position: ${mapPos}`);
         this.DEBUG(`Moving to: ${newMapPos}`);
 
-        if (this.scene.Level.getTileAt(newMapPos).terrainType !== MapData.TILE_FLOOR) {
+        if (gameState.getCurrentLevel().getTileAt(newMapPos).terrainType !== MapData.TILE_FLOOR) {
             this.DEBUG('Blocked by terrain');
             return;
         }
 
         let blocked = false;
-        this.scene.Level.iterateEntitiesAt(newMapPos, (entity) => {
+        gameState.getCurrentLevel().iterateEntitiesAt(newMapPos, (entity) => {
             if (entity.entityComponent) {
                 if (entity.entityComponent.blocksPath) {
                     blocked = true;
@@ -119,3 +129,4 @@ export default class PhysicsMover extends CustomJSComponent {
         triggerEvent.trigger(this.node, 'onTurnTaken', this, this.node);
     }
 }
+export = PhysicsMover;

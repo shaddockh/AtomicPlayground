@@ -1,11 +1,11 @@
 'use strict';
 'atomic component';
-import CustomJSComponent from '../../Modules/CustomJSComponent';
+import CustomJSComponent from 'CustomJSComponent';
 
 /**
  * Simple component that will listen for trigger messages and report on them
  */
-export default class Entity extends CustomJSComponent {
+class TriggerDebug extends CustomJSComponent {
     constructor() {
         super();
         this.debug = true;
@@ -15,3 +15,5 @@ export default class Entity extends CustomJSComponent {
         this.DEBUG(`Got a message: ${msg}`);
     }
 }
+
+export = TriggerDebug;

@@ -2,16 +2,16 @@
 'atomic component';
 
 import * as triggerEvent from 'atomicTriggerEvent';
-import CustomJSComponent from '../../Modules/CustomJSComponent';
+import CustomJSComponent from 'CustomJSComponent';
 
 import MapData from '../../Modules/MapData';
 import ROT = require('rot-js');
 import {vec2} from 'gl-matrix';
 import * as metrics from 'metricsGatherer';
 import gameState from '../../Modules/gameState';
-import Entity from '../common/Entity';
+import Entity = require('../common/Entity');
 
-export default class MonsterAi extends CustomJSComponent {
+class MonsterAi extends CustomJSComponent {
 
     inspectorFields = {
         debug: false,
@@ -188,3 +188,4 @@ export default class MonsterAi extends CustomJSComponent {
     }
 
 }
+export = MonsterAi;
