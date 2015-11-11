@@ -1,7 +1,5 @@
 'use strict';
 
-/// <reference path="lib/Atomic.d.ts"/>
-
 /**
  * This is a custom version of the JSComponent that adds some helper functions.
  * It could also be handled via extending the JSComponent.prototype, but that seems messy
@@ -16,7 +14,7 @@ export default class CustomJSComponent extends Atomic.JSComponent {
      */
     debug = false;
 
-    _componentName:string = null;
+    private _componentName:string = null;
 
     /**
      * Write a debug message to the console prefixed by the component name

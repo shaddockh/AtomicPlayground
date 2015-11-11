@@ -26,7 +26,8 @@ export function stop(name) {
 export function dumpMetrics(name) {
     if (name) {
         var statCounter = statContainer[name];
-        console.log('STAT: ' + name + ' - called ' + statCounter.count + ' times, total time: ' + statCounter.totalTime + ' ms, avg: ' + statCounter.avg + ' ms');
+        console.log('STAT: ' + name + ' - called ' + statCounter.count +
+                ' times, total time: ' + statCounter.totalTime + ' ms, avg: ' + statCounter.avg + ' ms');
     } else {
         for (var metric in statContainer) {
             dumpMetrics(metric);

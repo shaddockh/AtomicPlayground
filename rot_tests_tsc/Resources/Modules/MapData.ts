@@ -2,17 +2,18 @@
 import * as utils from './utils';
 import * as metrics from './metricsGatherer';
 
-interface IEntity {
-  x:number;
-  y:number;
+export interface IEntity {
+    x:number;
+    y:number;
+    blueprint:string;
 }
 
-interface ITile {
-  terrainType;
-  blocksLight?:boolean;
-  blocksPath?:boolean;
-  edge:number;
-  blueprint?:string;
+export interface ITile {
+    terrainType;
+    blocksLight?:boolean;
+    blocksPath?:boolean;
+    edge:number;
+    blueprint?:string;
 }
 
 export default class MapData {
@@ -109,7 +110,7 @@ export default class MapData {
     isEmpty(x, y) {
         let tile = this.getTile(x, y);
         if (tile && tile.terrainType === MapData.TILE_FLOOR) {
-            if (this.getEntitiesAt(x,y).length === 0) {
+            if (this.getEntitiesAt(x, y).length === 0) {
                 return true;
             }
         }
@@ -152,7 +153,7 @@ export default class MapData {
         try {
             let tiles = this.tiles;
             let xEnd = this.width,
-                yEnd = this.height;
+            yEnd = this.height;
 
             for (let x = 0; x < xEnd; x++) {
                 for (let y = 0; y < yEnd; y++) {
@@ -175,7 +176,7 @@ export default class MapData {
         };
     }
 
-    static buildEntity(blueprint, x = 0, y = 0) {
+    static buildEntity(blueprint, x = 0, y = 0):IEntity {
         return {
             x: x,
             y: y,
@@ -211,8 +212,8 @@ function createEmptyMap(width, height, defaultValue:ITile = {
             //Note: we have to create a copy of the default value for each cell otherwise
             //changing one cell will update all the other cells
             let newTile = {
-                x: x,
-                y: y
+            x: x,
+            y: y
             };
             for (let p in defaultValue) {
                 newTile[p] = defaultValue[p];

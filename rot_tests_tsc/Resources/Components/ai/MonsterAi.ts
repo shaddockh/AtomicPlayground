@@ -1,18 +1,15 @@
 'use strict';
 'atomic component';
 
-///<reference path="lib/atomicTriggerEvent.d.ts"/>
-///<reference path="lib/metricsGatherer.d.ts"/>
-///<reference path="lib/rot-js.d.ts"/>
-///<reference path="lib/gl-matrix.d.ts"/>
-
 import * as triggerEvent from 'atomicTriggerEvent';
 import CustomJSComponent from '../../Modules/CustomJSComponent';
 
 import MapData from '../../Modules/MapData';
 import ROT = require('rot-js');
-import { vec2 } from 'gl-matrix';
+import {vec2} from 'gl-matrix';
 import * as metrics from 'metricsGatherer';
+import gameState from '../../Modules/gameState';
+import Entity from '../common/Entity';
 
 export default class MonsterAi extends CustomJSComponent {
 
@@ -31,30 +28,31 @@ export default class MonsterAi extends CustomJSComponent {
     sightRadius:number;
     deathEffect:string;
 
-    resolveTurn() {};
+    resolveTurn() {
+        // nothing to do
+    };
 
 
     start() {
-        if (this.scene.Level) {
-            this.DEBUG('Registering self with scheduler');
-            this.scene.Level.registerActor(this);
-        }
+        this.DEBUG('Registering self with scheduler');
+        gameState.getCurrentLevel().registerActor(this);
     }
 
     canWalk(point) {
-        let pos = this.node.getJSComponent("Entity").getPosition();
+        let pos = this.node.getJSComponent<Entity>('Entity').getPosition();
 
         // See if we are trying to get to ourselves
         if (vec2.dist(point, pos) === 0) {
             return true;
         }
 
-        if (!this.scene.Level.isValidPos(point) || this.scene.Level.getTileAt(point).terrainType !== MapData.TILE_FLOOR) {
+        const level = gameState.getCurrentLevel();
+        if (!level.isValidPos(point) || level.getTileAt(point).terrainType !== MapData.TILE_FLOOR) {
             return false;
         }
 
         let canWalk = true;
-        this.scene.Level.iterateEntitiesAt(point, (entity) => {
+        level.iterateEntitiesAt(point, (entity) => {
             if (entity.entityComponent) {
                 if (entity.entityComponent.blocksPath) {
                     canWalk = false;
@@ -85,10 +83,10 @@ export default class MonsterAi extends CustomJSComponent {
                 return;
             }
 
-            var position = this.node.getJSComponent('Entity').getPosition();
-            let nearbyEntities = this.scene.Level.getEntitiesInRadius(position, this.trackingRadius);
+            var position = this.node.getJSComponent<Entity>('Entity').getPosition();
+            let nearbyEntities = gameState.getCurrentLevel().getEntitiesInRadius(position, this.trackingRadius);
             let hero = nearbyEntities.filter((entity) => {
-                return entity.blueprint === 'hero';
+            return entity.blueprint === 'hero';
             }).pop();
 
             // no hero in radius..go back to sleep
@@ -99,11 +97,11 @@ export default class MonsterAi extends CustomJSComponent {
             let playerPos = hero.entityComponent.getPosition();
 
             const astar = new ROT.Path.AStar(playerPos[0], playerPos[1], (x, y) => this.canWalk([x, y]), {
-                topology: 4
+            topology: 4
             });
 
             let path = [];
-            let pos = this.node.getJSComponent("Entity").getPosition();
+            let pos = this.node.getJSComponent<Entity>('Entity').getPosition();
             astar.compute(pos[0], pos[1], (x, y) => {
                 path.push([x, y]);
             });
@@ -125,7 +123,7 @@ export default class MonsterAi extends CustomJSComponent {
                 let dir = vec2.sub(vec2.create(), target, pos);
                 vec2.normalize(dir, dir);
 
-                triggerEvent.trigger(this.node, "onTryMove", dir);
+                triggerEvent.trigger(this.node, 'onTryMove', dir);
 
                 // we are returning a 'thenable' which tells the scheduler to not move on to the next actor
                 // until this actor has completed.  This is overriding the onTurnTaken event on this class with
@@ -158,14 +156,14 @@ export default class MonsterAi extends CustomJSComponent {
 
     onDie(killerComponent, killerNode) {
         this.DEBUG('Killed!');
-        this.scene.Level.deregisterActor(this);
+        gameState.getCurrentLevel().deregisterActor(this);
         if (this.deathEffect) {
-            this.scene.LevelRenderer.addVisualEffect(this.deathEffect, this.node.position2D);
+          gameState.getCurrentLevelRenderer().addVisualEffect(this.deathEffect, this.node.position2D);
         }
 
-        const entityComponent = this.node.getJSComponent('Entity');
+        const entityComponent = this.node.getJSComponent<Entity>('Entity');
         triggerEvent.trigger(killerNode, 'onLogAction', `${entityComponent.screenName} dies.`);
-        this.scene.Level.killEnemy();
+        gameState.getCurrentLevel().killEnemy();
         triggerEvent.trigger(this.node, 'onDestroy');
         Atomic.destroy(this.node);
     }

@@ -1,95 +1,76 @@
 'use strict';
 
-var gulp = require('gulp');
-var browserify = require('browserify');
-var babel = require("gulp-babel");
-var sourcemaps = require('gulp-sourcemaps');
-var source = require('vinyl-source-stream');
-var buffer = require('vinyl-buffer');
-var del = require('del');
-var replace = require('gulp-replace');
-var eslint = require('gulp-eslint');
+var gulp = require('gulp'),
+    debug = require('gulp-debug'),
+    inject = require('gulp-inject'),
+    tsc = require('gulp-typescript'),
+    tslint = require('gulp-tslint'),
+    sourcemaps = require('gulp-sourcemaps'),
+    del = require('del'),
+    Config = require('./Gulpfile.config'),
+    tsProject = tsc.createProject('tsconfig.json');
 
-var paths = {
-    babel: 'Resources/**/*.es6',
-    atomify: './vendor.js',
-    lint: ['Resources/**/*.{es6,js}','!Resources/Modules/gl-matrix.js']
-};
+var config = new Config();
 
-gulp.task('clean', function (cb) {
-    del(['build'], cb);
-});
+/**
+ * Generates the app.d.ts references file dynamically from all application *.ts files.
+ */
+ gulp.task('gen-ts-refs', function () {
+     var target = gulp.src(config.appTypeScriptReferences);
+     var sources = gulp.src([config.allTypeScript], {read: false});
+     console.log(target);
+     console.log(sources);
+     return target.pipe(inject(sources, {
+         starttag: '//{',
+         endtag: '//}',
+         transform: function (filepath) {
+             return '/// <reference path="..' + filepath + '" />';
+         }
+     })).pipe(gulp.dest(config.typings));
+ });
 
+/**
+ * Lint all custom TypeScript files.
+ */
 gulp.task('lint', function () {
-    return gulp.src(paths.lint)
-        // eslint() attaches the lint output to the eslint property
-        // of the file object so it can be used by other modules.
-        .pipe(eslint())
-        // eslint.format() outputs the lint results to the console.
-        // Alternatively use eslint.formatEach() (see Docs).
-        .pipe(eslint.format())
-        // To have the process exit with an error code (1) on
-        // lint error, return the stream and pipe to failOnError last.
-        .pipe(eslint.failOnError());
+    return gulp.src(config.allTypeScript).pipe(tslint()).pipe(tslint.report('prose'));
 });
 
-// We want to run all the .es6 files through babel first, before we browserify them
-gulp.task('babel', ['lint','copy-files'], doBabel);
-gulp.task('babel-watch', doBabel);
-gulp.task('atomify', ['copy-files'], doAtomify);
-gulp.task('atomify-watch', doAtomify);
-
-gulp.task('copy-files', ['clean'], function () {
-    return gulp.src(['*.atomic', 'UserPrefs.json', 'BuildSettings.json', './Resources/**', '!**/*.es6'], {
-            base: './'
-        })
-        .pipe(gulp.dest('./build'));
-});
-
-gulp.task('transform-spritesheets', ['copy-files'], function () {
-    // This is necessary because the spritesheets exported from Leshy Spritesheet Tool (http://www.leshylabs.com/apps/sstool/) are not formatted in a way that
-    // Atomic Game Engine can read... the casing is wrong.
-    return gulp.src(['./Resources/Sprites/*.xml'], {
-            base: './'
-        })
-        .pipe(replace(/textureatlas/ig, 'TextureAtlas'))
-        .pipe(replace(/subtexture/ig, 'SubTexture'))
-        .pipe(replace(/imagepath/ig, 'imagePath'))
-        .pipe(gulp.dest('./build'));
-});
-
-gulp.task('watch', ['default'], function () {
-    gulp.watch(paths.babel, ['babel-watch']);
-    gulp.watch(paths.atomify, ['atomify-watch']);
-});
-
-gulp.task('default', ['babel', 'atomify', 'transform-spritesheets']);
-
-// --------------------------------------------------------------------
-function doAtomify() {
-
-    if (paths.atomify) {
-        // set up the browserify instance on a task basis
-        var b = browserify({
-            entries: paths.atomify,
-            ignoreMissing: false
-        });
-
-        return b.bundle()
-            .pipe(source('vendor.js'))
-            .pipe(buffer())
-            .pipe(gulp.dest('./build/Resources/Modules'));
-    }
-}
-
-function doBabel() {
-    return gulp.src(paths.babel)
+/**
+ * Compile TypeScript and include references to library and app .d.ts files.
+ */
+gulp.task('compile-ts', function () {
+    var sourceTsFiles = [config.allTypeScript, //path to typescript files
+        config.libraryTypeScriptDefinitions
+    ]; //reference to library .d.ts files
+    console.log(sourceTsFiles);
+    var tsResult = gulp.src(sourceTsFiles)
         .pipe(sourcemaps.init())
-        .pipe(babel({
-            blacklist: ['strict'], // atomic doesn't like use strict in all cases.  If you want it, add it to the es6 file and it will carry over.
-            "only": ["*.es6"],
-            "optional": ["es7.classProperties"]
-        }))
+        .pipe(tsc(tsProject));
+
+    tsResult.dts.pipe(gulp.dest(config.tsOutputPath));
+    return tsResult.js
         .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest("./build/Resources"));
-}
+        .pipe(gulp.dest(config.tsOutputPath));
+});
+
+/**
+ * Remove all generated JavaScript files from TypeScript compilation.
+ */
+gulp.task('clean-ts', function (cb) {
+    var typeScriptGenFiles = [
+        config.tsOutputPath + '/**/*.js', // path to all JS files auto gen'd by editor
+        config.tsOutputPath + '/**/*.js.map', // path to all sourcemap files auto gen'd by editor
+        '!' + config.tsOutputPath + '/lib'
+    ];
+
+    // delete the files
+    del(typeScriptGenFiles, cb);
+});
+
+gulp.task('watch', function () {
+    gulp.watch([config.allTypeScript], ['lint', 'compile-ts']);
+});
+
+
+gulp.task('default', ['lint', 'compile-ts']);

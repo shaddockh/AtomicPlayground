@@ -1,31 +1,30 @@
 'use strict';
 'atomic component';
-///<reference path="lib/atomicTriggerEvent.d.ts"/>
-///<reference path="lib/metricsGatherer.d.ts"/>
-
 import * as triggerEvent from 'atomicTriggerEvent';
 import CustomJSComponent from '../../Modules/CustomJSComponent';
+import Entity from '../common/Entity';
 import * as metrics from 'metricsGatherer';
+import gameState from '../../Modules/gameState';
 
 export default class HeroAi extends CustomJSComponent {
 
     inspectorFields = {
-        debug: false,
-        sightRadius: 10
+    debug: false,
+    sightRadius: 10
     };
 
-    sightRadius:number = 10;
+    sightRadius: number = 10;
     resolveTurn = null;
 
     start() {
-        if (this.scene.Level) {
             this.DEBUG('Registering self with scheduler');
-            this.scene.Level.registerActor(this);
+            const level = gameState.getCurrentLevel();
+            level.registerActor(this);
+
 
             // TODO: we need to unlock the engine here for some reason.  It would be better if there were a less invasive way
-            this.scene.Level.engine.unlock();
-            this.scene.Level.updateFov(this.getPosition(), this.sightRadius);
-        }
+            level.engine.unlock();
+            level.updateFov(this.getPosition(), this.sightRadius);
     }
 
     /** Pointer to be called when the action is complete.  The complete promise will overwrite this */
@@ -65,13 +64,13 @@ export default class HeroAi extends CustomJSComponent {
 
     onTurnTaken() {
 
-        this.deferAction(()=>{
+        this.deferAction(() => {
             metrics.start('incTurn');
-            this.scene.Level.incTurn();
+            gameState.getCurrentLevel().incTurn();
             metrics.stop('incTurn');
 
             metrics.start('updateFov');
-            this.scene.Level.updateFov(this.getPosition());
+            gameState.getCurrentLevel().updateFov(this.getPosition());
             metrics.stop('updateFov');
         });
 
@@ -79,7 +78,7 @@ export default class HeroAi extends CustomJSComponent {
     }
 
     getPosition() {
-        return this.node.getJSComponent('Entity').getPosition();
+        return this.node.getJSComponent<Entity>('Entity').getPosition();
     }
 
     deferredActions = [];
@@ -98,7 +97,7 @@ export default class HeroAi extends CustomJSComponent {
 
     onMoveComplete() {
         triggerEvent.trigger(this.node, 'onTurnTaken', this, this.node);
-        this.scene.Level.setCameraTarget(this.node);
+        gameState.getCurrentLevel().setCameraTarget(this.node);
     }
 
     onSkipTurn() {
@@ -106,10 +105,10 @@ export default class HeroAi extends CustomJSComponent {
         triggerEvent.trigger(this.node, 'onTurnTaken', this, this.node);
     }
 
-    onDie( /*killerComponent, killerNode*/ ) {
+    onDie( /*killerComponent, killerNode*/) {
         this.DEBUG('Killed!');
-        this.scene.Level.deregisterActor(this);
-        this.scene.Level.gameOver();
+        gameState.getCurrentLevel().deregisterActor(this);
+        gameState.getCurrentLevel().gameOver();
     }
 
     onHit(hitter, hitterNode) {
@@ -138,6 +137,6 @@ export default class HeroAi extends CustomJSComponent {
     }
 
     onHealthChanged() {
-        this.scene.Level.updateUi();
+      gameState.getCurrentLevel().updateUi();
     }
 }
