@@ -78,5 +78,8 @@
         "typings/gl-matrix/gl-matrix.d.ts",
         "typings/rot-js/rot-js.d.ts",
         "typings/tsd.d.ts"
-    ]
+    ],
+    "atom": {
+        "rewriteTsconfig": true
+    }
 }
