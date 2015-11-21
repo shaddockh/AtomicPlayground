@@ -11,6 +11,8 @@ var GulpConfig = (function () {
         this.typings = './typings';
         this.appTypeScriptReferences = this.typings + '/app.d.ts'
         this.libraryTypeScriptDefinitions = this.typings + '/**/*.ts';
+
+        this.stubVendorFile = './vendor.js';
     }
     return gulpConfig;
 })();

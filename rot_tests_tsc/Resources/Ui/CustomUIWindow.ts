@@ -23,10 +23,12 @@ export default class CustomUIWindow {
         });
     }
 
-    openWindow(...args) {
+    openWindow(options = {
+      windowSettings: Atomic.UI_WINDOW_SETTINGS_TITLEBAR
+    }) {
 
         const window = this.window = new Atomic.UIWindow();
-        window.settings = Atomic.UI_WINDOW_SETTINGS_TITLEBAR;
+        window.settings = options.windowSettings;
         window.load(this.layoutFilename);
         window.resizeToFitContent();
 

@@ -18,6 +18,7 @@ export default class LevelGenSelector extends CustomUIWindow {
 
         let wnd = this.window;
         wnd.setRect([0, 0, 300, Atomic.graphics.height]);
+        wnd.text = 'Select a Generator to build a level with:';
 
         const selectList = wnd.getWidget<Atomic.UISelectList>('selGenerators');
         const selectSource = new Atomic.UISelectItemSource();

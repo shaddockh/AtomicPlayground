@@ -13,9 +13,11 @@ export default class Hud extends CustomUIWindow {
     }
 
     openWindow() {
-        super.openWindow();
+        super.openWindow({
+            windowSettings: Atomic.UI_WINDOW_SETTINGS_NONE
+        });
 
-        let wnd = this.window;
+        const wnd = this.window;
         wnd.setRect([0, Atomic.graphics.height - 150, 300, Atomic.graphics.height - 50]);
 
         this.messageWindow = wnd.getWidget<Atomic.UIEditField>('txtMessages');

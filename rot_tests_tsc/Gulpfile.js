@@ -8,9 +8,52 @@ var gulp = require('gulp'),
     sourcemaps = require('gulp-sourcemaps'),
     del = require('del'),
     Config = require('./Gulpfile.config'),
-    tsProject = tsc.createProject('tsconfig.json');
+    tsProject = tsc.createProject('tsconfig.json'),
+    browserify = require('browserify'),
+    source = require('vinyl-source-stream'),
+    buffer = require('vinyl-buffer'),
+    replace = require('gulp-replace');
 
 var config = new Config();
+
+/**
+ * Clean out the build folder
+ */
+gulp.task('clean', function (cb) {
+    del(['build'], cb);
+});
+
+/**
+ * Generate the vendor.js file based upon the requires contained within the
+ * vendor.js stub located in the root of the project
+ */
+gulp.task('atomify', ['copy-files'], doAtomify);
+gulp.task('atomify-watch', doAtomify);
+
+/**
+ * Copy all of the non typescript files into the build directory
+ */
+gulp.task('copy-files', ['clean'], function () {
+    return gulp.src(['*.atomic', 'UserPrefs.json', 'BuildSettings.json', './Resources/**', '!**/*.ts'], {
+            base: './'
+        })
+        .pipe(gulp.dest('./build'));
+});
+
+/**
+ * Post-processes the spritesheet
+ * This is necessary because the spritesheets exported from Leshy Spritesheet Tool (http://www.leshylabs.com/apps/sstool/) are not formatted in a way that
+ * Atomic Game Engine can read... the casing is wrong.
+ */
+gulp.task('transform-spritesheets', ['copy-files'], function () {
+    return gulp.src(['./Resources/Sprites/*.xml'], {
+            base: './'
+        })
+        .pipe(replace(/textureatlas/ig, 'TextureAtlas'))
+        .pipe(replace(/subtexture/ig, 'SubTexture'))
+        .pipe(replace(/imagepath/ig, 'imagePath'))
+        .pipe(gulp.dest('./build'));
+});
 
 /**
  * Generates the app.d.ts references file dynamically from all application *.ts files.
@@ -70,7 +113,24 @@ gulp.task('clean-ts', function (cb) {
 
 gulp.task('watch', function () {
     gulp.watch([config.allTypeScript], ['lint', 'compile-ts']);
+    gulp.watch(config.stubVendorFile, ['atomify-watch']);
 });
 
+gulp.task('default', ['clean', 'lint', 'compile-ts', 'atomify', 'transform-spritesheets']);
 
-gulp.task('default', ['lint', 'compile-ts']);
+// --------------------------------------------------------------------
+function doAtomify() {
+
+    if (config.stubVendorFile) {
+        // set up the browserify instance on a task basis
+        var b = browserify({
+            entries: config.stubVendorFile,
+            ignoreMissing: false
+        });
+
+        return b.bundle()
+            .pipe(source('vendor.js'))
+            .pipe(buffer())
+            .pipe(gulp.dest('./build/Resources/Modules'));
+    }
+}

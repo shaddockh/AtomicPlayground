@@ -1,7 +1,6 @@
 WindowInfo
 	title Instructions
 TBLayout: axis: y, size: available
-	TBTextField: text: "Instructions"
 	TBEditField: multiline: 1, styling: 1, readonly: 1, gravity: all, text: "" \
 		"<u>Goal</u>\n" \
 		"To kill all the rats in the maze.\n\n" \

@@ -18,6 +18,7 @@ export default class EndGameUi extends CustomUIWindow {
         super.openWindow();
 
         let wnd = this.window;
+        wnd.text = 'Game Over';
         this.txtEndGameReason = wnd.getWidget<Atomic.UITextField>('txtEndGameReason');
 
         wnd.getWidget<Atomic.UIButton>('btnGenerate').onClick = () => {

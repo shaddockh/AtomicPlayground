@@ -2,7 +2,6 @@ WindowInfo
 	title Game Over
 	size: 300 300
 TBLayout: axis: y, size: available
-	TBTextField: text: "Game Over"
 	TBTextField: text: "", id: "txtEndGameReason"
 	TBLayout: axis: x, distribution: gravity
 		TBButton: text: "Generate New Level", id: "btnGenerate"

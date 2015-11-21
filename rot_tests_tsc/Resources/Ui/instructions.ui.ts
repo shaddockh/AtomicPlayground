@@ -15,6 +15,7 @@ export default class InstructionsUi extends CustomUIWindow {
 
         let wnd = this.window;
         wnd.setRect([0, 0, 400, 300]);
+        wnd.text = 'Instructions';
 
         wnd.getWidget<Atomic.UIButton>('btnClose').onClick = () => {
             this.closeWindow();
