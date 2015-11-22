@@ -1,3 +1,12 @@
+2015-11-21
+---
+* Converted to TypeScript
+* Removed the elements that were hanging off the scene node and moved them to their own global module (gameState.ts) to be required in
+* Modified the camera during playtime to be zoomed in
+* Fixed some bugs revealed by converting to typescript
+* learning when and when not to use a ```*.d.ts``` file.  For some of the elements in the ```Resources\Modules``` folder, I went ahead and generated a d.ts file so that the require lines didn't need to use an absolute path.  Since AGE will auto-resolve anything in ```Modules```, by creating a ```d.ts``` file, it satisfies the compiler.  There needs to be a cleaner way, but this is how I got it to work.
+* Made some modifications to Atomic.d.ts to allow for generic functions on the getComponent and getJSComponent
+
 2015-10-14
 ---
 * Added an instructions screen
@@ -61,4 +70,3 @@ Lots of Changes - some highlights:
 * no longer need position component for just spawning an entity at a position.  The atomic-blueprintlib sets the position on the node object
 * forked the rot.js repo and made regex changes so that it loads into atomic game engine.  Updated package.js to reference that specific branch: shaddockh/rot.js#atomic-game-engine
 * removed vendor_overrides (no longer needed)
-

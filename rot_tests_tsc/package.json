@@ -1,7 +1,7 @@
 {
   "name": "rot_tests",
   "version": "0.0.1",
-  "description": "Tests using ROT.js with AtomicEngine",
+  "description": "Tests using ROT.js with AtomicEngine (Typescript Version)",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -17,7 +17,6 @@
     "del": "^1.2.0",
     "gulp": "^3.9.0",
     "gulp-debug": "^2.1.2",
-    "gulp-eslint": "^1.0.0",
     "gulp-inject": "^3.0.0",
     "gulp-replace": "^0.5.3",
     "gulp-rimraf": "^0.2.0",
