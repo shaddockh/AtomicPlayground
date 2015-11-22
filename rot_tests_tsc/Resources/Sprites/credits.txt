@@ -1,0 +1,2 @@
+So far, the images being used come from the DawnLike 16x16 Rogue tileset.  You can find them at:
+http://opengameart.org/content/dawnlike-16x16-universal-rogue-like-tileset-v181

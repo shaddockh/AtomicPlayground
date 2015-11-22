@@ -1,0 +1,23 @@
+definitions
+	HudElement
+		font: size: 24px
+
+WindowInfo
+	title HUD
+TBLayout: axis: y, distribution-position: bottom
+	TBLayout: distribution: available, gravity: left right
+		TBLayout: axis: x, gravity: bottom left
+			TBTextField: text: "Turns: "
+				@include definitions>HudElement
+			TBTextField: text: "0", id: "txtTurnCount"
+				@include definitions>HudElement
+		TBLayout: axis: x, gravity: bottom left
+			TBTextField: text: "Enemies Remaining: "
+				@include definitions>HudElement
+			TBTextField: text: "0", id: "txtRemaining"
+				@include definitions>HudElement
+		TBLayout: axis: x, gravity: bottom right
+			TBTextField: text: "Health: "
+				@include definitions>HudElement
+			TBTextField: text: "0", id: "txtHealth"
+				@include definitions>HudElement

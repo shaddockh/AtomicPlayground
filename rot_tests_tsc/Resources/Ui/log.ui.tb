@@ -1,0 +1,11 @@
+definitions
+	HudElement
+		font: size: 10px
+
+WindowInfo
+	title Messages
+	size: 300 150
+TBLayout: axis: y, distribution-position: available
+	TBLayout: distribution: available, gravity: all
+		TBEditField: multiline: 1, readonly: 1, styling: 1, id: "txtMessages"
+			@include definitions>HudElement
