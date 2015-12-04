@@ -1,0 +1,29 @@
+{
+    "compilerOptions": {
+        "noImplicitAny": false,
+        "target": "ES5",
+        "module": "commonjs",
+        "outDir": "./Resources",
+        "declaration": false,
+        "inlineSourceMap": true,
+        "removeComments": false
+    },
+    "filesGlob": [
+        "!node_modules/**",
+        "!build/**",
+        "src/**/*.ts",
+        "typings/**/*.ts"
+    ],
+    "files": [
+        "src/Resources/Components/Star.ts",
+        "src/Resources/Modules/atomicUtils.ts",
+        "src/Resources/Scripts/main.ts",
+        "typings/Atomic/Atomic.d.ts",
+        "typings/Atomic/AtomicWork.d.ts",
+        "typings/Atomic/Editor.d.ts",
+        "typings/Atomic/ToolCore.d.ts"
+    ],
+    "atom": {
+        "rewriteTsconfig": true
+    }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "tsc_project_seed",
+  "version": "0.0.1",
+  "description": "Typescript project seed for Atomic Game Engine projects",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "AtomicGameEngine"
+  ],
+  "author": "Shaddock Heath",
+  "license": "ISC",
+  "devDependencies": {
+    "atomic-blueprintlib": "file:../atomic-blueprintlib",
+    "browserify": "^10.2.4",
+    "del": "^1.2.0",
+    "gulp": "^3.9.0",
+    "gulp-debug": "^2.1.2",
+    "gulp-inject": "^3.0.0",
+    "gulp-replace": "^0.5.3",
+    "gulp-rimraf": "^0.2.0",
+    "gulp-tslint": "^3.5.0",
+    "gulp-typescript": "^2.9.2",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
+  }
+}
