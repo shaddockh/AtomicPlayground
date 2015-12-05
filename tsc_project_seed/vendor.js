@@ -27,5 +27,9 @@ Duktape.modSearch = (function (origModSearch, vendorMap) {
         }
     };
 }(Duktape.modSearch, {
+    /* Add NPM modules that you will be "requiring in" to your components here.
+       They will get bundled up into a vendor.js file in the Resources/Modules directory
+       and you will just need to require that in within your Resources/Scripts/main.js
+       */
     'atomic-blueprintLib': require('atomic-blueprintLib')
 }));

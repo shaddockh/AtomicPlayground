@@ -4,6 +4,7 @@
         "target": "ES5",
         "module": "commonjs",
         "outDir": "./Resources",
+        "rootDir": "./src/Resources",
         "declaration": false,
         "inlineSourceMap": true,
         "removeComments": false
@@ -15,10 +16,11 @@
         "typings/**/*.ts"
     ],
     "files": [
-        "src/Resources/Components/Star.ts",
+        "src/Resources/Components/Spinner.ts",
         "src/Resources/Modules/atomicUtils.ts",
         "src/Resources/Scripts/main.ts",
         "typings/Atomic/Atomic.d.ts",
+        "typings/Atomic/AtomicPatches.d.ts",
         "typings/Atomic/AtomicWork.d.ts",
         "typings/Atomic/Editor.d.ts",
         "typings/Atomic/ToolCore.d.ts"

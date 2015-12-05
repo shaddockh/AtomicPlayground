@@ -1,11 +1,7 @@
 import atomicUtils = require('../Modules/atomicUtils');
 
+// Load up our main scene
 const scene = Atomic.player.loadScene('Scenes/main.scene');
 
-configure2DCamera(scene);
-
-function configure2DCamera(scene : Atomic.Scene) {
-    let cameraNode = scene.getChild('Camera');
-    let camera = cameraNode.getComponent<Atomic.Camera>('Camera');
-    camera.orthoSize = Atomic.graphics.height * Atomic.PIXEL_SIZE;
-}
+// Set the camera ortho size based upon pixel size and player height
+atomicUtils.configureSceneCameraOrthoSize(scene);

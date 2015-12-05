@@ -1,3 +1,14 @@
+/* Catch all for some common helpers.  Collecting in here until I can organize them better */
+/**
+ * Sets the 2d camera ortho size to the correct size based upon the Atomic.PIXEL_SIZE and the graphics height
+ * @param {Atomic.Scene} scene [description]
+ */
+function configureSceneCameraOrthoSize(scene) {
+    var cameraNode = scene.getChild('Camera');
+    var camera = cameraNode.getComponent('Camera');
+    camera.orthoSize = Atomic.graphics.height * Atomic.PIXEL_SIZE;
+}
+exports.configureSceneCameraOrthoSize = configureSceneCameraOrthoSize;
 /**
  *	Creates a 2D scene and returns the scene.  A camera will be attached
  *	with the name "Camera" and a zone will be created with the name "Zone"

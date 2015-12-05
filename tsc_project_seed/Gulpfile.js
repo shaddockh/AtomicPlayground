@@ -112,16 +112,33 @@ gulp.task('default', ['clean', 'lint', 'compile-ts', 'atomify']);
 // --------------------------------------------------------------------
 function doAtomify() {
 
-    // if (config.stubVendorFile) {
-    //     // set up the browserify instance on a task basis
-    //     var b = browserify({
-    //         entries: config.stubVendorFile,
-    //         ignoreMissing: false
-    //     });
-    //
-    //     return b.bundle()
-    //         .pipe(source('vendor.js'))
-    //         .pipe(buffer())
-    //         .pipe(gulp.dest('./build/Resources/Modules'));
-    // }
+        var b = browserify({
+            entries: './vendor.js',
+            ignoreMissing: false
+        });
+
+        return b.bundle()
+            .pipe(source('vendor.js'))
+            .pipe(buffer())
+            .pipe(gulp.dest('./Resources/Modules'));
+}
+
+function doAtomifyExpiremental() {
+  if (config.vendorModules && config.vendorModules.length > 0) {
+    for (var i = 0; i < config.vendorModules.length; i++ ) {
+      var b = browserify({
+        ignoreMissing: false
+      });
+
+      //b.add(require(config.vendorModules[i]));
+      b.add(config.vendorModules[i]);
+      console.log(config.vendorModules[i]);
+      //b.require(config.vendorModules);
+      //b.ignore('Atomic');
+      return b.bundle()
+       .pipe(buffer())
+       .pipe(gulp.dest('./Resources/Modules'));
+
+    }
+  }
 }
