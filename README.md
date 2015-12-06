@@ -1,6 +1,8 @@
 # AtomicPlayground
 Various experiments with the Atomic Game Engine ( http://www.atomicgameengine.com )
 
+Most of these sub projects have their own README files with more information, but here is a summary:
+
 * **es6_browserify** - playing with writing scripts and components in es6 and using babelJs to build
 * **simple_blueprint_test** - A very basic example that shows how to define a blueprint for an entity and then construct it, instead of hand constructing and attaching components to an entity.
 * **simple_es6_blueprint_test** - ES6 version of the simple_blueprint_test
