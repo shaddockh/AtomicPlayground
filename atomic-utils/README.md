@@ -18,4 +18,12 @@ import * as atomicUtils from 'atomic-utils';
 ```
 
 
-See the [Typescript Project Seed](../tsc_project_seed/README) project for usage and how to use this in Atomic Game Engine projects via bundling with Browserify.
+See the [Typescript Project Seed](../tsc_project_seed) project for how to use this in Atomic Game Engine projects via bundling with Browserify.
+
+
+## References
+Some useful references for getting this working correctly:
+
+* <https://basarat.gitbooks.io/typescript/content/docs/node/nodejs.html>
+* <http://blog.johnnyreilly.com/2015/09/authoring-npm-modules-with-typescript.html>
+* <https://github.com/Microsoft/TypeScript/wiki/Typings-for-npm-packages>
