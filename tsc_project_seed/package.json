@@ -10,14 +10,15 @@
     "AtomicGameEngine"
   ],
   "author": "Shaddock Heath",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
-    "atomic-blueprintlib": "file:../atomic-blueprintlib",
+    "atomic-utils": "file:../atomic-utils",
     "browserify": "^10.2.4",
     "del": "^1.2.0",
     "gulp": "^3.9.0",
     "gulp-debug": "^2.1.2",
     "gulp-inject": "^3.0.0",
+    "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.3",
     "gulp-rimraf": "^0.2.0",
     "gulp-tslint": "^3.5.0",

@@ -11,33 +11,37 @@ var gulp = require('gulp'),
     browserify = require('browserify'),
     source = require('vinyl-source-stream'),
     buffer = require('vinyl-buffer'),
-    replace = require('gulp-replace');
+    replace = require('gulp-replace'),
+    rename = require('gulp-rename');
 
 var tsProject = tsc.createProject('tsconfig.json');
 
 /**
- * Clean out the build folder
+ * Delete all of the *.js files from Resources.  If any *.js files
+ * need to be stored, place them instead into src/Resources and they
+ * will get copied over.
  */
 gulp.task('clean', function (cb) {
-    del(['build'], cb);
+    del(['Resources/**/*.js'], cb);
 });
 
 /**
  * Generate the vendor.js file based upon the requires contained within the
- * vendor.js stub located in the root of the project
+ * vendor_stub.js stub located in the root of the project
  */
 gulp.task('atomify', ['copy-files'], doAtomify);
 gulp.task('atomify-watch', doAtomify);
 
 /**
- * Copy all of the non typescript files into the build directory
+ * Copy all of the non typescript files from src into the build directory.
+ * if there are any *.js files needed, make sure they are in the src directory
+ * or else they will get deleted by the clean step.
  */
 gulp.task('copy-files', ['clean'], function () {
-    // may be obsolete
-    // return gulp.src(['*.atomic', 'UserPrefs.json', 'BuildSettings.json', './Resources/**', '!**/*.ts'], {
-    //         base: './'
-    //     })
-    //     .pipe(gulp.dest('./build'));
+     return gulp.src(['./src/Resources/**', '!**/*.ts'], {
+             base: './'
+         })
+         .pipe(gulp.dest('./'));
 });
 
 
@@ -113,13 +117,14 @@ gulp.task('default', ['clean', 'lint', 'compile-ts', 'atomify']);
 function doAtomify() {
 
         var b = browserify({
-            entries: './vendor.js',
+            entries: './vendor_stub.js',
             ignoreMissing: false
         });
 
         return b.bundle()
-            .pipe(source('vendor.js'))
+            .pipe(source('vendor_stub.js'))
             .pipe(buffer())
+            .pipe(rename('vendor.js'))
             .pipe(gulp.dest('./Resources/Modules'));
 }
 

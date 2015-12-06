@@ -17,7 +17,6 @@
     ],
     "files": [
         "src/Resources/Components/Spinner.ts",
-        "src/Resources/Modules/atomicUtils.ts",
         "src/Resources/Scripts/main.ts",
         "typings/Atomic/Atomic.d.ts",
         "typings/Atomic/AtomicPatches.d.ts",

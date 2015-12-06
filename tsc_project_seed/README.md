@@ -5,11 +5,30 @@ Some features:
 * Properly configured `tsconfig.json` to compile the typescript in the `/src` directory into the `/Resources` directory
 * Should work with the Atom editor and the `atom-typescript` package
 * Linting rules configured in `tslint.json` (will be picked up by `atom-tslint` package)
-* Gulpfile with a default build that will lint all files and compile the typescript
+* importing of a separate TypeScript library via npm (imports `atomic-utils`).  This library will be bundled into vendor.js via browserify.  In order to do this, the stub file `vendor_stub.js` is modified with the name of the library and a require line:
+
+** vendor.js **
+```javascript
+    . . .
+    }(Duktape.modSearch, {
+        /* Add NPM modules that you will be "requiring in" to your components here.
+           They will get bundled up into a vendor.js file in the Resources/Modules directory
+           and you will just need to require that in within your Resources/Scripts/main.js
+           */
+        'atomic-utils': require('atomic-utils'),
+        'other-lib': require('other-lib')
+    }));
+```
+Additionally, the following line needs to be added to `main.ts`
+
+```javascript
+    import 'vendor';
+```
+**Note:** the gulp build needs to be run in order to support this.
+* Gulpfile with a default build that will lint all files, bundle up a vendor.js file, and compile the typescript
 
 In progress features:
 * clean up the configuration
-* work on atomify to browserify 3rd party node modules into the `Resources/Modules` directory properly
 * may clone this version to have another version that utilizes the blueprint system
 * add to this project seed as more features for building out an Atomic Game Engine project are required
 
