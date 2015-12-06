@@ -1,0 +1,27 @@
+{
+  "atom": {
+    "rewriteTsconfig": true
+  },
+  "compileOnSave": true,
+  "compilerOptions": {
+    "declaration": true,
+    "module": "commonjs",
+    "noImplicitAny": false,
+    "outDir": "../",
+    "preserveConstEnums": true,
+    "removeComments": false,
+    "sourceMap": false,
+    "suppressImplicitAnyIndexErrors": true,
+    "target": "es5"
+  },
+  "files": [
+    "lib/index.ts",
+    "typings/Atomic/Atomic.d.ts",
+    "typings/Atomic/AtomicWork.d.ts",
+    "typings/Atomic/Editor.d.ts",
+    "typings/Atomic/ToolCore.d.ts"
+  ],
+  "filesGlob": [
+    "**/*.ts"
+  ]
+}

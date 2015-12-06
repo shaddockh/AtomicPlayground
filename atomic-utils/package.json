@@ -1,0 +1,13 @@
+{
+  "name": "atomic-utils",
+  "version": "1.0.0",
+  "description": "Utilities for use in the Atomic Game Engine",
+  "main": "dist/index.js",
+  "typings": "index",
+  "dependencies": {
+  },
+  "devDependencies": {
+  },
+  "author": "T. Shaddock Heath",
+  "license": "MIT"
+}
