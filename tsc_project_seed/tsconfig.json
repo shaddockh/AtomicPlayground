@@ -6,7 +6,7 @@
         "outDir": "./Resources",
         "rootDir": "./src/Resources",
         "declaration": false,
-        "inlineSourceMap": true,
+        "inlineSourceMap": false,
         "removeComments": false
     },
     "filesGlob": [
@@ -19,7 +19,8 @@
         "src/Resources/Components/Spinner.ts",
         "src/Resources/Scripts/main.ts",
         "typings/Atomic/Atomic.d.ts",
-        "typings/Atomic/AtomicPatches.d.ts",
+        "typings/Atomic/AtomicNET.d.ts",
+        "typings/Atomic/AtomicPlayer.d.ts",
         "typings/Atomic/AtomicWork.d.ts",
         "typings/Atomic/Editor.d.ts",
         "typings/Atomic/ToolCore.d.ts"

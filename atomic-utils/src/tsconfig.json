@@ -17,6 +17,8 @@
   "files": [
     "lib/index.ts",
     "typings/Atomic/Atomic.d.ts",
+    "typings/Atomic/AtomicNET.d.ts",
+    "typings/Atomic/AtomicPlayer.d.ts",
     "typings/Atomic/AtomicWork.d.ts",
     "typings/Atomic/Editor.d.ts",
     "typings/Atomic/ToolCore.d.ts"

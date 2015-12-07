@@ -1,5 +1,4 @@
 //Atomic TypeScript Definitions
-/* tslint:disable */
 
 
 /// <reference path="Atomic.d.ts" />
@@ -36,6 +35,10 @@ declare module ToolCore {
       coreDataDir: string;
       playerDataDir: string;
       editorDataDir: string;
+      nETCoreCLRAbsPath: string;
+      nETAssemblyLoadPaths: string;
+      nETTPAPaths: string;
+      atomicNETEngineAssemblyPath: string;
       deploymentDataDir: string;
       toolDataDir: string;
       devConfigFilename: string;
@@ -62,6 +65,11 @@ declare module ToolCore {
       getCoreDataDir(): string;
       getPlayerDataDir(): string;
       getEditorDataDir(): string;
+      // AtomicNET
+      getNETCoreCLRAbsPath(): string;
+      getNETAssemblyLoadPaths(): string;
+      getNETTPAPaths(): string;
+      getAtomicNETEngineAssemblyPath(): string;
       // Data directories
       getDeploymentDataDir(): string;
       getToolDataDir(): string;
@@ -315,6 +323,11 @@ declare module ToolCore {
 
       defaultPlatform: PlatformID;
       lastBuildPath: string;
+      snapTranslationX: number;
+      snapTranslationY: number;
+      snapTranslationZ: number;
+      snapRotation: number;
+      snapScale: number;
 
       // Construct.
       constructor();
@@ -322,6 +335,16 @@ declare module ToolCore {
       getDefaultPlatform(): PlatformID;
       getLastBuildPath(): string;
       setLastBuildPath(path: string): void;
+      getSnapTranslationX(): number;
+      getSnapTranslationY(): number;
+      getSnapTranslationZ(): number;
+      getSnapRotation(): number;
+      getSnapScale(): number;
+      setSnapTranslationX(value: number): void;
+      setSnapTranslationY(value: number): void;
+      setSnapTranslationZ(value: number): void;
+      setSnapRotation(value: number): void;
+      setSnapScale(value: number): void;
 
    }
 
@@ -511,6 +534,10 @@ declare module ToolCore {
       // Sets the time stamp to the asset files current time
       updateFileTimestamp(): void;
       getDotAssetFilename(): string;
+      // Rename the asset, which depending on the asset type may be nontrivial
+      rename(newName: string): boolean;
+      // Move the asset, which depending on the asset type may be nontrivial
+      move(newPath: string): boolean;
       isFolder(): boolean;
       load(): boolean;
       save(): boolean;
@@ -537,7 +564,7 @@ declare module ToolCore {
       getResourceImporterName(resourceTypeName: string): string;
       getDotAssetFilename(path: string): string;
       getFolderAssets(folder:string):ToolCore.Asset[];
-      getAssetsByImporterType(type:string):ToolCore.Asset[];
+      getAssetsByImporterType(importerType:string, resourceType:string):ToolCore.Asset[];
 
    }
 
@@ -555,6 +582,8 @@ declare module ToolCore {
       requiresCacheFile(): boolean;
       // Instantiate a node from the asset
       instantiateNode(parent: Atomic.Node, name: string): Atomic.Node;
+      rename(newName: string): boolean;
+      move(newPath: string): boolean;
 
    }
 
@@ -579,6 +608,16 @@ declare module ToolCore {
 
    }
 
+   export class JSONImporter extends AssetImporter {
+
+      // Construct.
+      constructor(asset: Asset);
+
+      setDefaults(): void;
+      getResource(typeName?: string): Atomic.Resource;
+
+   }
+
    export class MaterialImporter extends AssetImporter {
 
       // Construct.
@@ -586,6 +625,7 @@ declare module ToolCore {
 
       setDefaults(): void;
       saveMaterial(): void;
+      getResource(typeName?: string): Atomic.Resource;
 
    }
 
@@ -626,6 +666,17 @@ declare module ToolCore {
       getAnimationInfo(index: number): AnimationImportInfo;
       // Instantiate a node from the asset
       instantiateNode(parent: Atomic.Node, name: string): Atomic.Node;
+      getAnimations():Atomic.Animation[];
+
+   }
+
+   export class NETAssemblyImporter extends AssetImporter {
+
+      // Construct.
+      constructor(asset: Asset);
+
+      setDefaults(): void;
+      getResource(typeName?: string): Atomic.Resource;
 
    }
 
@@ -734,9 +785,11 @@ declare module ToolCore {
       useResourcePackager(): boolean;
       getBuildSubfolder(): string;
       addResourceDir(dir: string): void;
-      buildLog(message: string): void;
-      buildWarn(warning: string): void;
-      buildError(error: string): void;
+      buildLog(message: string, sendEvent?: boolean): void;
+      buildWarn(warning: string, sendEvent?: boolean): void;
+      buildError(error: string, sendEvent?: boolean): void;
+      // Fail the current build
+      failBuild(message: string): void;
 
    }
 

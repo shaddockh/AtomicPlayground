@@ -821,6 +821,26 @@ declare module Atomic {
    export var WS_FAIL_TO_CONNECT: WebSocketState;
 
 
+   // enum WebSocketMessageType
+   export type WebSocketMessageType = number;
+   export var WSMT_CONTINUATION: WebSocketMessageType;
+   export var WSMT_TEXT: WebSocketMessageType;
+   export var WSMT_BINARY: WebSocketMessageType;
+   export var WSMT_RSV3: WebSocketMessageType;
+   export var WSMT_RSV4: WebSocketMessageType;
+   export var WSMT_RSV5: WebSocketMessageType;
+   export var WSMT_RSV6: WebSocketMessageType;
+   export var WSMT_RSV7: WebSocketMessageType;
+   export var WSMT_CLOSE: WebSocketMessageType;
+   export var WSMT_PING: WebSocketMessageType;
+   export var WSMT_PONG: WebSocketMessageType;
+   export var WSMT_CONTROL_RSVB: WebSocketMessageType;
+   export var WSMT_CONTROL_RSVC: WebSocketMessageType;
+   export var WSMT_CONTROL_RSVD: WebSocketMessageType;
+   export var WSMT_CONTROL_RSVE: WebSocketMessageType;
+   export var WSMT_CONTROL_RSVF: WebSocketMessageType;
+
+
    export var QUICKSORT_THRESHOLD: number;
    export var CONVERSION_BUFFER_LENGTH: number;
    export var MATRIX_CONVERSION_BUFFER_LENGTH: number;
@@ -1537,7 +1557,7 @@ declare module Atomic {
       // Return object category. Categories are (optionally) registered along with the object factory. Return an empty string if the object category is not registered.
       getCategory(): string;
       isObject(): boolean;
-      getTypeNameStatic(): string;
+      static getTypeNameStatic(): string;
       sendEvent(eventType:string, data?:Object);
       subscribeToEvent(eventType:string, callback:(data:any)=>void);
       subscribeToEvent(sender:AObject, eventType:string, callback:(data:any)=>void);
@@ -1731,12 +1751,8 @@ declare module Atomic {
       removeChildren(removeReplicated: boolean, removeLocal: boolean, recursive: boolean): void;
       // Create a component to this node (with specified ID if provided).
       createComponent(type: string, mode?: CreateMode, id?: number): Component;
-      // Create a component to this node (with specified ID if provided).
-      createComponent<T extends Component>(type: string, mode?: CreateMode, id?: number): T;
       // Create a component to this node if it does not exist already.
       getOrCreateComponent(type: string, mode?: CreateMode, id?: number): Component;
-      // Create a component to this node if it does not exist already.
-      getOrCreateComponent<T extends Component>(type: string, mode?: CreateMode, id?: number): T;
       // Remove a component from this node.
       removeComponent(component: Component): void;
       // Remove all components from this node.
@@ -1817,8 +1833,6 @@ declare module Atomic {
       getNumNetworkComponents(): number;
       // Return component by type. If there are several, returns the first.
       getComponent(type: string, recursive?: boolean): Component;
-      // Return component by type. If there are several, returns the first.
-      getComponent<T extends Component>(type: string, recursive?: boolean): T;
       // Return whether has a specific component.
       hasComponent(type: string): boolean;
       // Set ID. Called by Scene.
@@ -1857,7 +1871,6 @@ declare module Atomic {
       getChildAtIndex(index:number):Node;
       createJSComponent(name:string, args?:{});
       getJSComponent(name:string, recursive?:boolean):JSComponent;
-      getJSComponent<T extends JSComponent>(name:string, recursive?:boolean):T;
       createChildPrefab(childName:string, prefabPath:string):Node;
       loadPrefab(prefabPath:string):boolean;
 
@@ -2656,7 +2669,7 @@ declare module Atomic {
       // Return shader parameter hash value. Used as an optimization to avoid setting shader parameters unnecessarily.
       getShaderParameterHash(): number;
       // Return name for texture unit.
-      getTextureUnitName(unit: TextureUnit): string;
+      static getTextureUnitName(unit: TextureUnit): string;
       static getTextureUnitName(unit:TextureUnit):string;
       getShaderParameters():ShaderParameter[];
 
@@ -3020,7 +3033,7 @@ declare module Atomic {
       // Return number of passes.
       getNumPasses(): number;
       // Return a pass type index by name. Allocate new if not used yet.
-      getPassIndex(passName: string): number;
+      static getPassIndex(passName: string): number;
 
    }
 
@@ -3269,6 +3282,8 @@ declare module Atomic {
       pixelUVOffset: Vector2;
       maxBones: number;
       gL3Support: boolean;
+      currentMonitor: number;
+      monitorsNumber: number;
 
       // Construct.
       constructor();
@@ -3277,6 +3292,8 @@ declare module Atomic {
       setWindowIcon(windowIcon: Image): void;
       // Set window title.
       setWindowTitle(windowTitle: string): void;
+      // Set window position.
+      setWindowPosition(x: number, y: number): void;
       // Set window size.
       setWindowSize(width: number, height: number): void;
       // Center window.
@@ -3508,43 +3525,47 @@ declare module Atomic {
       // Bind a UBO, avoiding redundant operation.
       setUBO(object: number): void;
       // Return the API-specific alpha texture format.
-      getAlphaFormat(): number;
+      static getAlphaFormat(): number;
       // Return the API-specific luminance texture format.
-      getLuminanceFormat(): number;
+      static getLuminanceFormat(): number;
       // Return the API-specific luminance alpha texture format.
-      getLuminanceAlphaFormat(): number;
+      static getLuminanceAlphaFormat(): number;
       // Return the API-specific RGB texture format.
-      getRGBFormat(): number;
+      static getRGBFormat(): number;
       // Return the API-specific RGBA texture format.
-      getRGBAFormat(): number;
+      static getRGBAFormat(): number;
       // Return the API-specific RGBA 16-bit texture format.
-      getRGBA16Format(): number;
+      static getRGBA16Format(): number;
       // Return the API-specific RGBA 16-bit float texture format.
-      getRGBAFloat16Format(): number;
+      static getRGBAFloat16Format(): number;
       // Return the API-specific RGBA 32-bit float texture format.
-      getRGBAFloat32Format(): number;
+      static getRGBAFloat32Format(): number;
       // Return the API-specific RG 16-bit texture format.
-      getRG16Format(): number;
+      static getRG16Format(): number;
       // Return the API-specific RG 16-bit float texture format.
-      getRGFloat16Format(): number;
+      static getRGFloat16Format(): number;
       // Return the API-specific RG 32-bit float texture format.
-      getRGFloat32Format(): number;
+      static getRGFloat32Format(): number;
       // Return the API-specific single channel 16-bit float texture format.
-      getFloat16Format(): number;
+      static getFloat16Format(): number;
       // Return the API-specific single channel 32-bit float texture format.
-      getFloat32Format(): number;
+      static getFloat32Format(): number;
       // Return the API-specific linear depth texture format.
-      getLinearDepthFormat(): number;
+      static getLinearDepthFormat(): number;
       // Return the API-specific hardware depth-stencil texture format.
-      getDepthStencilFormat(): number;
+      static getDepthStencilFormat(): number;
       // Return the API-specific readable hardware depth format, or 0 if not supported.
-      getReadableDepthFormat(): number;
+      static getReadableDepthFormat(): number;
       // Return UV offset required for pixel perfect rendering.
-      getPixelUVOffset(): Vector2;
+      static getPixelUVOffset(): Vector2;
       // Return maximum number of supported bones for skinning.
-      getMaxBones(): number;
+      static getMaxBones(): number;
       // Return whether is using an OpenGL 3 context.
-      getGL3Support(): boolean;
+      static getGL3Support(): boolean;
+      // Return the current monitor number
+      getCurrentMonitor(): number;
+      // Return the available monitors number
+      getMonitorsNumber(): number;
 
    }
 
@@ -3733,9 +3754,9 @@ declare module Atomic {
       // Return number of image components required to receive pixel data from GetData(), or 0 for compressed images.
       getComponents(): number;
       // Return the non-internal texture format corresponding to an OpenGL internal format.
-      getExternalFormat(format: number): number;
+      static getExternalFormat(format: number): number;
       // Return the data type corresponding to an OpenGL internal format.
-      getDataType(format: number): number;
+      static getDataType(format: number): number;
       // Set additional parameters from an XML file.
       setParameters(xml: XMLFile): void;
       // Return the corresponding SRGB texture format if supported. If not supported, return format unchanged.
@@ -3855,7 +3876,7 @@ declare module Atomic {
       // Return whether is the master (first) animated model.
       isMaster(): boolean;
       // Globally enable/disable bone creation, useful for when in the editor
-      setBoneCreationEnabled(enabled: boolean): void;
+      static setBoneCreationEnabled(enabled: boolean): void;
 
    }
 
@@ -4196,7 +4217,7 @@ declare module Atomic {
       boundingBox: BoundingBox;
       numGeometries: number;
       numMorphs: number;
-      animationCount: number;
+      geometryNames: string[];
 
       // Construct.
       constructor();
@@ -4227,10 +4248,9 @@ declare module Atomic {
       getMorphRangeStart(bufferIndex: number): number;
       // Return vertex buffer morph range vertex count.
       getMorphRangeCount(bufferIndex: number): number;
-      addAnimationResource(animation: Animation): void;
-      removeAnimationResource(animation: Animation): void;
-      clearAnimationResources(): void;
-      getAnimationCount(): number;
+      setGeometryName(index: number, name: string): boolean;
+      getGeometryName(index: number): string;
+      getGeometryNames(): string[];
 
    }
 
@@ -4510,6 +4530,12 @@ declare module Atomic {
       isInside(point: Vector3): boolean;
       // Determines if the given local space point is within the model geometry.
       isInsideLocal(point: Vector3): boolean;
+      // Get whether a named submesh is visible
+      getGeometryVisible(name: string): boolean;
+      // Show a named submesh
+      showGeometry(name: string): void;
+      // Hide a named submesh
+      hideGeometry(name: string): void;
       setMaterialIndex(index:number, material:Material);
 
    }
@@ -7213,6 +7239,8 @@ declare module Atomic {
       keyboardDisabled: boolean;
       inputDisabled: boolean;
       skinLoaded: boolean;
+      focusedWidget: boolean;
+      blockChangedEvents: boolean;
 
       // Construct.
       constructor();
@@ -7234,9 +7262,12 @@ declare module Atomic {
       toggleDebugHud(): void;
       showConsole(value: boolean): void;
       toggleConsole(): void;
+      getFocusedWidget(): boolean;
       // request exit on next frame
       requestExit(): void;
       getWidgetAt(x: number, y: number, include_children: boolean): UIWidget;
+      getBlockChangedEvents(): boolean;
+      setBlockChangedEvents(blocked?: boolean): void;
 
    }
 
@@ -7408,6 +7439,7 @@ declare module Atomic {
 
    export class UIListView extends UIWidget {
 
+      multiSelect: boolean;
       hoverItemID: string;
       selectedItemID: string;
       rootList: UISelectList;
@@ -7425,11 +7457,15 @@ declare module Atomic {
       setExpanded(itemID: number, value: boolean): void;
       getExpanded(itemID: number): boolean;
       getExpandable(itemID: number): boolean;
+      getMultiSelect(): boolean;
+      setMultiSelect(value: boolean): void;
       deleteAllItems(): void;
-      selectItemByID(id: string): void;
+      selectItemByID(id: string, selected?: boolean): void;
       getHoverItemID(): string;
       getSelectedItemID(): string;
       getRootList(): UISelectList;
+      updateItemVisibility(): void;
+      selectAllItems(select?: boolean): void;
 
    }
 
@@ -7603,6 +7639,8 @@ declare module Atomic {
       value: number;
       hoverItemID: string;
       selectedItemID: string;
+      numItems: number;
+      uIListView: boolean;
 
       constructor(createWidget?: boolean);
 
@@ -7614,8 +7652,13 @@ declare module Atomic {
       getHoverItemID(): string;
       getSelectedItemID(): string;
       scrollToSelectedItem(): void;
+      getItemID(index: number): string;
+      getItemSelected(index: number): boolean;
+      getNumItems(): number;
+      selectItem(index: number, selected?: boolean): void;
       selectNextItem(): void;
       selectPreviousItem(): void;
+      setUIListView(value: boolean): void;
 
    }
 
@@ -7745,7 +7788,6 @@ declare module Atomic {
       isAncestorOf(widget: UIWidget): boolean;
       setIsFocusable(value: boolean): void;
       getWidget(id: string): UIWidget;
-      getWidget<T extends UIWidget>(id: string): T;
       getView(): UIView;
       addChild(child: UIWidget): void;
       addChildAfter(child: UIWidget, otherChild: UIWidget): void;
@@ -7950,8 +7992,6 @@ declare module Atomic {
       getFile(name: string, sendEventOnFailure?: boolean): File;
       // Return a resource by type and name. Load if not loaded yet. Return null if not found or if fails, unless SetReturnFailedResources(true) has been called. Can be called only from the main thread.
       getResource(type: string, name: string, sendEventOnFailure?: boolean): Resource;
-      // Return a resource by type and name. Load if not loaded yet. Return null if not found or if fails, unless SetReturnFailedResources(true) has been called. Can be called only from the main thread.
-      getResource<T extends Resource>(type: string, name: string, sendEventOnFailure?: boolean): T;
       // Load a resource without storing it in the resource cache. Return null if not found or if fails. Can be called from outside the main thread if the resource itself is safe to load completely (it does not possess for example GPU data.)
       getTempResource(type: string, name: string, sendEventOnFailure?: boolean): Resource;
       // Background load a resource. An event will be sent when complete. Return true if successfully stored to the load queue, false if eg. already exists. Can be called from outside the main thread.
@@ -8131,6 +8171,18 @@ declare module Atomic {
 //----------------------------------------------------
 
 
+   export class BufferQueue extends AObject {
+
+      // Construct.
+      constructor();
+
+      // Seek operation is not supported for a BufferQueue.
+      seek(position: number): number;
+      // Remove all buffered data.
+      clear(): void;
+
+   }
+
    export class File extends AObject {
 
       name: string;
@@ -8297,9 +8349,9 @@ declare module Atomic {
       // Return whether log is in quiet mode (only errors printed to standard error stream).
       isQuiet(): boolean;
       // Write to the log. If logging level is higher than the level of the message, the message is ignored.
-      write(level: number, message: string): void;
+      static write(level: number, message: string): void;
       // Write raw output to the log.
-      writeRaw(message: string, error?: boolean): void;
+      static writeRaw(message: string, error?: boolean): void;
 
    }
 
@@ -8490,7 +8542,7 @@ declare module Atomic {
       setAutoUpdate(autoUpdate: boolean): void;
       // Return whether a geometry update is necessary, and if it can happen in a worker thread.
       getUpdateGeometryType(): UpdateGeometryType;
-      getTimeOfDay(): number;
+      static getTimeOfDay(): number;
 
    }
 

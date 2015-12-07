@@ -4,17 +4,17 @@
  * Sets the 2d camera ortho size to the correct size based upon the Atomic.PIXEL_SIZE and the graphics height
  * @param {Atomic.Scene} scene [description]
  */
-export function configureSceneCameraOrthoSize(scene: Atomic.Scene):void {
+export function configureSceneCameraOrthoSize(scene: Atomic.Scene): void {
     let cameraNode = scene.getChild('Camera');
-    let camera = cameraNode.getComponent<Atomic.Camera>('Camera');
+    let camera = <Atomic.Camera>cameraNode.getComponent('Camera');
     camera.orthoSize = Atomic.graphics.height * Atomic.PIXEL_SIZE;
 }
 
- /**
-  *	Creates a 2D scene and returns the scene.  A camera will be attached
-  *	with the name "Camera" and a zone will be created with the name "Zone"
-  * @return {Atomic.Scene} The generated scene
-  */
+/**
+ *	Creates a 2D scene and returns the scene.  A camera will be attached
+ *	with the name "Camera" and a zone will be created with the name "Zone"
+ * @return {Atomic.Scene} The generated scene
+ */
 export function create2dScene(): Atomic.Scene {
     // create a 2D scene
     let scene = new Atomic.Scene();
@@ -23,7 +23,7 @@ export function create2dScene(): Atomic.Scene {
     let cameraNode = scene.createChild('Camera');
     cameraNode.position = [0.0, 0.0, -10.0];
 
-    let camera = cameraNode.createComponent<Atomic.Camera>('Camera');
+    let camera = <Atomic.Camera>cameraNode.createComponent('Camera');
     camera.orthographic = true;
     camera.orthoSize = Atomic.graphics.height * Atomic.PIXEL_SIZE;
 
@@ -33,7 +33,7 @@ export function create2dScene(): Atomic.Scene {
     Atomic.renderer.textureFilterMode = Atomic.FILTER_NEAREST;
 
     // set up lighting zone
-    let zone = scene.createComponent<Atomic.Zone>('Zone');
+    let zone = <Atomic.Zone>scene.createComponent('Zone');
     zone.ambientColor = [.1, .1, .1, 0];
 
     // Put some limits on the renderer
@@ -53,7 +53,7 @@ export function initPhysics2D(scene: Atomic.Scene): Atomic.PhysicsWorld2D {
     // set up physics
     scene.createComponent('DebugRenderer');
     //scene.createComponent('Renderer2D');
-    let physicsWorld = scene.createComponent<Atomic.PhysicsWorld2D>('PhysicsWorld2D');
+    let physicsWorld = <Atomic.PhysicsWorld2D>scene.createComponent('PhysicsWorld2D');
     physicsWorld.drawShape = true;
     physicsWorld.allowSleeping = true;
     physicsWorld.warmStarting = true;
