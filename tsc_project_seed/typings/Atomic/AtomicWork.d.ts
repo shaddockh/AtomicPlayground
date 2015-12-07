@@ -1,8 +1,7 @@
-/* tslint:disable */
 /// <reference path="Atomic.d.ts" />
 /// <reference path="ToolCore.d.ts" />
 /// <reference path="Editor.d.ts" />
-
+/// <reference path="AtomicPlayer.d.ts" />
 
 declare module Atomic {
 
@@ -21,6 +20,7 @@ declare module Atomic {
     export var network: Network;
     export var ui: UI;
     export var audio: Audio;
+    export var player: AtomicPlayer.Player;
 
     export var editorMode: Editor.EditorMode;
 
@@ -45,6 +45,28 @@ declare module Atomic {
 
     }
 
+    export interface KeyDownEvent {
+
+        // keycode
+        key: number;
+        //  Atomic.QUAL_SHIFT, Atomic.QUAL_CTRL, Atomic.QUAL_ALT, Atomic.QUAL_ANY
+        qualifiers: number;
+
+        // mouse buttons down
+        buttons: number;
+
+    }
+
+    export interface KeyUpEvent {
+
+        // keycode
+        key: number;
+        //  Atomic.QUAL_SHIFT, Atomic.QUAL_CTRL, Atomic.QUAL_ALT, Atomic.QUAL_ANY
+        qualifiers: number;
+        // mouse buttons down
+        buttons: number;
+
+    }
 
     export interface UIShortcutEvent {
 
@@ -52,6 +74,13 @@ declare module Atomic {
         key: number;
         //  Atomic.QUAL_SHIFT, Atomic.QUAL_CTRL, Atomic.QUAL_ALT, Atomic.QUAL_ANY
         qualifiers: number;
+
+    }
+
+    export interface UIListViewSelectionChangedEvent {
+
+        refid: string;
+        selected: boolean;
 
     }
 
@@ -93,6 +122,15 @@ declare module Atomic {
         modifierkeys: number;
         refid: string;
         touch: boolean;
+    }
+
+    export interface UIWidgetFocusChangedEvent {
+        widget: UIWidget;
+        focused: boolean;
+    }
+
+    export interface UIWidgetEditCompleteEvent {
+        widget: UIWidget;
     }
 
     export interface UIWidgetDeletedEvent {
@@ -171,6 +209,7 @@ declare module Atomic {
         defaultValue: string;
         enumNames: string[];
         resourceTypeName: string;
+        dynamic: boolean;
 
     }
 
@@ -210,6 +249,77 @@ declare module Atomic {
 
 }
 
+declare module AtomicNET {
+
+    export interface CSComponentClassChangedEvent {
+
+        cscomponent: CSComponent;
+        classname: string;
+
+    }
+
+}
+
+declare module Editor {
+
+    export interface SceneNodeSelectedEvent {
+        scene: Atomic.Scene;
+        node: Atomic.Node;
+        selected: boolean;
+        quiet: boolean;
+    }
+
+    export interface SceneEditAddRemoveNodesEvent {
+
+        end: boolean;
+
+    }
+
+
+    export interface SceneEditNodeAddedEvent {
+
+        scene: Atomic.Scene;
+        parent: Atomic.Node;
+        node: Atomic.Node;
+
+    }
+
+    export interface SceneEditNodeRemovedEvent {
+
+        scene: Atomic.Scene;
+        parent: Atomic.Node;
+        node: Atomic.Node;
+
+    }
+
+    export interface SceneEditComponentAddedRemovedEvent {
+
+        scene: Atomic.Scene;
+        node: Atomic.Node;
+        component: Atomic.Component;
+        removed: boolean;
+    }
+
+    export interface SceneEditStateChangeEvent {
+
+        serializable: Atomic.Serializable;
+
+    }
+
+    export interface SceneEditNodeCreatedEvent {
+        node: Atomic.Node;
+    }
+
+    export interface GizmoEditModeChangedEvent {
+        mode: EditMode;
+    }
+
+    export interface GizmoAxisModeChangedEvent {
+        mode: AxisMode;
+    }
+
+}
+
 declare module ToolCore {
 
     export interface ResourceAddedEvent {
@@ -232,30 +342,43 @@ declare module ToolCore {
 
     export interface AssetImportErrorEvent {
 
-        path:string;
-        guid:string;
+        path: string;
+        guid: string;
         error: string;
+    }
+
+    export interface AssetRenamedEvent {
+
+        asset: Asset;
 
     }
 
+    export interface AssetMovedEvent {
+
+        asset: Asset;
+        oldPath: string;
+
+    }
+
+
     export interface PlatformChangedEvent {
 
-        platform:ToolCore.Platform;
+        platform: ToolCore.Platform;
 
     }
 
     export interface BuildOutputEvent {
 
-        text:string;
+        text: string;
 
     }
 
     export interface BuildCompleteEvent {
 
-      platformID:number;
-      message:string;
-      success:boolean;
-      buildFolder:string;
+        platformID: number;
+        message: string;
+        success: boolean;
+        buildFolder: string;
 
     }
 
