@@ -88,7 +88,7 @@ gulp.task('watch', function () {
     //gulp.watch(config.stubVendorFile, ['atomify-watch']);
 });
 
-gulp.task('default', ['clean', 'lint', 'compile-ts', 'atomify']);
+gulp.task('default', ['clean', 'lint', 'compile-ts', 'atomify', 'transform-spritesheets']);
 
 // --------------------------------------------------------------------
 
@@ -98,18 +98,17 @@ gulp.task('default', ['clean', 'lint', 'compile-ts', 'atomify']);
  * Atomic Game Engine can read... the casing is wrong.
  */
 gulp.task('transform-spritesheets', ['copy-files'], function () {
-    return gulp.src(['./Resources/Sprites/*.xml'], {
-            base: './'
+    return gulp.src(['./SourceAssets/Sprites/*.xml'], {
+            base: './SourceAssets/Sprites'
         })
         .pipe(replace(/textureatlas/ig, 'TextureAtlas'))
         .pipe(replace(/subtexture/ig, 'SubTexture'))
         .pipe(replace(/imagepath/ig, 'imagePath'))
-        .pipe(gulp.dest('./build'));
+        .pipe(gulp.dest('./Resources/Sprites'));
 });
 
 function doAtomify() {
 
-console.log('atomify');
         var b = browserify({
             entries: './vendor_stub.js',
             ignoreMissing: false
