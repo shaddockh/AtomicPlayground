@@ -59,5 +59,5 @@ var ROTDigger = (function (_super) {
         this.placeItems(builder.getRooms());
     };
     return ROTDigger;
-})(BaseLevelGenerator_1.default);
+}(BaseLevelGenerator_1.default));
 module.exports = ROTDigger;

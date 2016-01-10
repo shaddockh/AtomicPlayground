@@ -69,5 +69,5 @@ var ROTCellular = (function (_super) {
         this.placeItems();
     };
     return ROTCellular;
-})(BaseLevelGenerator_1.default);
+}(BaseLevelGenerator_1.default));
 module.exports = ROTCellular;

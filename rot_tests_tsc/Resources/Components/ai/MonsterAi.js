@@ -151,5 +151,5 @@ var MonsterAi = (function (_super) {
         triggerEvent.trigger(this.node, 'onActionComplete', this, this.node);
     };
     return MonsterAi;
-})(CustomJSComponent_1.default);
+}(CustomJSComponent_1.default));
 module.exports = MonsterAi;

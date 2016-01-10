@@ -36,5 +36,5 @@ var ShadowTile = (function (_super) {
         }
     };
     return ShadowTile;
-})(CustomJSComponent_1.default);
+}(CustomJSComponent_1.default));
 module.exports = ShadowTile;

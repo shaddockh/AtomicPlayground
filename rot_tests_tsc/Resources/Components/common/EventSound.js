@@ -43,5 +43,5 @@ var EventSound = (function (_super) {
         }
     };
     return EventSound;
-})(CustomJSComponent_1.default);
+}(CustomJSComponent_1.default));
 module.exports = EventSound;

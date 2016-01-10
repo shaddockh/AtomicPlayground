@@ -1,6 +1,5 @@
 'use strict';
 'atomic component';
-/// <reference path="../../../typings/gl-matrix/gl-matrix.d.ts"/>
 import CustomJSComponent from 'CustomJSComponent';
 import Entity = require('../common/Entity');
 import MapData from '../../Modules/MapData';

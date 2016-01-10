@@ -31,5 +31,5 @@ var SpriteSheet = (function (_super) {
         }
     };
     return SpriteSheet;
-})(CustomJSComponent_1.default);
+}(CustomJSComponent_1.default));
 module.exports = SpriteSheet;

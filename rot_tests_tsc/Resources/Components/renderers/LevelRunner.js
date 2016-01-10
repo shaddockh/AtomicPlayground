@@ -5,7 +5,6 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-/// <reference path="../../../typings/rot-js/rot-js.d.ts"/>
 var CustomJSComponent_1 = require('../../Modules/CustomJSComponent');
 var triggerEvent = require('atomicTriggerEvent');
 //import { nodeBuilder } from 'atomic-blueprintLib';
@@ -162,5 +161,5 @@ var LevelRunner = (function (_super) {
         triggerEvent.trigger(this.node, 'onSetCameraTarget', targetNode);
     };
     return LevelRunner;
-})(CustomJSComponent_1.default);
+}(CustomJSComponent_1.default));
 module.exports = LevelRunner;

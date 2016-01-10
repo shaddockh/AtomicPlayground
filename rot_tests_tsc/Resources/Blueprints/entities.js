@@ -1,3 +1,4 @@
+"use strict";
 exports.entities = {
     entity_base: {
         Entity: {},

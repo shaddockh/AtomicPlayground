@@ -5,7 +5,6 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-/// <reference path="../../../typings/Atomic/Atomic.d.ts"/>
 var CustomJSComponent_1 = require('../../Modules/CustomJSComponent');
 var gameState_1 = require('../../Modules/gameState');
 var Entity = (function (_super) {
@@ -64,5 +63,5 @@ var Entity = (function (_super) {
         gameState_1.default.getCurrentLevel().mapData.removeEntity(this.mapEntity);
     };
     return Entity;
-})(CustomJSComponent_1.default);
+}(CustomJSComponent_1.default));
 module.exports = Entity;

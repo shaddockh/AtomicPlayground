@@ -44,5 +44,5 @@ var Tile = (function (_super) {
         this.mapEntity.tileComponent = null;
     };
     return Tile;
-})(CustomJSComponent_1.default);
+}(CustomJSComponent_1.default));
 module.exports = Tile;

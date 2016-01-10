@@ -1,3 +1,4 @@
+"use strict";
 var atomic_blueprintLib_1 = require('atomic-blueprintLib');
 var tiles_1 = require('./tiles');
 var ui_1 = require('./ui');

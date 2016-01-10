@@ -176,5 +176,5 @@ var LevelRenderer2D = (function (_super) {
         //node.scale2D = [zoom, zoom];
     };
     return LevelRenderer2D;
-})(CustomJSComponent_1.default);
+}(CustomJSComponent_1.default));
 module.exports = LevelRenderer2D;

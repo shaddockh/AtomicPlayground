@@ -1,4 +1,4 @@
-/*eslint no-var:0*/
+"use strict";
 var statContainer = {};
 var metricsChain = [];
 function start(name) {
