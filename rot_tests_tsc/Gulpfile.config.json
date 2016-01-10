@@ -1,0 +1,6 @@
+{
+  "vendorModules": [
+    "atomic-blueprintLib",
+    "rot-js"
+  ]
+}
