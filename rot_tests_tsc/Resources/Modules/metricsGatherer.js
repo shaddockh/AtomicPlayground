@@ -1,4 +1,3 @@
-"use strict";
 var statContainer = {};
 var metricsChain = [];
 function start(name) {

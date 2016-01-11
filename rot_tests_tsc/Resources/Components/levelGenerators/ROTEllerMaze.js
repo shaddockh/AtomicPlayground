@@ -39,5 +39,5 @@ var ROTEllerMaze = (function (_super) {
         this.placeItems();
     };
     return ROTEllerMaze;
-}(BaseLevelGenerator_1.default));
+})(BaseLevelGenerator_1.default);
 module.exports = ROTEllerMaze;

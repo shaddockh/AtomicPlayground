@@ -22,7 +22,7 @@ var PlayerActions = (function () {
     PlayerActions.SKIP_TURN = 5;
     PlayerActions.DUMP_METRICS = 6;
     return PlayerActions;
-}());
+})();
 var PlayerInputHandler = (function (_super) {
     __extends(PlayerInputHandler, _super);
     function PlayerInputHandler() {
@@ -116,5 +116,5 @@ var PlayerInputHandler = (function (_super) {
         }
     };
     return PlayerInputHandler;
-}(CustomJSComponent_1.default));
+})(CustomJSComponent_1.default);
 module.exports = PlayerInputHandler;

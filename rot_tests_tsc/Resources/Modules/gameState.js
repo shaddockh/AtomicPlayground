@@ -1,4 +1,3 @@
-"use strict";
 var GameState = (function () {
     function GameState() {
     }
@@ -15,7 +14,7 @@ var GameState = (function () {
         this._levelRenderer = levelRenderer;
     };
     return GameState;
-}());
+})();
 exports.GameState = GameState;
 var gameState = new GameState();
 Object.defineProperty(exports, "__esModule", { value: true });

@@ -19,5 +19,5 @@ var ActionLogger = (function (_super) {
         gameChannels_1.uiChannel.sendMessage('log:addmessage', message, color);
     };
     return ActionLogger;
-}(CustomJSComponent_1.default));
+})(CustomJSComponent_1.default);
 module.exports = ActionLogger;

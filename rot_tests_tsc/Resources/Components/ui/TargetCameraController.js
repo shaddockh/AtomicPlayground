@@ -44,5 +44,5 @@ var TargetCameraController = (function (_super) {
         }
     };
     return TargetCameraController;
-}(Atomic.JSComponent));
+})(Atomic.JSComponent);
 module.exports = TargetCameraController;

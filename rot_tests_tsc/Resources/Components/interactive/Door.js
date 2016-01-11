@@ -73,5 +73,5 @@ var Door = (function (_super) {
         }
     };
     return Door;
-}(CustomJSComponent_1.default));
+})(CustomJSComponent_1.default);
 module.exports = Door;

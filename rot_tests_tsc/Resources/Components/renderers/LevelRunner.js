@@ -161,5 +161,5 @@ var LevelRunner = (function (_super) {
         triggerEvent.trigger(this.node, 'onSetCameraTarget', targetNode);
     };
     return LevelRunner;
-}(CustomJSComponent_1.default));
+})(CustomJSComponent_1.default);
 module.exports = LevelRunner;

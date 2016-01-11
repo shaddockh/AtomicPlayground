@@ -19,5 +19,5 @@ var TriggerDebug = (function (_super) {
         this.DEBUG("Got a message: " + msg);
     };
     return TriggerDebug;
-}(CustomJSComponent_1.default));
+})(CustomJSComponent_1.default);
 module.exports = TriggerDebug;

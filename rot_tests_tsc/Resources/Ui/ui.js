@@ -1,4 +1,3 @@
-"use strict";
 var gameChannels_1 = require('../Modules/gameChannels');
 var hud_ui_1 = require('./hud.ui');
 var levelgen_selector_ui_1 = require('./levelgen_selector.ui');

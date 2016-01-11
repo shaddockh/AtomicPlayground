@@ -55,5 +55,5 @@ var ROTUniform = (function (_super) {
         this.placeItems(builder.getRooms());
     };
     return ROTUniform;
-}(BaseLevelGenerator_1.default));
+})(BaseLevelGenerator_1.default);
 module.exports = ROTUniform;

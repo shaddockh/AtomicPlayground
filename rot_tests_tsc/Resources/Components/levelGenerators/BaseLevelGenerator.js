@@ -134,6 +134,6 @@ var BaseLevelGenerator = (function (_super) {
         triggerEvent.trigger(this.node, 'onPlaceItems', this.mapData, roomData);
     };
     return BaseLevelGenerator;
-}(CustomJSComponent_1.default));
+})(CustomJSComponent_1.default);
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = BaseLevelGenerator;

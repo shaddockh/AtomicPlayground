@@ -32,5 +32,5 @@ var ItemGenerator = (function (_super) {
         }
     };
     return ItemGenerator;
-}(CustomJSComponent_1.default));
+})(CustomJSComponent_1.default);
 module.exports = ItemGenerator;

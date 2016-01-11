@@ -1,4 +1,3 @@
-"use strict";
 exports.levelGenerators = {
     baseLevelGenerator: {
         //LevelRenderer2D: {}

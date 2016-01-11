@@ -33,5 +33,5 @@ var Health = (function (_super) {
         triggerEvent.trigger(this.node, 'onHealthChanged', this, this.node);
     };
     return Health;
-}(CustomJSComponent_1.default));
+})(CustomJSComponent_1.default);
 module.exports = Health;

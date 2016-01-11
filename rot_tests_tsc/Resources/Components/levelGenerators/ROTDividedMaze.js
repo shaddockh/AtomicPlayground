@@ -39,5 +39,5 @@ var ROTDividedMaze = (function (_super) {
         this.placeItems();
     };
     return ROTDividedMaze;
-}(BaseLevelGenerator_1.default));
+})(BaseLevelGenerator_1.default);
 module.exports = ROTDividedMaze;

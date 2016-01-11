@@ -72,5 +72,5 @@ var LightFlicker = (function (_super) {
     LightFlicker.POINT_LIGHT_2D = 1;
     LightFlicker.LIGHT = 2;
     return LightFlicker;
-}(Atomic.JSComponent));
+})(Atomic.JSComponent);
 module.exports = LightFlicker;

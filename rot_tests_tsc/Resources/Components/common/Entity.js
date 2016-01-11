@@ -63,5 +63,5 @@ var Entity = (function (_super) {
         gameState_1.default.getCurrentLevel().mapData.removeEntity(this.mapEntity);
     };
     return Entity;
-}(CustomJSComponent_1.default));
+})(CustomJSComponent_1.default);
 module.exports = Entity;

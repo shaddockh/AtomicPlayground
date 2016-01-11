@@ -34,6 +34,6 @@ var CustomJSComponent = (function (_super) {
         }
     };
     return CustomJSComponent;
-}(Atomic.JSComponent));
+})(Atomic.JSComponent);
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = CustomJSComponent;

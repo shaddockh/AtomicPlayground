@@ -1,4 +1,3 @@
-"use strict";
 // This script is the main entry point of the game
 require('vendor');
 require('Blueprints/blueprints'); // Load all the blueprints into the catalog

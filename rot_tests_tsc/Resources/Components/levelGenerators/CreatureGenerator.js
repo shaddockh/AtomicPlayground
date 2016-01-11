@@ -32,5 +32,5 @@ var CreatureGenerator = (function (_super) {
         }
     };
     return CreatureGenerator;
-}(CustomJSComponent_1.default));
+})(CustomJSComponent_1.default);
 module.exports = CreatureGenerator;

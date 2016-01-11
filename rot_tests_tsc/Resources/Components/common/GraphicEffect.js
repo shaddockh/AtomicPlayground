@@ -51,5 +51,5 @@ var GraphicEffect = (function (_super) {
         }
     };
     return GraphicEffect;
-}(CustomJSComponent_1.default));
+})(CustomJSComponent_1.default);
 module.exports = GraphicEffect;

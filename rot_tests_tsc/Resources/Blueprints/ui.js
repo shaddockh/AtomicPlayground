@@ -1,4 +1,3 @@
-"use strict";
 exports.ui = {
     uiLevelGenerationChooser: {
         LevelGenerationChooser: {},
