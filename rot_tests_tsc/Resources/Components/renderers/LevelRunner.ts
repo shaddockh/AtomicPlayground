@@ -1,6 +1,5 @@
 'use strict';
 'atomic component';
-/// <reference path="../../../typings/rot-js/rot-js.d.ts"/>
 import CustomJSComponent from '../../Modules/CustomJSComponent';
 import * as triggerEvent from 'atomicTriggerEvent';
 //import { nodeBuilder } from 'atomic-blueprintLib';

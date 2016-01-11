@@ -17,13 +17,15 @@
     "del": "^1.2.0",
     "gulp": "^3.9.0",
     "gulp-debug": "^2.1.2",
+    "gulp-ignore": "^2.0.1",
     "gulp-inject": "^3.0.0",
+    "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.3",
     "gulp-rimraf": "^0.2.0",
-    "gulp-sourcemaps": "^1.6.0",
-    "gulp-tslint": "^3.5.0",
+    "gulp-tslint": "^4.3.0",
     "gulp-typescript": "^2.9.2",
     "rot-js": "git://github.com/shaddockh/rot.js.git#atomic-game-engine",
+    "tslint": "^3.2.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
   }

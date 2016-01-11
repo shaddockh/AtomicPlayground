@@ -6,19 +6,19 @@
       "productName": ""
    },
    "WindowsBuildSettings": {
-      "appName": "",
+      "appName": "ROTTests",
       "packageName": "",
       "companyName": "",
       "productName": ""
    },
    "WebBuildSettings": {
-      "appName": "",
+      "appName": "ROTTests",
       "packageName": "",
       "companyName": "",
       "productName": ""
    },
    "AndroidBuildSettings": {
-      "appName": "",
+      "appName": "ROTTests",
       "packageName": "",
       "companyName": "",
       "productName": "",
@@ -27,7 +27,7 @@
       "activityName": ""
    },
    "IOSBuildSettings": {
-      "appName": "",
+      "appName": "ROTTests",
       "packageName": "",
       "companyName": "",
       "productName": "",

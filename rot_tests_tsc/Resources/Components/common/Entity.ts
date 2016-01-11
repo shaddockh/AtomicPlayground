@@ -1,6 +1,5 @@
 'use strict';
 'atomic component';
-/// <reference path="../../../typings/Atomic/Atomic.d.ts"/>
 import CustomJSComponent from '../../Modules/CustomJSComponent';
 import gameState from '../../Modules/gameState';
 
