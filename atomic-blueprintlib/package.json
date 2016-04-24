@@ -1,10 +1,15 @@
 {
+  "typings": "lib/index.d.ts",
   "name": "atomic-blueprintlib",
   "version": "0.0.1",
   "description": "A framework for using blueprints to generate Atomic game objects.",
   "main": "dist/atomic-blueprintLib.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "tslint ./index.ts",
+    "decl": "dts-generator --name atomic-blueprintlib --project ./ --out dist/atomic-blueprintlib.d.ts --extern typings/Atomic/Atomic.d.ts --exclude typings/Atomic/**/*.d.ts --exclude node_modules/**/*.d.ts --exclude /dist/*.d.ts",
+    "prebuild": "tsc && npm run decl",
+    "build": "browserify ./lib/atomic-blueprintLib.bundleMaker.js > ./dist/atomic-blueprintLib.bundle.js"
   },
   "keywords": [
     "AtomicGameEngine"
@@ -14,8 +19,10 @@
   "devDependencies": {
     "browserify": "^10.2.4",
     "del": "^1.2.0",
-    "entity-blueprint-manager": "shaddockh/entity-blueprint-manager",
+    "dts-generator": "^1.7.0",
+    "entity-blueprint-manager": "github:shaddockh/entity-blueprint-manager",
     "gulp-derequire": "^2.1.0",
+    "tslint": "^3.8.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
   }

@@ -2,21 +2,35 @@
 
 This library is an effort to make the blueprint framework reusable with atomic game engine projects.  It contains routines for constructing
 atomic game objects from blueprints that are defined as JavaScript object literals.  The blueprint library management is handled by a more generic
-blueprint sytstem pulled in from https://github.com/shaddockh/entity-blueprint-manager.
+blueprint system pulled in from https://github.com/shaddockh/entity-blueprint-manager.
 
 # Usage
+## Preparing the library for Usage
+* Place ```atomic-bluerpintLib.bundle.js``` in your ```Resources/Modules``` directory.
+
+* in ```scripts/main.js``` you will need to add the following line to the top
+```JavaScript
+require('atomic-blueprintLib.bundle');
+```
+or
+```typescript
+import 'atomic-blueprintLib.bundle';
+```
+
+This will bring in the bundled library and allow the components to be required in by the different modules.
+
 ## Requiring in the library
 ```
 var blueprintCatalog = require('atomic-blueprintlib').blueprintCatalog;
 var nodeBuilder = require('atomic-blueprintlib').nodeBuilder;
 ```
-or ES6
+or ES6/typescript
 ```
 import {blueprintCatalog, nodeBuilder} from 'atomic-blueprintlib';
 ```
 
 ## Simple example
-```
+```JavaScript
 var blueprintCatalog = require('atomic-blueprintlib').blueprintCatalog,
     nodeBuilder = require('atomic-blueprintlib').nodeBuilder;
 
