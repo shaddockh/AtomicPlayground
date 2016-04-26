@@ -1,0 +1,31 @@
+{
+    "compilerOptions": {
+        "noImplicitAny": false,
+        "target": "ES5",
+        "module": "commonjs",
+        "declaration": false,
+        "inlineSourceMap": false,
+        "removeComments": false
+    },
+    "filesGlob": [
+        "./**/*.ts"
+    ],
+    "files": [
+        "./Components/Star.ts",
+        "./Modules/blueprints.ts",
+        "./Scripts/main.ts",
+        "./typings/atomic-blueprintlib/atomic-blueprintlib.d.ts",
+        "./typings/Atomic/Atomic.d.ts",
+        "./typings/Atomic/AtomicNET.d.ts",
+        "./typings/Atomic/AtomicPlayer.d.ts",
+        "./typings/Atomic/AtomicWork.d.ts",
+        "./typings/Atomic/duktape.d.ts",
+        "./typings/Atomic/Editor.d.ts",
+        "./typings/Atomic/EditorWork.d.ts",
+        "./typings/Atomic/ToolCore.d.ts",
+        "./typings/Atomic/WebView.d.ts"
+    ],
+    "atom": {
+        "rewriteTsconfig": true
+    }
+}

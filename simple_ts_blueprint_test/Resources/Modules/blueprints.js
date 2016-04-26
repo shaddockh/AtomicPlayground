@@ -1,3 +1,4 @@
+"use strict";
 // all blueprints should be defined here
 // This is the base star blueprint that defines the texture, etc.
 exports.star = {
@@ -12,19 +13,17 @@ exports.star = {
         blendMode: Atomic.BLEND_ALPHA
     }
 };
-
 // this descends from the base star and overrides the spawn position and speed
 exports.star1 = {
-    inherits: 'star',
+    inherits: "star",
     position2D: [-3, 0],
     Star: {
         speed: -50
     }
 };
-
 // this descends from the base star and overrides the spawn position and speed
 exports.star2 = {
-    inherits: 'star',
+    inherits: "star",
     position2D: [3, 0],
     Star: {
         speed: 100

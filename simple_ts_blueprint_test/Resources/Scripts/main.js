@@ -1,51 +1,39 @@
-require('atomic-blueprintLib.bundle'); // need to initialize the library bundle so we can access the contents
-var blueprintLib = require('atomic-blueprintLib');
-
-
+"use strict";
+require("atomic-blueprintLib.bundle"); // need to initialize the library bundle so we can access the contents
+var atomic_blueprintlib_1 = require("atomic-blueprintlib");
 // This script is the main entry point of the game
-
 // called at the start of play
-
 // create a 2D scene
 var scene = new Atomic.Scene();
 scene.createComponent("Octree");
-
 var cameraNode = scene.createChild("Camera");
 cameraNode.position = [0.0, 0.0, -10.0];
-
 var camera = cameraNode.createComponent("Camera");
 camera.orthographic = true;
 camera.orthoSize = Atomic.graphics.height * Atomic.PIXEL_SIZE;
-
 var viewport = null;
-
 viewport = new Atomic.Viewport(scene, camera);
 Atomic.renderer.setViewport(0, viewport);
-
 // Put some limits on the renderer
 Atomic.engine.setMaxFps(30);
-Atomic.engine.vSync = true;
-for (var b in blueprintLib) console.log(b);
-blueprintLib.blueprintCatalog.loadBlueprints(require('blueprints'));
-
+// not existant
+// Atomic.engine.vSync = true;
+atomic_blueprintlib_1.blueprintCatalog.loadBlueprints(require("blueprints"));
 // Generate prefabs from any blueprints that specify isPrefab=true
-blueprintLib.nodeBuilder.generatePrefabs();
-
+atomic_blueprintlib_1.nodeBuilder.generatePrefabs();
 // Use the blueprint system to spawn the blueprints named star1 and star2.  All components that
 // these need are defined in the blueprint and the blueprint system handles attaching the components.
 // Each component, in turn is in charge of initializing itself based upon it's section of the blueprint
-var spaceNode = blueprintLib.nodeBuilder.createChild(scene, 'star1');
-var spaceNode2 = blueprintLib.nodeBuilder.createChild(scene, 'star2');
-
+var spaceNode = atomic_blueprintlib_1.nodeBuilder.createChild(scene, "star1");
+var spaceNode2 = atomic_blueprintlib_1.nodeBuilder.createChild(scene, "star2");
 // Specify a start position instead of relying on the blueprint
-var spaceNode3 = blueprintLib.nodeBuilder.createChildAtPosition(scene, 'star2', [2, 2]);
-
-// override the speed
-var starOverride = blueprintLib.nodeBuilder.getBlueprint('star2');
+var spaceNode3 = atomic_blueprintlib_1.nodeBuilder.createChildAtPosition(scene, "star2", [2, 2]);
+// override the speed -- we know what we are doing so cast to any
+var starOverride = atomic_blueprintlib_1.nodeBuilder.getBlueprint("star2");
 starOverride.Star.speed = 1000;
-var spaceNode4 = blueprintLib.nodeBuilder.createChildAtPosition(scene, starOverride, [1, 1]);
-
+var spaceNode4 = atomic_blueprintlib_1.nodeBuilder.createChildAtPosition(scene, starOverride, [1, 1]);
 // called per frame
-module.exports.update = function(timeStep) {
+function update(timeStep) {
     // console.log('update');
-};
+}
+exports.update = update;
