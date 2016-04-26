@@ -1,4 +1,3 @@
-/// <reference path="typings/Atomic/Atomic.d.ts" />
 declare module 'atomic-blueprintlib' {
 	import { BlueprintCatalog } from "entity-blueprint-manager";
 	import { Blueprint } from "entity-blueprint-manager";
@@ -142,7 +141,7 @@ declare module 'entity-blueprint-manager' {
 	     * @param {object} block a block of blueprints to load with keys as the name of each blueprint
 	     * @param {function} [progressCallback] Callback with the signature  function(blueprintName, loaded (boolean), message, blueprint)
 	     */
-	    loadBlueprints(block: Object, progressCallback: (blueprintName: string, error: boolean, message: string, blueprint: Blueprint) => void): void;
+	    loadBlueprints(block: Object, progressCallback?: (blueprintName: string, error: boolean, message: string, blueprint: Blueprint) => void): void;
 	    /**
 	     * Will extend either a blueprint of a sub component of a blueprint, returning a new blueprint containing the combination.
 	     * The original blueprint will not be modified unless inPlaceExtend is set.
@@ -153,7 +152,7 @@ declare module 'entity-blueprint-manager' {
 	     * @param {bool} [inPlaceExtend] if true, will modify the orig blueprint.  Defaults to false
 	     * @return {Object} New object that contains the merged values
 	     */
-	    extendBlueprint(orig: Blueprint, extendwith: Blueprint, inPlaceExtend?: boolean): Blueprint;
+	    extendBlueprint(orig: Blueprint, extendwith?: Blueprint, inPlaceExtend?: boolean): Blueprint;
 	    /**
 	     * will return a blueprint hydrating it with values from it's lineage, optionally extending it with
 	     * the blueprint provided with 'extendwith'

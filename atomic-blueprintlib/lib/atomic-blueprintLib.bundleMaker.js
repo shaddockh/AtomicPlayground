@@ -27,5 +27,5 @@ Duktape.modSearch = (function (origModSearch, vendorMap) {
         }
     };
 }(Duktape.modSearch, {
-    'atomic-blueprintLib': require('./atomic-blueprintLib.js')
+    'atomic-blueprintlib': require('./atomic-blueprintlib.js')
 }));

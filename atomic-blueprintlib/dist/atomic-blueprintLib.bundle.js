@@ -28,10 +28,10 @@ Duktape.modSearch = (function (origModSearch, vendorMap) {
         }
     };
 }(Duktape.modSearch, {
-    'atomic-blueprintLib': require('./atomic-blueprintLib.js')
+    'atomic-blueprintlib': require('./atomic-blueprintlib.js')
 }));
 
-},{"./atomic-blueprintLib.js":2}],2:[function(require,module,exports){
+},{"./atomic-blueprintlib.js":2}],2:[function(require,module,exports){
 // Routines for generating an entity from a blueprint -- very basic implementation here
 "use strict";
 var entity_blueprint_manager_1 = require("entity-blueprint-manager");

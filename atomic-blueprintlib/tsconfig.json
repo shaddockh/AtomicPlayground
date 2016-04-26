@@ -25,7 +25,7 @@
     "rewriteTsconfig": true
   },
   "files": [
-    "./atomic-blueprintLib.ts",
+    "./atomic-blueprintlib.ts",
     "./typings/Atomic/Atomic.d.ts",
     "./typings/Atomic/AtomicNET.d.ts",
     "./typings/Atomic/AtomicPlayer.d.ts",
