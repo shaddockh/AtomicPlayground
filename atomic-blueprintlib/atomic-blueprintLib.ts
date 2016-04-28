@@ -15,6 +15,8 @@ const PREFABS_DIR = "Prefabs";
 const GENERATED_PREFABS_DIR = Atomic.addTrailingSlash(PREFABS_DIR) + "Generated";
 let DEBUG = true;
 
+let cachedProjectRoot = null;
+
 function debug(message) {
     if (DEBUG) {
         console.log(message);
@@ -141,15 +143,19 @@ function mapBlueprintToNativeComponent(component: Atomic.Node | Atomic.Component
 
 // TODO: need to find a better way to get the project root
 function getProjectRoot(): string {
-    let pth = "";
-    const cl = Atomic.getArguments().join(",").split(",");
-    for (let i = 0; i < cl.length; i++) {
-        if (cl[i] === "--project") {
-            pth = cl[i + 1];
-            break;
+    if (cachedProjectRoot) {
+        return cachedProjectRoot;
+    } else {
+        let pth = "";
+        const cl = Atomic.getArguments().join(",").split(",");
+        for (let i = 0; i < cl.length; i++) {
+            if (cl[i] === "--project") {
+                pth = cl[i + 1];
+                break;
+            }
         }
+        return pth;
     }
-    return pth;
 }
 
 function generatePrefab(scene: Atomic.Scene, blueprint: AtomicBlueprint, path: string) {
@@ -181,6 +187,7 @@ function generatePrefabs(projectRoot?: string) {
         console.log("Cannot generate prefabs without --project command line argument");
         return;
     }
+    cachedProjectRoot = projectRoot;
     projectRoot = Atomic.addTrailingSlash(projectRoot);
 
     const scene = new Atomic.Scene();
