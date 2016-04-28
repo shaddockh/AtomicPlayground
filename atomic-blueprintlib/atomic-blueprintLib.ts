@@ -26,11 +26,18 @@ function debug(message) {
 /**
  * The internal blueprint catalog that stores the blueprints
  * @type {BlueprintCatalog}
+ * @deprecated
  */
 export const blueprintCatalog: BlueprintCatalog = new BlueprintCatalog({
     ignoreCase: false,
     requireInherits: false
 });
+
+/**
+ * The internal blueprint catalog that stores the blueprints
+ * @type {BlueprintCatalog}
+ */
+export const catalog: BlueprintCatalog = blueprintCatalog;
 
 /**
  * Builders for the various types of components.  These are in charge of mapping the blueprint properties to
@@ -179,7 +186,7 @@ function generatePrefab(scene: Atomic.Scene, blueprint: AtomicBlueprint, path: s
  * Generate prefabs from the blueprints located in the blueprint catalog
  * @param  {string} projectRoot optional root of the project.  Will look for the --project command line argument if not provided
  */
-function generatePrefabs(projectRoot?: string) {
+export function generatePrefabs(projectRoot?: string) {
 
     // Let's create an edit-time scene..one that doesn't update or start the component
     projectRoot = projectRoot || getProjectRoot();
@@ -369,7 +376,7 @@ function extend(orig: Object, extendwith: Object): Object {
  * @method
  * @param {string} name the name of the blueprint to retrieve
  */
-function getBlueprint(name: string): AtomicBlueprint {
+export function getBlueprint(name: string): AtomicBlueprint {
     return <AtomicBlueprint>blueprintCatalog.getBlueprint(name);
 }
 
@@ -427,9 +434,9 @@ function getRootComponentBuilder() {
     return componentBuilders.rootNodeComponentBuilder;
 }
 
-function buildEntity(node: Atomic.Node, blueprint: string): Atomic.Node;
-function buildEntity(node: Atomic.Node, blueprint: AtomicBlueprint): Atomic.Node;
-function buildEntity(node: Atomic.Node, blueprint: any): Atomic.Node {
+export function buildEntity(node: Atomic.Node, blueprint: string): Atomic.Node;
+export function buildEntity(node: Atomic.Node, blueprint: AtomicBlueprint): Atomic.Node;
+export function buildEntity(node: Atomic.Node, blueprint: any): Atomic.Node {
     let blueprintObj: AtomicBlueprint;
 
     if (typeof (blueprint) === "string") {
@@ -460,7 +467,7 @@ function buildEntity(node: Atomic.Node, blueprint: any): Atomic.Node {
     return node;
 }
 
-function createChild(parent: Atomic.Node, blueprint, forceCreateFromBlueprint?: boolean): Atomic.Node {
+export function createChild(parent: Atomic.Node, blueprint, forceCreateFromBlueprint?: boolean): Atomic.Node {
     if (typeof (blueprint) === "string") {
         blueprint = getBlueprint(blueprint);
     }
@@ -479,7 +486,7 @@ function createChild(parent: Atomic.Node, blueprint, forceCreateFromBlueprint?: 
     return node;
 }
 
-function createChildAtPosition(parent: Atomic.Node, blueprint, spawnPosition: number[]) {
+export function createChildAtPosition(parent: Atomic.Node, blueprint, spawnPosition: number[]) {
     const node = createChild(parent, blueprint);
     if (spawnPosition.length === 2) {
         node.position2D = [spawnPosition[0], spawnPosition[1]];
@@ -492,6 +499,11 @@ function createChildAtPosition(parent: Atomic.Node, blueprint, spawnPosition: nu
 }
 
 
+/**
+ * Obsolete.  Use the functions directly
+ * @type {Object}
+ * @deprecated
+ */
 export const nodeBuilder = {
     createChild: createChild,
     createChildAtPosition: createChildAtPosition,
