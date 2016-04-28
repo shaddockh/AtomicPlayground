@@ -15,7 +15,7 @@
     "outDir": "./lib/"
   },
   "filesGlob": [
-    "./*.ts",
+    "./ts/**/*.ts",
     "!./node_modules/**/*.ts",
     "./typings/**/*.ts"
   ],
@@ -25,16 +25,8 @@
     "rewriteTsconfig": true
   },
   "files": [
-    "./atomic-blueprintlib.ts",
+    "./ts/atomic-blueprintlib.ts",
     "./typings/Atomic/Atomic.d.ts",
-    "./typings/Atomic/AtomicNET.d.ts",
-    "./typings/Atomic/AtomicPlayer.d.ts",
-    "./typings/Atomic/AtomicWork.d.ts",
-    "./typings/Atomic/duktape.d.ts",
-    "./typings/Atomic/Editor.d.ts",
-    "./typings/Atomic/EditorWork.d.ts",
-    "./typings/Atomic/ToolCore.d.ts",
-    "./typings/Atomic/WebView.d.ts",
     "./typings/entity-blueprint-manager/entity-blueprint-manager.d.ts"
   ]
 }
