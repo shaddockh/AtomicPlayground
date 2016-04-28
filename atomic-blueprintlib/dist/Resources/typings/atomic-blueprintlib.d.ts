@@ -14,7 +14,7 @@ declare module 'atomic-blueprintlib' {
 	    createChild: (parent: Atomic.Node, blueprint: any, forceCreateFromBlueprint?: boolean) => Atomic.Node;
 	    createChildAtPosition: (parent: Atomic.Node, blueprint: any, spawnPosition: number[]) => Atomic.Node;
 	    getBlueprint: (name: string) => AtomicBlueprint;
-	    generatePrefabs: () => void;
+	    generatePrefabs: (projectRoot?: string) => void;
 	    setDebug: (val: any) => void;
 	};
 

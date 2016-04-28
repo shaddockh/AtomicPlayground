@@ -169,15 +169,20 @@ function generatePrefab(scene: Atomic.Scene, blueprint: AtomicBlueprint, path: s
     node.remove();
 }
 
-function generatePrefabs() {
+/**
+ * Generate prefabs from the blueprints located in the blueprint catalog
+ * @param  {string} projectRoot optional root of the project.  Will look for the --project command line argument if not provided
+ */
+function generatePrefabs(projectRoot?: string) {
 
     // Let's create an edit-time scene..one that doesn't update or start the component
-    let projectRoot = getProjectRoot();
+    projectRoot = projectRoot || getProjectRoot();
     if (projectRoot === "") {
         console.log("Cannot generate prefabs without --project command line argument");
         return;
     }
     projectRoot = Atomic.addTrailingSlash(projectRoot);
+
     const scene = new Atomic.Scene();
     scene.setUpdateEnabled(false);
 
@@ -188,7 +193,7 @@ function generatePrefabs() {
     if (fs.checkAccess(projectRoot + defaultPath)) {
         let blueprintNames = blueprintCatalog.getAllBlueprintNames();
         for (let i = 0; i < blueprintNames.length; i++) {
-            let blueprint = <AtomicBlueprint> blueprintCatalog.getBlueprint(blueprintNames[i]);
+            let blueprint = <AtomicBlueprint>blueprintCatalog.getBlueprint(blueprintNames[i]);
             if (blueprint.isPrefab) {
                 let path = defaultPath;
                 if (blueprint.prefabDir) {

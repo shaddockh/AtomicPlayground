@@ -179,9 +179,13 @@ function generatePrefab(scene, blueprint, path) {
     node.removeAllComponents();
     node.remove();
 }
-function generatePrefabs() {
+/**
+ * Generate prefabs from the blueprints located in the blueprint catalog
+ * @param  {string} projectRoot optional root of the project.  Will look for the --project command line argument if not provided
+ */
+function generatePrefabs(projectRoot) {
     // Let's create an edit-time scene..one that doesn't update or start the component
-    var projectRoot = getProjectRoot();
+    projectRoot = projectRoot || getProjectRoot();
     if (projectRoot === "") {
         console.log("Cannot generate prefabs without --project command line argument");
         return;
