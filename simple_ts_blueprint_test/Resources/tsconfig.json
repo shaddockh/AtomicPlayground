@@ -12,6 +12,7 @@
     ],
     "files": [
         "./Components/Star.ts",
+        "./EditorData/AtomicBlueprintLib/AtomicBlueprintLib.Plugin.ts",
         "./Modules/blueprints.ts",
         "./Scripts/main.ts",
         "./typings/atomic-blueprintlib/atomic-blueprintlib.d.ts",

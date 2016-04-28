@@ -29,7 +29,7 @@ Atomic.engine.setMaxFps(30);
 blueprintCatalog.loadBlueprints(require("blueprints"));
 
 // Generate prefabs from any blueprints that specify isPrefab=true
-nodeBuilder.generatePrefabs();
+//nodeBuilder.generatePrefabs();
 
 // Use the blueprint system to spawn the blueprints named star1 and star2.  All components that
 // these need are defined in the blueprint and the blueprint system handles attaching the components.
