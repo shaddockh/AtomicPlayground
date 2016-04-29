@@ -3,6 +3,7 @@
 require("../Modules/atomic-blueprintlib.bundle");
 var blueprintLib = require("atomic-blueprintlib");
 var ExamplePluginUILabel = "Atomic BlueprintLib";
+var debug = false;
 var AtomicBlueprintlibPlugin = (function () {
     function AtomicBlueprintlibPlugin() {
         this.name = "AtomicBlueprintLibPlugin";
@@ -11,7 +12,9 @@ var AtomicBlueprintlibPlugin = (function () {
         this.blueprintPath = "../Modules/blueprints";
     }
     AtomicBlueprintlibPlugin.prototype.log = function (message) {
-        console.log(this.name + ": " + message);
+        if (debug) {
+            console.log(this.name + ": " + message);
+        }
     };
     AtomicBlueprintlibPlugin.prototype.loadBlueprintCatalog = function () {
         var blueprints;

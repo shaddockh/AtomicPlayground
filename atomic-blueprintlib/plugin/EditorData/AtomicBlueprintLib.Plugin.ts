@@ -3,7 +3,7 @@ import "../Modules/atomic-blueprintlib.bundle";
 import * as blueprintLib from "atomic-blueprintlib";
 
 const ExamplePluginUILabel = "Atomic BlueprintLib";
-
+const debug = false;
 class AtomicBlueprintlibPlugin implements Editor.HostExtensions.HostEditorService, Editor.HostExtensions.ProjectServicesEventListener, Editor.HostExtensions.UIServicesEventListener {
 
     name: string = "AtomicBlueprintLibPlugin";
@@ -13,7 +13,9 @@ class AtomicBlueprintlibPlugin implements Editor.HostExtensions.HostEditorServic
     private blueprintPath =  "../Modules/blueprints";
 
     private log(message: string) {
-        console.log(`${this.name}: ${message}`);
+        if (debug) {
+            console.log(`${this.name}: ${message}`);
+        }
     }
 
     private loadBlueprintCatalog() {
