@@ -1,8 +1,5 @@
 # Space Shooter example with blueprints
 
-This is the version of the space_shooter_es6_blueprint with all of the es6 specific syntax converted to es5 JavaScript.  There is no need to run 
-a transpiler on the soures.  The project should run as-is.
+This is a conversion of the space shooter example from the Atomic Game Engine, converted to use the [Atomic Blueprint Library](https://github.com/shaddockh/AtomicPlayground/tree/master/atomic-blueprintlib).
 
-See the notes from the es6 version for details.
-
-
+More information about blueprints can be found in the **atomic-blueprintlib** documentation.

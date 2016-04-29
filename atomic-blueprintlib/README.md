@@ -161,11 +161,11 @@ blueprintLib.createChildAtLocation(game.scene, 'testBlueprint', [1,1]);
 ```
 
 ## Full Examples
-Full examples can be found in the AtomicPlayground ( http://www.github.com/shaddockh/atomicplayground)
-* simple_blueprint_test
-* simple_ts_blueprint_test
+Full examples can be found in the AtomicPlayground (http://www.github.com/shaddockh/atomicplayground)
+* [simple_blueprint_test](https://github.com/shaddockh/AtomicPlayground/tree/master/simple_blueprint_test)
+* [simple_ts_blueprint_test](https://github.com/shaddockh/AtomicPlayground/tree/master/simple_ts_blueprint_test)
 * simple_es6_blueprint_test (in progress)
-* space_shooter_blueprint
+* [space_shooter_blueprint](https://github.com/shaddockh/AtomicPlayground/tree/master/space_shooter_blueprint)
 * space_shooter_es6_blueprint (in progress)
 
 # Blueprint Library plugin (Pre-Alpha)
