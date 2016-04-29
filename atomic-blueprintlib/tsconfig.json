@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "declaration": false,
+    "noImplicitAny": false,
+    "noImplicitUseStrict": false,
+    "removeComments": false,
+    "noLib": false,
+    "preserveConstEnums": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "outDir": "./lib/"
+  },
+  "filesGlob": [
+    "./ts/**/*.ts",
+    "!./node_modules/**/*.ts",
+    "./typings/**/*.ts"
+  ],
+  "compileOnSave": true,
+  "buildOnSave": false,
+  "atom": {
+    "rewriteTsconfig": true
+  },
+  "files": [
+    "./ts/atomic-blueprintlib.ts",
+    "./typings/Atomic/Atomic.d.ts",
+    "./typings/entity-blueprint-manager/entity-blueprint-manager.d.ts"
+  ]
+}

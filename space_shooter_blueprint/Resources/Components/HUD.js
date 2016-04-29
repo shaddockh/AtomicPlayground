@@ -1,4 +1,5 @@
 'use strict';
+"atomic component";
 
 function buildFontDescription(font, size) {
     var fd;

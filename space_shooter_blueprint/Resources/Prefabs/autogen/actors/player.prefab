@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<node id="3">
+	<attribute name="Is Enabled" value="true" />
+	<attribute name="Name" value="player" />
+	<attribute name="Position" value="0 0 0" />
+	<attribute name="Rotation" value="1 0 0 0" />
+	<attribute name="Scale" value="1 1 1" />
+	<attribute name="Variables" />
+	<component type="JSComponent" id="16777218">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/Health.js" />
+		<attribute name="FieldValues">
+			<variant hash="2768288956" type="Float" value="10" />
+		</attribute>
+	</component>
+	<component type="JSComponent" id="16777219">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/common/SpriteSheet.js" />
+		<attribute name="FieldValues">
+			<variant hash="4150063834" type="String" value="Sprites/spacegame_sheet.xml" />
+			<variant hash="2167772624" type="String" value="spaceship_mantis" />
+		</attribute>
+	</component>
+	<component type="JSComponent" id="16777220">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/Player.js" />
+		<attribute name="FieldValues">
+			<variant hash="1492690138" type="Bool" value="true" />
+			<variant hash="3632049366" type="Bool" value="true" />
+			<variant hash="3350165329" type="String" value="playerBullet" />
+		</attribute>
+	</component>
+</node>

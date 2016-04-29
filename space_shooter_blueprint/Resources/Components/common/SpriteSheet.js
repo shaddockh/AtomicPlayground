@@ -5,8 +5,8 @@ module.exports.component = function (self) {
     var node = self.node;
 
     var inspectorFields = {
-        spriteSheet: null,
-        spriteName: null,
+        spriteSheet: "",
+        spriteName: "",
         blendMode: Atomic.BLEND_ALPHA,
         orderInLayer: 0,
     };

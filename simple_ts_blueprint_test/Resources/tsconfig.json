@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "noImplicitAny": false,
+        "target": "ES5",
+        "module": "commonjs",
+        "declaration": false,
+        "inlineSourceMap": false,
+        "removeComments": false
+    },
+    "filesGlob": [
+        "./**/*.ts"
+    ],
+    "files": [
+        "./Components/Star.ts",
+        "./EditorData/AtomicBlueprintLib/AtomicBlueprintLib.Plugin.ts",
+        "./Modules/blueprints.ts",
+        "./Scripts/main.ts",
+        "./typings/atomic-blueprintlib/atomic-blueprintlib.d.ts",
+        "./typings/Atomic/Atomic.d.ts"
+    ],
+    "atom": {
+        "rewriteTsconfig": true
+    }
+}

@@ -1,4 +1,5 @@
 'use strict';
+"atomic component";
 // Atomic Component
 
 module.exports.component = function (self) {

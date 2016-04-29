@@ -1,5 +1,6 @@
 'use strict';
-var blueprintLib = require('blueprintLib');
+"atomic component";
+var blueprintLib = require('atomic-blueprintlib');
 
 module.exports.component = function (self) {
     var node = self.node;
@@ -33,7 +34,9 @@ module.exports.component = function (self) {
         // explosion to appear somewhere way off from the node...like the sprite is not displayed where the 2d coord is.
         // switching it to use the passed in pos works, but it may be masking some bug somewhere.
         //EntityBuilder.createChildAtPosition(game.scene, 'explosion', node.worldPosition2D);
-        blueprintLib.createChildAtPosition(node.scene, 'explosion', pos);
+        if (node && node.scene) {
+            blueprintLib.createChildAtPosition(node.scene, 'explosion', pos);
+        }
     };
 
     // update function called per frame with delta time

@@ -1,5 +1,6 @@
 'use strict';
-var blueprintLib = require('blueprintLib');
+"atomic component";
+var blueprintLib = require('atomic-blueprintlib');
 
 module.exports.component = function (self) {
     var node = self.node;

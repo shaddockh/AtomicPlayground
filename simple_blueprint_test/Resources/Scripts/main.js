@@ -1,4 +1,6 @@
-var blueprintLib = require('blueprintLib');
+require('atomic-blueprintlib.bundle'); // need to initialize the library bundle so we can access the contents
+var blueprintLib = require('atomic-blueprintlib');
+
 
 // This script is the main entry point of the game
 
@@ -17,19 +19,17 @@ camera.orthoSize = Atomic.graphics.height * Atomic.PIXEL_SIZE;
 
 var viewport = null;
 
-if (Atomic.editor) {
-    viewport = Atomic.editor.setView(scene, camera);
-} else {
-    viewport = new Atomic.Viewport(scene, camera);
-    Atomic.renderer.setViewport(0, viewport);
-}
+viewport = new Atomic.Viewport(scene, camera);
+Atomic.renderer.setViewport(0, viewport);
 
 // Put some limits on the renderer
 Atomic.engine.setMaxFps(30);
 Atomic.engine.vSync = true;
 
+blueprintLib.catalog.loadBlueprints(require('blueprints'));
+
 // Generate prefabs from any blueprints that specify isPrefab=true
-blueprintLib.generatePrefabs();
+// blueprintLib.generatePrefabs();
 
 // Use the blueprint system to spawn the blueprints named star1 and star2.  All components that
 // these need are defined in the blueprint and the blueprint system handles attaching the components.
@@ -46,6 +46,6 @@ starOverride.Star.speed = 1000;
 var spaceNode4 = blueprintLib.createChildAtPosition(scene, starOverride, [1, 1]);
 
 // called per frame
-module.exports.update = function (timeStep) {
+module.exports.update = function(timeStep) {
     // console.log('update');
 };
