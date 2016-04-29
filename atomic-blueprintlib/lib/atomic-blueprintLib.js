@@ -6,7 +6,6 @@ var RESOURCES_DIR = "Resources";
 var PREFABS_DIR = "Prefabs";
 var GENERATED_PREFABS_DIR = Atomic.addTrailingSlash(PREFABS_DIR) + "Generated";
 var DEBUG = true;
-var cachedProjectRoot = null;
 function debug(message) {
     if (DEBUG) {
         console.log(message);
@@ -128,8 +127,9 @@ function mapBlueprintToNativeComponent(component, blueprint, componentName) {
 }
 // TODO: need to find a better way to get the project root
 function getProjectRoot() {
-    if (cachedProjectRoot) {
-        return cachedProjectRoot;
+    if (ToolCore) {
+        // Are we runningin the editor?
+        return ToolCore.toolSystem.project.projectPath;
     }
     else {
         var pth = "";
@@ -161,14 +161,13 @@ function generatePrefab(scene, blueprint, path) {
  * Generate prefabs from the blueprints located in the blueprint catalog
  * @param  {string} projectRoot optional root of the project.  Will look for the --project command line argument if not provided
  */
-function generatePrefabs(projectRoot) {
+function generatePrefabs() {
     // Let's create an edit-time scene..one that doesn't update or start the component
-    projectRoot = projectRoot || getProjectRoot();
-    if (projectRoot === "") {
-        console.log("Cannot generate prefabs without --project command line argument");
+    var projectRoot = getProjectRoot();
+    if (!projectRoot || projectRoot === "") {
+        console.log("Cannot generate prefabs without --project command line argument or outside the editor environment.");
         return;
     }
-    cachedProjectRoot = projectRoot;
     projectRoot = Atomic.addTrailingSlash(projectRoot);
     var scene = new Atomic.Scene();
     scene.setUpdateEnabled(false);
@@ -341,6 +340,13 @@ function getBlueprint(name) {
     return exports.blueprintCatalog.getBlueprint(name);
 }
 exports.getBlueprint = getBlueprint;
+/**
+ * Resets the library to defaults.  Clears the catalog and releases any cached settings
+ */
+function reset() {
+    exports.catalog.clear();
+}
+exports.reset = reset;
 /**
  * Resolve the component name to the actual path of the component
  * @method

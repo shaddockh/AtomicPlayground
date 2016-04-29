@@ -20,7 +20,7 @@ declare module 'atomic-blueprintlib' {
 	 * Generate prefabs from the blueprints located in the blueprint catalog
 	 * @param  {string} projectRoot optional root of the project.  Will look for the --project command line argument if not provided
 	 */
-	export function generatePrefabs(projectRoot?: string): void;
+	export function generatePrefabs(): void;
 	/**
 	 * Returns a blueprint from the library with the specified name.  If the blueprint has
 	 * an 'inherits' property, it will walk up the inheritance and fill in the values of the blueprint
@@ -29,6 +29,10 @@ declare module 'atomic-blueprintlib' {
 	 * @param {string} name the name of the blueprint to retrieve
 	 */
 	export function getBlueprint(name: string): AtomicBlueprint;
+	/**
+	 * Resets the library to defaults.  Clears the catalog and releases any cached settings
+	 */
+	export function reset(): void;
 	export function buildEntity(node: Atomic.Node, blueprint: string): Atomic.Node;
 	export function buildEntity(node: Atomic.Node, blueprint: AtomicBlueprint): Atomic.Node;
 	export function createChild(parent: Atomic.Node, blueprint: any, forceCreateFromBlueprint?: boolean): Atomic.Node;
@@ -42,7 +46,7 @@ declare module 'atomic-blueprintlib' {
 	    createChild: (parent: Atomic.Node, blueprint: any, forceCreateFromBlueprint?: boolean) => Atomic.Node;
 	    createChildAtPosition: (parent: Atomic.Node, blueprint: any, spawnPosition: number[]) => Atomic.Node;
 	    getBlueprint: (name: string) => AtomicBlueprint;
-	    generatePrefabs: (projectRoot?: string) => void;
+	    generatePrefabs: () => void;
 	    setDebug: (val: any) => void;
 	};
 

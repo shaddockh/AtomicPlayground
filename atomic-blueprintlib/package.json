@@ -6,10 +6,12 @@
   "main": "dist/atomic-blueprintLib.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "tslint ./index.ts",
+    "lint": "tslint ./ts/**/*.ts ./plugin/EditorData/*.ts",
     "decl": "dts-generator --name atomic-blueprintlib --project ./ --out dist/Resources/typings/atomic-blueprintlib.d.ts --exclude typings/Atomic/Atomic.d.ts --exclude typings/Atomic/**/*.d.ts --exclude node_modules/**/*.d.ts --exclude /dist/*.d.ts",
     "prebuild": "tsc && npm run decl",
     "build": "browserify ./lib/atomic-blueprintlib.bundleMaker.js > ./dist/Resources/Modules/atomic-blueprintlib.bundle.js",
+    "postbuild": "npm run buildplugin",
+    "buildplugin": "tsc -p ./plugin",
     "combineAtomic": "dts-generator --name Atomic --baseDir ./ --file typings/Atomic/*.d.ts ./ --out dist/Atomic.d.ts"
   },
   "keywords": [

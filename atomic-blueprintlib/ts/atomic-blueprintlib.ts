@@ -15,8 +15,6 @@ const PREFABS_DIR = "Prefabs";
 const GENERATED_PREFABS_DIR = Atomic.addTrailingSlash(PREFABS_DIR) + "Generated";
 let DEBUG = true;
 
-let cachedProjectRoot = null;
-
 function debug(message) {
     if (DEBUG) {
         console.log(message);
@@ -150,8 +148,9 @@ function mapBlueprintToNativeComponent(component: Atomic.Node | Atomic.Component
 
 // TODO: need to find a better way to get the project root
 function getProjectRoot(): string {
-    if (cachedProjectRoot) {
-        return cachedProjectRoot;
+    if (ToolCore) {
+        // Are we runningin the editor?
+        return ToolCore.toolSystem.project.projectPath;
     } else {
         let pth = "";
         const cl = Atomic.getArguments().join(",").split(",");
@@ -186,15 +185,14 @@ function generatePrefab(scene: Atomic.Scene, blueprint: AtomicBlueprint, path: s
  * Generate prefabs from the blueprints located in the blueprint catalog
  * @param  {string} projectRoot optional root of the project.  Will look for the --project command line argument if not provided
  */
-export function generatePrefabs(projectRoot?: string) {
+export function generatePrefabs() {
 
     // Let's create an edit-time scene..one that doesn't update or start the component
-    projectRoot = projectRoot || getProjectRoot();
-    if (projectRoot === "") {
-        console.log("Cannot generate prefabs without --project command line argument");
+    let projectRoot = getProjectRoot();
+    if (!projectRoot || projectRoot === "") {
+        console.log("Cannot generate prefabs without --project command line argument or outside the editor environment.");
         return;
     }
-    cachedProjectRoot = projectRoot;
     projectRoot = Atomic.addTrailingSlash(projectRoot);
 
     const scene = new Atomic.Scene();
@@ -378,6 +376,13 @@ function extend(orig: Object, extendwith: Object): Object {
  */
 export function getBlueprint(name: string): AtomicBlueprint {
     return <AtomicBlueprint>blueprintCatalog.getBlueprint(name);
+}
+
+/**
+ * Resets the library to defaults.  Clears the catalog and releases any cached settings
+ */
+export function reset() {
+    catalog.clear();
 }
 
 /**
