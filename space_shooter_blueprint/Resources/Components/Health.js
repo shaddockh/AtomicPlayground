@@ -1,5 +1,6 @@
 // Health component
 'use strict';
+"atomic component";
 
 var triggerEvent = require('atomicTriggerEvent');
 

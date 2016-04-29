@@ -48,11 +48,17 @@ function debug(message) {
 /**
  * The internal blueprint catalog that stores the blueprints
  * @type {BlueprintCatalog}
+ * @deprecated
  */
 exports.blueprintCatalog = new entity_blueprint_manager_1.BlueprintCatalog({
     ignoreCase: false,
     requireInherits: false
 });
+/**
+ * The internal blueprint catalog that stores the blueprints
+ * @type {BlueprintCatalog}
+ */
+exports.catalog = exports.blueprintCatalog;
 /**
  * Builders for the various types of components.  These are in charge of mapping the blueprint properties to
  * the component.  JSComponents are generic, but native components may require specific builders
@@ -155,15 +161,21 @@ function mapBlueprintToNativeComponent(component, blueprint, componentName) {
 }
 // TODO: need to find a better way to get the project root
 function getProjectRoot() {
-    var pth = "";
-    var cl = Atomic.getArguments().join(",").split(",");
-    for (var i = 0; i < cl.length; i++) {
-        if (cl[i] === "--project") {
-            pth = cl[i + 1];
-            break;
-        }
+    if (ToolCore) {
+        // Are we runningin the editor?
+        return ToolCore.toolSystem.project.projectPath;
     }
-    return pth;
+    else {
+        var pth = "";
+        var cl = Atomic.getArguments().join(",").split(",");
+        for (var i = 0; i < cl.length; i++) {
+            if (cl[i] === "--project") {
+                pth = cl[i + 1];
+                break;
+            }
+        }
+        return pth;
+    }
 }
 function generatePrefab(scene, blueprint, path) {
     if (DEBUG) {
@@ -183,11 +195,11 @@ function generatePrefab(scene, blueprint, path) {
  * Generate prefabs from the blueprints located in the blueprint catalog
  * @param  {string} projectRoot optional root of the project.  Will look for the --project command line argument if not provided
  */
-function generatePrefabs(projectRoot) {
+function generatePrefabs() {
     // Let's create an edit-time scene..one that doesn't update or start the component
-    projectRoot = projectRoot || getProjectRoot();
-    if (projectRoot === "") {
-        console.log("Cannot generate prefabs without --project command line argument");
+    var projectRoot = getProjectRoot();
+    if (!projectRoot || projectRoot === "") {
+        console.log("Cannot generate prefabs without --project command line argument or outside the editor environment.");
         return;
     }
     projectRoot = Atomic.addTrailingSlash(projectRoot);
@@ -218,6 +230,7 @@ function generatePrefabs(projectRoot) {
         }
     }
 }
+exports.generatePrefabs = generatePrefabs;
 /**
  * Scans for component files in the workspace and generated an index of componentname=componentpath entries
  * This will be loaded up in order to resolve blueprint components at runtime
@@ -360,6 +373,14 @@ function extend(orig, extendwith) {
 function getBlueprint(name) {
     return exports.blueprintCatalog.getBlueprint(name);
 }
+exports.getBlueprint = getBlueprint;
+/**
+ * Resets the library to defaults.  Clears the catalog and releases any cached settings
+ */
+function reset() {
+    exports.catalog.clear();
+}
+exports.reset = reset;
 /**
  * Resolve the component name to the actual path of the component
  * @method
@@ -437,6 +458,7 @@ function buildEntity(node, blueprint) {
     }
     return node;
 }
+exports.buildEntity = buildEntity;
 function createChild(parent, blueprint, forceCreateFromBlueprint) {
     if (typeof (blueprint) === "string") {
         blueprint = getBlueprint(blueprint);
@@ -455,6 +477,7 @@ function createChild(parent, blueprint, forceCreateFromBlueprint) {
     }
     return node;
 }
+exports.createChild = createChild;
 function createChildAtPosition(parent, blueprint, spawnPosition) {
     var node = createChild(parent, blueprint);
     if (spawnPosition.length === 2) {
@@ -468,6 +491,12 @@ function createChildAtPosition(parent, blueprint, spawnPosition) {
     }
     return node;
 }
+exports.createChildAtPosition = createChildAtPosition;
+/**
+ * Obsolete.  Use the functions directly
+ * @type {Object}
+ * @deprecated
+ */
 exports.nodeBuilder = {
     createChild: createChild,
     createChildAtPosition: createChildAtPosition,

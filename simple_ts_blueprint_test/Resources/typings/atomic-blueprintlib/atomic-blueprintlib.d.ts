@@ -8,8 +8,40 @@ declare module 'atomic-blueprintlib' {
 	/**
 	 * The internal blueprint catalog that stores the blueprints
 	 * @type {BlueprintCatalog}
+	 * @deprecated
 	 */
 	export const blueprintCatalog: BlueprintCatalog;
+	/**
+	 * The internal blueprint catalog that stores the blueprints
+	 * @type {BlueprintCatalog}
+	 */
+	export const catalog: BlueprintCatalog;
+	/**
+	 * Generate prefabs from the blueprints located in the blueprint catalog
+	 * @param  {string} projectRoot optional root of the project.  Will look for the --project command line argument if not provided
+	 */
+	export function generatePrefabs(projectRoot?: string): void;
+	/**
+	 * Returns a blueprint from the library with the specified name.  If the blueprint has
+	 * an 'inherits' property, it will walk up the inheritance and fill in the values of the blueprint
+	 * appropriately from it's ancestors
+	 * @method
+	 * @param {string} name the name of the blueprint to retrieve
+	 */
+	export function getBlueprint(name: string): AtomicBlueprint;
+	/**
+	 * Resets the library to defaults.  Clears the catalog and releases any cached settings
+	 */
+	export function reset(): void;
+	export function buildEntity(node: Atomic.Node, blueprint: string): Atomic.Node;
+	export function buildEntity(node: Atomic.Node, blueprint: AtomicBlueprint): Atomic.Node;
+	export function createChild(parent: Atomic.Node, blueprint: any, forceCreateFromBlueprint?: boolean): Atomic.Node;
+	export function createChildAtPosition(parent: Atomic.Node, blueprint: any, spawnPosition: number[]): Atomic.Node;
+	/**
+	 * Obsolete.  Use the functions directly
+	 * @type {Object}
+	 * @deprecated
+	 */
 	export const nodeBuilder: {
 	    createChild: (parent: Atomic.Node, blueprint: any, forceCreateFromBlueprint?: boolean) => Atomic.Node;
 	    createChildAtPosition: (parent: Atomic.Node, blueprint: any, spawnPosition: number[]) => Atomic.Node;

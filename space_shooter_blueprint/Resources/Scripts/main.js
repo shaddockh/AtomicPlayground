@@ -1,8 +1,10 @@
+require('atomic-blueprintlib.bundle'); // need to initialize the library bundle so we can access the contents
+var blueprintLib = require('atomic-blueprintlib');
+
 // Set up a globals ojbect that we can reference since
 // I'm not entirely sure how the module system works
 Globals = {};
 // This script is the main entry point of the game
-var blueprintLib = require('blueprintLib');
 
 // create a 2D scene
 var scene = new Atomic.Scene();
@@ -21,6 +23,11 @@ viewport = new Atomic.Viewport(scene, camera);
 Atomic.renderer.setViewport(0, viewport);
 
 Atomic.renderer.textureFilterMode = Atomic.FILTER_NEAREST;
+
+blueprintLib.blueprintCatalog.loadBlueprints(require('blueprints'));
+
+// Generate prefabs from any blueprints that specify isPrefab=true
+//blueprintLib.nodeBuilder.generatePrefabs();
 
 // create the game component
 var comp = blueprintLib.createChild(scene, 'spaceGame');

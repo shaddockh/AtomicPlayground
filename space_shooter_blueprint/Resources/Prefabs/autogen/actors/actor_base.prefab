@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<node id="2">
+	<attribute name="Is Enabled" value="true" />
+	<attribute name="Name" value="actor_base" />
+	<attribute name="Position" value="0 0 0" />
+	<attribute name="Rotation" value="1 0 0 0" />
+	<attribute name="Scale" value="1 1 1" />
+	<attribute name="Variables" />
+	<component type="JSComponent" id="16777216">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/Health.js" />
+		<attribute name="FieldValues">
+			<variant hash="2768288956" type="Float" value="1" />
+		</attribute>
+	</component>
+	<component type="JSComponent" id="16777217">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/common/SpriteSheet.js" />
+		<attribute name="FieldValues">
+			<variant hash="4150063834" type="String" value="Sprites/spacegame_sheet.xml" />
+		</attribute>
+	</component>
+</node>

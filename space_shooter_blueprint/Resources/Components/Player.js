@@ -1,5 +1,6 @@
 'use strict';
-var blueprintLib = require('blueprintLib');
+"atomic component";
+var blueprintLib = require('atomic-blueprintlib');
 
 module.exports.component = function (self) {
     var input = Atomic.input;
@@ -23,7 +24,7 @@ module.exports.component = function (self) {
 
     self.onHit = function (pos) {
         blueprintLib.createChildAtPosition(node.scene, 'explosion', pos);
-        SpaceGame.node.HUD.updateHealth(self.node.Health.health);
+        SpaceGame.node.getJSComponent("HUD").updateHealth(self.node.getJSComponent("Health").health);
     };
 
     self.onDie = function () {

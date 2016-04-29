@@ -2,6 +2,6 @@
 	"version": 1,
 	"guid": "3434c670dca8c17a6712575906bb6c54",
 	"JavascriptImporter": {
-		"IsComponentFile": false
+		"IsComponentFile": true
 	}
 }

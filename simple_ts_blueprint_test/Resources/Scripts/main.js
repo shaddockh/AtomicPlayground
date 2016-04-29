@@ -1,6 +1,6 @@
 "use strict";
 require("atomic-blueprintLib.bundle"); // need to initialize the library bundle so we can access the contents
-var atomic_blueprintlib_1 = require("atomic-blueprintlib");
+var blueprintLib = require("atomic-blueprintlib");
 // This script is the main entry point of the game
 // called at the start of play
 // create a 2D scene
@@ -18,20 +18,20 @@ Atomic.renderer.setViewport(0, viewport);
 Atomic.engine.setMaxFps(30);
 // not existant
 // Atomic.engine.vSync = true;
-atomic_blueprintlib_1.blueprintCatalog.loadBlueprints(require("blueprints"));
+blueprintLib.catalog.loadBlueprints(require("blueprints"));
 // Generate prefabs from any blueprints that specify isPrefab=true
-atomic_blueprintlib_1.nodeBuilder.generatePrefabs();
+// blueprintCatalog.generatePrefabs();
 // Use the blueprint system to spawn the blueprints named star1 and star2.  All components that
 // these need are defined in the blueprint and the blueprint system handles attaching the components.
 // Each component, in turn is in charge of initializing itself based upon it's section of the blueprint
-var spaceNode = atomic_blueprintlib_1.nodeBuilder.createChild(scene, "star1");
-var spaceNode2 = atomic_blueprintlib_1.nodeBuilder.createChild(scene, "star2");
+var spaceNode = blueprintLib.createChild(scene, "star1");
+var spaceNode2 = blueprintLib.createChild(scene, "star2");
 // Specify a start position instead of relying on the blueprint
-var spaceNode3 = atomic_blueprintlib_1.nodeBuilder.createChildAtPosition(scene, "star2", [2, 2]);
+var spaceNode3 = blueprintLib.createChildAtPosition(scene, "star2", [2, 2]);
 // override the speed -- we know what we are doing so cast to any
-var starOverride = atomic_blueprintlib_1.nodeBuilder.getBlueprint("star2");
+var starOverride = blueprintLib.getBlueprint("star2");
 starOverride.Star.speed = 1000;
-var spaceNode4 = atomic_blueprintlib_1.nodeBuilder.createChildAtPosition(scene, starOverride, [1, 1]);
+var spaceNode4 = blueprintLib.createChildAtPosition(scene, starOverride, [1, 1]);
 // called per frame
 function update(timeStep) {
     // console.log('update');

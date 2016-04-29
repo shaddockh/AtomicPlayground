@@ -1,9 +1,11 @@
 'use strict';
-var blueprintLib = require('blueprintLib');
+"atomic component";
+var blueprintLib = require('atomic-blueprintlib');
 
 module.exports.component = function (self) {
     var node = self.node;
     var scene = node.scene;
+    var hud = null;
 
     // expose ourselves as a global
     Globals.SpaceGame = self;
@@ -35,6 +37,8 @@ module.exports.component = function (self) {
         musicSource.gain = 0.5;
         musicSource.soundType = Atomic.SOUND_MUSIC;
         musicSource.play(musicFile);
+
+        hud = self.node.getJSComponent('HUD');
     };
 
     self.random = function random(min, max) {
@@ -43,7 +47,7 @@ module.exports.component = function (self) {
 
     self.spawnBullet = function (pos, blueprint) {
         if (typeof (blueprint) === 'string') {
-            blueprint = blueprintLib.getBlueprint(blueprint);
+            blueprint = blueprintLib.blueprintCatalog.getBlueprint(blueprint);
         }
 
         blueprintLib.createChildAtPosition(scene, blueprint, pos);
@@ -53,14 +57,14 @@ module.exports.component = function (self) {
         score += 10;
         self.enemies.splice(self.enemies.indexOf(enemy), 1);
         Atomic.destroy(enemy.node);
-        node.HUD.updateScore(score);
+        hud.updateScore(score);
     };
 
     self.capitalShipDestroyed = function () {
         score += 1000;
         Atomic.destroy(self.capitalShipNode);
         self.capitalShipNode = null;
-        self.node.HUD.updateScore(score);
+        hud.updateScore(score);
     };
 
     function spawnSpace() {
@@ -79,8 +83,7 @@ module.exports.component = function (self) {
             for (var x = 0; x < 12; x++) {
                 var enemyNode = blueprintLib.createChildAtPosition(enemyBaseNode,
                     Math.random() < 0.85 ? 'spaceship_louse' : 'spaceship_scarab', [pos[0], pos[1]]);
-                self.enemies.push(enemyNode.Enemy);
-
+                self.enemies.push(enemyNode.getJSComponent('Enemy'));
                 pos[0] += 0.75;
             }
             pos[1] -= 0.75;
@@ -111,18 +114,18 @@ module.exports.component = function (self) {
     }
 
     self.win = function () {
-        node.HUD.updateGameText("YOU WIN!!!!");
+        hud.updateGameText("YOU WIN!!!!");
         self.gameOver = true;
     };
 
     self.lose = function () {
-        node.HUD.updateGameText("YOU LOSE!!!!");
+        hud.updateGameText("YOU LOSE!!!!");
         self.gameOver = true;
     };
 
     function spawnPlayer() {
         self.playerNode = blueprintLib.createChild(scene, 'player');
-        self.player = self.playerNode.Player;
+        self.player = self.playerNode.getJSComponent('Player');
     }
 
     self.update = function update(timeStep) {
