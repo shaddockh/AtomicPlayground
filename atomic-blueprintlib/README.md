@@ -192,39 +192,6 @@ There is a generated ```d.ts``` file located in ```dist/Resources/typings``` for
 
 
 # Api
-The API for the **Atomic Blueprint Lib** can be found in the [Atomic Blueprint Library API](http://htmlpreview.github.com/?https://github.com/shaddockh/atomicplayground/blob/master/docs/index.html)
+The API for the **Atomic Blueprint Lib** can be found in the [Atomic Blueprint Library API](http://htmlpreview.github.com/?https://github.com/shaddockh/atomicplayground/blob/master/atomic-blueprintlib/docs/index.html)
 
 This uses some functionality from the Entity Blueprint Manager, which can be found at [Entity Blueprint Manager API]( http://htmlpreview.github.com/?https://github.com/shaddockh/entity-blueprint-manager/blob/master/docs/index.html)
-
-### blueprintLib.createChild(parent, blueprintName)
-### blueprintLib.createChild(parent, blueprintObject)
-Creates a child node attached to specific parent.  That parent could be the scene or another Atomic Game Engine node.  Passing in
-blueprint name will cause a lookup of that name in the blueprint catalog.  Passing in an object will just instantiate that object
-without a lookup.
-
-### blueprintLib.createChildAtLocation(parent, blueprintName, location)
-### blueprintLib.createChildAtLocation(parent, blueprintObject, location)
-Creates a child node attached to specific parent.  That parent could be the scene or another Atomic Game Engine node.  Passing in
-blueprint name will cause a lookup of that name in the blueprint catalog.  Passing in an object will just instantiate that object
-without a lookup.  Once created, it will have it's initial spawn point set to the location.  Note! The blueprint must contain a
-Position component.
-
-### blueprintLib.generatePrefabs()
-Will generate prefabs for all blueprints in the catalog that have ```isPrefab``` set.  All descendents of this blueprint will also have prefabs generated.
-
-### blueprintLib.setDebugMode(val)
-turns on or off debug output.
-
-### BlueprintCatalog api (copied from the entity-blueprint-manager)
-* blueprintLib.catalog.clear() - Clear the catalog and reset the hydrated blueprint cache
-* blueprintLib.catalog.loadSingleBlueprint(blueprint, blueprintName, [progressCallback]) - Loads a single blueprint with optional callback
-* blueprintLib.catalog.loadBlueprints(block, [progressCallback]) - loads a list of blueprints contained in an object literal with the keys being the names.
-* blueprintLib.catalog.getBlueprint(name, [extendWith]) - returns a hydrated blueprint of 'name' and optionally extends it with extendWith
-* blueprintLib.catalog.getBlueprintFromInstance - WIP
-* blueprintLib.catalog.getBlueprintsDescendingFrom(blueprintName, [recurse]) - returns all blueprints descending from blueprint name (optionally recursing down to all grandchildren)
-* blueprintLib.catalog.hydrateAllBlueprints() - runs through all blueprints and builds up the blueprint cache of complete blueprints (ensuring that children are fleshed out with lineage elements)
-* blueprintLib.catalog.find(filterCallback, [limit]) - searches for a blueprint.  Calls callback for every blueprint.  Optionally set limit to stop at # matches.
-* blueprintLib.catalog.getAllBlueprintNames() - gets an array of blueprint names in the catalog
-* blueprintLib.catalog.getOriginalBlueprint(blueprintName) - gets a copy of the unhydrated blueprint.
-* blueprintLib.catalog.hasBlueprint(blueprintName) - returns whether blueprint exists in the catalog
-* blueprintLib.catalog.extendBlueprint(origBlueprint, extendWith, [inPlaceExtend]) - utility function for extending one blueprint with another and returning the combination.

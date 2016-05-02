@@ -451,6 +451,8 @@ function getRootComponentBuilder(): Builder {
  * Builds an entity from a blueprint.  If the blueprint has the isPrefab value set to true
  * then it will simply load the prefab and return it.  Otherwise it will generate a new object.
  * Note that to generate a new object and not a prefab will involve a slight performance hit.
+ * The entity will not be attached to anything.  The preferred way of generating an entity is by
+ * using createChild or createChildAtPosition.
  * @return {Atomic.Node}
  */
 export function buildEntity(node: Atomic.Node, blueprint: string): Atomic.Node;
@@ -487,7 +489,8 @@ export function buildEntity(node: Atomic.Node, blueprint: any): Atomic.Node {
 }
 
 /**
- * Builds an entity from a blueprint and attaches it to the node provided.  If the blueprint has the isPrefab value set to true
+ * Builds an entity from a blueprint and attaches it to the node provided.  The node can either be a parent node, or a scene object.
+ * If the blueprint has the isPrefab value set to true
  * then it will simply load the prefab and return it.  Otherwise it will generate a new object.
  * Note that to generate a new object and not a prefab will involve a slight performance hit.
  * @return {Atomic.Node}
@@ -515,6 +518,7 @@ export function createChild(parent: Atomic.Node, blueprint: any, forceCreateFrom
 
 /**
  * Builds an entity from a blueprint and attaches it to the node provided.  Additionally it will set the world position of the node.
+ * The node can either be a parent node or a scene object.
  * If the blueprint has the isPrefab value set to true
  * then it will simply load the prefab and return it.  Otherwise it will generate a new object.
  * Note that to generate a new object and not a prefab will involve a slight performance hit.
