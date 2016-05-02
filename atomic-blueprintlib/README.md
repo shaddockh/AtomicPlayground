@@ -192,6 +192,9 @@ There is a generated ```d.ts``` file located in ```dist/Resources/typings``` for
 
 
 # Api
+The API for the **Atomic Blueprint Lib** can be found in the [Atomic Blueprint Library API](http://htmlpreview.github.com/?https://github.com/shaddockh/atomicplayground/blob/master/docs/index.html)
+
+This uses some functionality from the Entity Blueprint Manager, which can be found at [Entity Blueprint Manager API]( http://htmlpreview.github.com/?https://github.com/shaddockh/entity-blueprint-manager/blob/master/docs/index.html)
 
 ### blueprintLib.createChild(parent, blueprintName)
 ### blueprintLib.createChild(parent, blueprintObject)

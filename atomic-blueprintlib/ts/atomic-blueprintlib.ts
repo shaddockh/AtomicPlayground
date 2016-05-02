@@ -4,18 +4,33 @@
 import {BlueprintCatalog} from "entity-blueprint-manager";
 import {Blueprint} from "entity-blueprint-manager";
 
+/**
+ * Definition of a blueprint structure that can be stored in the catalog
+ */
 export interface AtomicBlueprint extends Blueprint {
+    /**
+     * Should this blueprint be rendered as a prefab when processed?
+     */
     isPrefab: boolean;
-    prefabDir: boolean;
+
+    /**
+     * The directory that this blueprint and all of it's descendents should render their prefabs to.
+     * If not specified, the prefabs will be generated to Resources/Prefabs/Generated.
+     */
+    prefabDir?: boolean;
 }
 
-let componentCrossref = null;
+interface Builder {
+    build(node: Atomic.Node, componentBlueprint: AtomicBlueprint, componentName: string, blueprint?: AtomicBlueprint): void;
+}
+
+let componentCrossref: { [key: string]: string } = null;
 const RESOURCES_DIR = "Resources";
 const PREFABS_DIR = "Prefabs";
 const GENERATED_PREFABS_DIR = Atomic.addTrailingSlash(PREFABS_DIR) + "Generated";
 let DEBUG = true;
 
-function debug(message) {
+function debug(message: string) {
     if (DEBUG) {
         console.log(message);
     }
@@ -23,19 +38,11 @@ function debug(message) {
 
 /**
  * The internal blueprint catalog that stores the blueprints
- * @type {BlueprintCatalog}
- * @deprecated
  */
-export const blueprintCatalog: BlueprintCatalog = new BlueprintCatalog({
+export const catalog: BlueprintCatalog = new BlueprintCatalog({
     ignoreCase: false,
     requireInherits: false
 });
-
-/**
- * The internal blueprint catalog that stores the blueprints
- * @type {BlueprintCatalog}
- */
-export const catalog: BlueprintCatalog = blueprintCatalog;
 
 /**
  * Builders for the various types of components.  These are in charge of mapping the blueprint properties to
@@ -51,14 +58,14 @@ export const catalog: BlueprintCatalog = blueprintCatalog;
 const componentBuilders = {
     // Used for mapping the root attributes of a node from a blueprint
     rootNodeComponentBuilder: {
-        build: function(node: Atomic.Node | Atomic.Component, componentBlueprint: AtomicBlueprint, componentName: string, blueprint: AtomicBlueprint) {
+        build: function(node: Atomic.Node, componentBlueprint: AtomicBlueprint, componentName: string, blueprint: AtomicBlueprint): void{
             mapBlueprintToNativeComponent(node, blueprint, "Node");
         }
     },
 
     // used to create and map a native component
     nativeComponentBuilder: {
-        build: function(node: Atomic.Node, componentBlueprint: AtomicBlueprint, componentName: string) {
+        build: function(node: Atomic.Node, componentBlueprint: AtomicBlueprint, componentName: string): void {
             if (DEBUG) {
                 console.log("Attaching Native Component: " + componentName + " to node.");
             }
@@ -69,7 +76,7 @@ const componentBuilders = {
 
     // Used to create and map a JSComponent
     jsComponentBuilder: {
-        build: function(node, componentBlueprint, componentName) {
+        build: function(node: Atomic.Node, componentBlueprint: AtomicBlueprint, componentName: string): void {
             if (DEBUG) {
                 console.log("Attaching JSComponent: " + componentName + " to node.");
             }
@@ -136,7 +143,7 @@ function mapBlueprintToNativeComponent(component: Atomic.Node | Atomic.Component
                     if (DEBUG) {
                         console.log("setting attribute: " + attribute.name + " to value: " + blueprint[prop] + ", resource type: " + attribute.resourceTypeName);
                     }
-                    component.setAttribute(attribute.name, Atomic.cache.getResource(attribute.resourceTypeName, blueprint[prop]));
+                    component.setAttribute(attribute.name, Atomic.cache.getResource(attribute.resourceTypeName, <string> blueprint[prop]));
                 }
                 break;
             default:
@@ -182,8 +189,10 @@ function generatePrefab(scene: Atomic.Scene, blueprint: AtomicBlueprint, path: s
 }
 
 /**
- * Generate prefabs from the blueprints located in the blueprint catalog
- * @param  {string} projectRoot optional root of the project.  Will look for the --project command line argument if not provided
+ * Generate prefabs from the blueprints located in the blueprint catalog.  Any
+ * blueprints with the isPrefab value set to true will be generated.  Additionally, if the prefabDir
+ * value is specified, the prefab will be placed in that directory.  Default directory that prefabs
+ * are generated to is: Resources/Prefabs/Generated
  */
 export function generatePrefabs() {
 
@@ -203,9 +212,9 @@ export function generatePrefabs() {
     const fs = Atomic.fileSystem;
     let defaultPath = Atomic.addTrailingSlash(RESOURCES_DIR) + GENERATED_PREFABS_DIR;
     if (fs.checkAccess(projectRoot + defaultPath)) {
-        let blueprintNames = blueprintCatalog.getAllBlueprintNames();
+        let blueprintNames = catalog.getAllBlueprintNames();
         for (let i = 0; i < blueprintNames.length; i++) {
-            let blueprint = <AtomicBlueprint>blueprintCatalog.getBlueprint(blueprintNames[i]);
+            let blueprint = <AtomicBlueprint>catalog.getBlueprint(blueprintNames[i]);
             if (blueprint.isPrefab) {
                 let path = defaultPath;
                 if (blueprint.prefabDir) {
@@ -340,15 +349,14 @@ function buildComponentCrossref(): Object {
  */
 function extend(orig: Object, extendwith: Object): Object {
     let result = {};
-    let i;
 
-    for (i in orig) {
+    for (let i in orig) {
         if (orig.hasOwnProperty(i)) {
             result[i] = orig[i];
         }
     }
 
-    for (i in extendwith) {
+    for (let i in extendwith) {
         if (extendwith.hasOwnProperty(i)) {
             if (typeof extendwith[i] === "object") {
                 if (extendwith[i] === null) {
@@ -372,10 +380,10 @@ function extend(orig: Object, extendwith: Object): Object {
  * an 'inherits' property, it will walk up the inheritance and fill in the values of the blueprint
  * appropriately from it's ancestors
  * @method
- * @param {string} name the name of the blueprint to retrieve
+ * @param name the name of the blueprint to retrieve
  */
 export function getBlueprint(name: string): AtomicBlueprint {
-    return <AtomicBlueprint>blueprintCatalog.getBlueprint(name);
+    return <AtomicBlueprint>catalog.getBlueprint(name);
 }
 
 /**
@@ -391,9 +399,9 @@ export function reset() {
  * @param {string} componentName the name of the component.  If the component contains slashes, it will be assumed that the component is referenced by absolute path.  Otherwise, the component will be looked up in componentCrossref.js.json
  * @returns {string} the absolute path to the component
  */
-function resolveJSComponent(componentName: string): Atomic.Component {
+function resolveJSComponent(componentName: string): string {
     buildComponentCrossref();
-    let comp;
+    let comp: string;
     if (new RegExp("\\ | \/", "g").test(componentName)) {
         // We have an absolute path to the component.  Let's assume the blueprint writer knows what they are doing and just return it.
         comp = componentName;
@@ -423,7 +431,7 @@ function isRegisteredJSComponent(componentName: string): boolean {
  * @method
  * @param componentName the name of the component to retrieve the builder for
  */
-function getComponentBuilder(componentName: string) {
+function getComponentBuilder(componentName: string): Builder {
     if (isRegisteredJSComponent(componentName)) {
         return componentBuilders.jsComponentBuilder;
     } else {
@@ -435,10 +443,16 @@ function getComponentBuilder(componentName: string) {
  * Returns the comnponent builder required to map the root node values from a blueprint
  * @method
  */
-function getRootComponentBuilder() {
+function getRootComponentBuilder(): Builder {
     return componentBuilders.rootNodeComponentBuilder;
 }
 
+/**
+ * Builds an entity from a blueprint.  If the blueprint has the isPrefab value set to true
+ * then it will simply load the prefab and return it.  Otherwise it will generate a new object.
+ * Note that to generate a new object and not a prefab will involve a slight performance hit.
+ * @return {Atomic.Node}
+ */
 export function buildEntity(node: Atomic.Node, blueprint: string): Atomic.Node;
 export function buildEntity(node: Atomic.Node, blueprint: AtomicBlueprint): Atomic.Node;
 export function buildEntity(node: Atomic.Node, blueprint: any): Atomic.Node {
@@ -452,7 +466,7 @@ export function buildEntity(node: Atomic.Node, blueprint: any): Atomic.Node {
         console.log("Building entity: " + blueprint.name);
     }
 
-    let builder;
+    let builder: Builder;
 
     // first lets map over the root of the node
     builder = getRootComponentBuilder();
@@ -472,12 +486,20 @@ export function buildEntity(node: Atomic.Node, blueprint: any): Atomic.Node {
     return node;
 }
 
-export function createChild(parent: Atomic.Node, blueprint, forceCreateFromBlueprint?: boolean): Atomic.Node {
+/**
+ * Builds an entity from a blueprint and attaches it to the node provided.  If the blueprint has the isPrefab value set to true
+ * then it will simply load the prefab and return it.  Otherwise it will generate a new object.
+ * Note that to generate a new object and not a prefab will involve a slight performance hit.
+ * @return {Atomic.Node}
+ */
+export function createChild(parent: Atomic.Node, blueprint: string, forceCreateFromBlueprint?: boolean): Atomic.Node;
+export function createChild(parent: Atomic.Node, blueprint: Blueprint, forceCreateFromBlueprint?: boolean): Atomic.Node;
+export function createChild(parent: Atomic.Node, blueprint: any, forceCreateFromBlueprint?: boolean): Atomic.Node {
     if (typeof (blueprint) === "string") {
         blueprint = getBlueprint(blueprint);
     }
 
-    let node;
+    let node: Atomic.Node;
     if (blueprint.isPrefab && !forceCreateFromBlueprint) {
         let prefabPath = Atomic.addTrailingSlash(RESOURCES_DIR) + GENERATED_PREFABS_DIR;
         if (blueprint.prefabDir) {
@@ -491,7 +513,16 @@ export function createChild(parent: Atomic.Node, blueprint, forceCreateFromBluep
     return node;
 }
 
-export function createChildAtPosition(parent: Atomic.Node, blueprint, spawnPosition: number[]) {
+/**
+ * Builds an entity from a blueprint and attaches it to the node provided.  Additionally it will set the world position of the node.
+ * If the blueprint has the isPrefab value set to true
+ * then it will simply load the prefab and return it.  Otherwise it will generate a new object.
+ * Note that to generate a new object and not a prefab will involve a slight performance hit.
+ * @return {Atomic.Node}
+ */
+export function createChildAtPosition(parent: Atomic.Node, blueprint: string, spawnPosition: number[]): Atomic.Node;
+export function createChildAtPosition(parent: Atomic.Node, blueprint: Blueprint, spawnPosition: number[]): Atomic.Node;
+export function createChildAtPosition(parent: Atomic.Node, blueprint: any, spawnPosition: number[]): Atomic.Node {
     const node = createChild(parent, blueprint);
     if (spawnPosition.length === 2) {
         node.position2D = [spawnPosition[0], spawnPosition[1]];
@@ -502,19 +533,3 @@ export function createChildAtPosition(parent: Atomic.Node, blueprint, spawnPosit
     }
     return node;
 }
-
-
-/**
- * Obsolete.  Use the functions directly
- * @type {Object}
- * @deprecated
- */
-export const nodeBuilder = {
-    createChild: createChild,
-    createChildAtPosition: createChildAtPosition,
-    getBlueprint: getBlueprint,
-    generatePrefabs: generatePrefabs,
-    setDebug: function(val) {
-        DEBUG = val;
-    }
-};

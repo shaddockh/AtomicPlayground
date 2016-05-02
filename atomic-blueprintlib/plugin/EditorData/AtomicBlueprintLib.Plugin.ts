@@ -10,7 +10,7 @@ class AtomicBlueprintlibPlugin implements Editor.HostExtensions.HostEditorServic
     description: string = "Support plugin for the Atomic Blueprint Library";
 
     private serviceLocator: Editor.HostExtensions.HostServiceLocator = null;
-    private blueprintPath =  "../Modules/blueprints";
+    private blueprintPath = "../Modules/blueprints";
 
     private log(message: string) {
         if (debug) {
