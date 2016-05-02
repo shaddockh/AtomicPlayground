@@ -3,16 +3,17 @@ declare module 'entity-blueprint-manager' {
 	 *
 	 * Created by shaddockh on 9/28/14.
 	 */
+	export interface DictionaryOptions {
+	    ignoreCase: boolean;
+	}
 	/**
 	 * Dictionary class.  Allows for creating a case-insensitive dictionary
 	 */
-	export default class Dictionary<T> {
+	export class Dictionary<T> {
 	    private _catalog;
 	    private _keys;
 	    private _ignoreCase;
-	    constructor(opts?: {
-	        ignoreCase: boolean;
-	    });
+	    constructor(opts?: DictionaryOptions);
 	    /**
 	     * Clears the catalog
 	     *
@@ -45,11 +46,12 @@ declare module 'entity-blueprint-manager' {
 	    addItems(block: Object): void;
 	    /**
 	     * returns an item specified by the key provided in the catalog
-	     * @param key
+	     * @param {string} key
 	     * @returns {*}
 	     */
-	    get(key: any): T;
-	    getItem(key: any): T;
+	    get(key: string): T;
+	    /** @deprecated */
+	    getItem(key: string): T;
 	    /**
 	     * returns an array of all key names in the catalog
 	     * @returns {Array}
@@ -59,17 +61,17 @@ declare module 'entity-blueprint-manager' {
 	     * iterates over the items in the catalog and executes callback for each element
 	     * @param callback format: function(item, key)
 	     */
-	    forEach(callback: any): void;
+	    forEach(callback: (item: T, key: string) => void): void;
 	    /**
 	     * find an item by providing a filter that will be called for each item.
 	     * if limit is provided, it will stop iterating once the limit of found items is met.
 	     *
 	     * @method find
 	     * @param {function} filt
-	     * @param {int} limit
+	     * @param {int} limit number of elements to limit result to
 	     * @return {Array} matches
 	     */
-	    find(filt: (item) => boolean, limit?: any): T[];
+	    find(filt: (item: T) => boolean, limit?: number): T[];
 	}
 
 }
@@ -81,12 +83,12 @@ declare module 'entity-blueprint-manager' {
 	export interface Blueprint {
 	    inherits?: string;
 	    name?: string;
+	    [key: string]: Object;
 	}
 	export class BlueprintCatalog {
 	    constructor(opts?: BlueprintCatalogOptions);
 	    private blueprintDictionary;
 	    private hydratedBlueprints;
-	    private bpList;
 	    private debugMode;
 	    private needsReindexing;
 	    private options;
@@ -131,7 +133,8 @@ declare module 'entity-blueprint-manager' {
 	     * @param {bool} [inPlaceExtend] if true, will modify the orig blueprint.  Defaults to false
 	     * @return {Object} New object that contains the merged values
 	     */
-	    extendBlueprint(orig: Blueprint, extendwith?: Blueprint, inPlaceExtend?: boolean): Blueprint;
+	    extendBlueprint(orig: Object, extendwith: Object, inPlaceExtend?: boolean): Blueprint;
+	    extendBlueprint(orig: Blueprint, extendwith: Blueprint, inPlaceExtend?: boolean): Blueprint;
 	    /**
 	     * will return a blueprint hydrating it with values from it's lineage, optionally extending it with
 	     * the blueprint provided with 'extendwith'
@@ -192,7 +195,7 @@ declare module 'entity-blueprint-manager' {
 	     * @param {int} limit if provided, then limit the results to this amount
 	     * @return {Array} matches
 	     */
-	    find(filt: (item) => boolean, limit?: number): Blueprint[];
+	    find(filt: (item: Blueprint) => boolean, limit?: number): Blueprint[];
 	    /**
 	     * @method hasBlueprint
 	     * @param {string} blueprintName Name of blueprint to check fo
@@ -203,6 +206,9 @@ declare module 'entity-blueprint-manager' {
 
 }
 declare module 'entity-blueprint-manager' {
+	export interface Mixin {
+	    name: string;
+	}
 	/**
 	 * mixin catalog
 	 */
@@ -219,7 +225,7 @@ declare module 'entity-blueprint-manager' {
 	     * progressCallback can optionally be provided as:
 	     *   function(mixinName, true|false (loaded), msg)
 	     */
-	    loadSingleMixin(mixin: any, progressCallback: any): void;
+	    loadSingleMixin(mixin: Mixin, progressCallback: (mixinName: string, loaded: boolean, msg: string) => void): void;
 	    /**
 	     * loads a block of mixins into the dictionary.  They need to be in the format
 	     * {
@@ -229,19 +235,19 @@ declare module 'entity-blueprint-manager' {
 	     * @param block block of mixins
 	     * @param progressCallback function to be provided as callback with signature function(mixinName, bool loaded, message)
 	     */
-	    loadMixins(block: any, progressCallback: any): void;
+	    loadMixins(block: Object, progressCallback: (mixinName: string, loaded: boolean, message: string) => void): void;
 	    /**
 	     * will return a component by name
 	     * @param name name of the mixin to retrieve
 	     * @returns Object mixin object
 	     */
-	    getMixin(name: any): Object;
+	    getMixin(name: string): Mixin;
 	    /**
 	     * will return an array of mixin names
 	     * @returns {Array}
 	     */
 	    getAllMixinNames(): string[];
-	    hasMixin(mixinName: any): boolean;
+	    hasMixin(mixinName: string): boolean;
 	}
 
 }

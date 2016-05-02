@@ -48,17 +48,11 @@ function debug(message) {
 /**
  * The internal blueprint catalog that stores the blueprints
  * @type {BlueprintCatalog}
- * @deprecated
  */
-exports.blueprintCatalog = new entity_blueprint_manager_1.BlueprintCatalog({
+exports.catalog = new entity_blueprint_manager_1.BlueprintCatalog({
     ignoreCase: false,
     requireInherits: false
 });
-/**
- * The internal blueprint catalog that stores the blueprints
- * @type {BlueprintCatalog}
- */
-exports.catalog = exports.blueprintCatalog;
 /**
  * Builders for the various types of components.  These are in charge of mapping the blueprint properties to
  * the component.  JSComponents are generic, but native components may require specific builders
@@ -192,8 +186,10 @@ function generatePrefab(scene, blueprint, path) {
     node.remove();
 }
 /**
- * Generate prefabs from the blueprints located in the blueprint catalog
- * @param  {string} projectRoot optional root of the project.  Will look for the --project command line argument if not provided
+ * Generate prefabs from the blueprints located in the blueprint catalog.  Any
+ * blueprints with the isPrefab value set to true will be generated.  Additionally, if the prefabDir
+ * value is specified, the prefab will be placed in that directory.  Default directory that prefabs
+ * are generated to is: Resources/Prefabs/Generated
  */
 function generatePrefabs() {
     // Let's create an edit-time scene..one that doesn't update or start the component
@@ -210,9 +206,9 @@ function generatePrefabs() {
     var fs = Atomic.fileSystem;
     var defaultPath = Atomic.addTrailingSlash(RESOURCES_DIR) + GENERATED_PREFABS_DIR;
     if (fs.checkAccess(projectRoot + defaultPath)) {
-        var blueprintNames = exports.blueprintCatalog.getAllBlueprintNames();
+        var blueprintNames = exports.catalog.getAllBlueprintNames();
         for (var i = 0; i < blueprintNames.length; i++) {
-            var blueprint = exports.blueprintCatalog.getBlueprint(blueprintNames[i]);
+            var blueprint = exports.catalog.getBlueprint(blueprintNames[i]);
             if (blueprint.isPrefab) {
                 var path = defaultPath;
                 if (blueprint.prefabDir) {
@@ -336,13 +332,12 @@ function buildComponentCrossref() {
  */
 function extend(orig, extendwith) {
     var result = {};
-    var i;
-    for (i in orig) {
+    for (var i in orig) {
         if (orig.hasOwnProperty(i)) {
             result[i] = orig[i];
         }
     }
-    for (i in extendwith) {
+    for (var i in extendwith) {
         if (extendwith.hasOwnProperty(i)) {
             if (typeof extendwith[i] === "object") {
                 if (extendwith[i] === null) {
@@ -371,7 +366,7 @@ function extend(orig, extendwith) {
  * @param {string} name the name of the blueprint to retrieve
  */
 function getBlueprint(name) {
-    return exports.blueprintCatalog.getBlueprint(name);
+    return exports.catalog.getBlueprint(name);
 }
 exports.getBlueprint = getBlueprint;
 /**
@@ -492,20 +487,6 @@ function createChildAtPosition(parent, blueprint, spawnPosition) {
     return node;
 }
 exports.createChildAtPosition = createChildAtPosition;
-/**
- * Obsolete.  Use the functions directly
- * @type {Object}
- * @deprecated
- */
-exports.nodeBuilder = {
-    createChild: createChild,
-    createChildAtPosition: createChildAtPosition,
-    getBlueprint: getBlueprint,
-    generatePrefabs: generatePrefabs,
-    setDebug: function (val) {
-        DEBUG = val;
-    }
-};
 
 },{"entity-blueprint-manager":5}],3:[function(require,module,exports){
 "use strict";
@@ -564,15 +545,14 @@ var BlueprintCatalog = (function () {
         }; }
         this.blueprintDictionary = null;
         this.hydratedBlueprints = null;
-        this.bpList = [];
         this.debugMode = false;
         this.needsReindexing = false;
         this.options = null;
         this.options = opts;
-        this.blueprintDictionary = new dictionary_1.default({
+        this.blueprintDictionary = new dictionary_1.Dictionary({
             ignoreCase: opts.ignoreCase
         });
-        this.hydratedBlueprints = new dictionary_1.default({
+        this.hydratedBlueprints = new dictionary_1.Dictionary({
             ignoreCase: opts.ignoreCase
         });
     }
@@ -584,7 +564,6 @@ var BlueprintCatalog = (function () {
     BlueprintCatalog.prototype.clear = function () {
         this.blueprintDictionary.clear();
         this.hydratedBlueprints.clear();
-        this.bpList = [];
         this.needsReindexing = false;
     };
     /**
@@ -635,25 +614,14 @@ var BlueprintCatalog = (function () {
             }
         }
     };
-    /**
-     * Will extend either a blueprint of a sub component of a blueprint, returning a new blueprint containing the combination.
-     * The original blueprint will not be modified unless inPlaceExtend is set.
-     *
-     * @method extendBlueprint
-     * @param orig original blueprint to extend
-     * @param extendwith object to extend original blueprint with
-     * @param {bool} [inPlaceExtend] if true, will modify the orig blueprint.  Defaults to false
-     * @return {Object} New object that contains the merged values
-     */
     BlueprintCatalog.prototype.extendBlueprint = function (orig, extendwith, inPlaceExtend) {
         var result = inPlaceExtend ? orig : {};
-        var i;
-        for (i in orig) {
+        for (var i in orig) {
             if (orig.hasOwnProperty(i)) {
                 result[i] = orig[i];
             }
         }
-        for (i in extendwith) {
+        for (var i in extendwith) {
             if (extendwith.hasOwnProperty(i)) {
                 if (typeof extendwith[i] === "object") {
                     if (extendwith[i] === null) {
@@ -886,7 +854,7 @@ var Dictionary = (function () {
     ;
     /**
      * returns an item specified by the key provided in the catalog
-     * @param key
+     * @param {string} key
      * @returns {*}
      */
     Dictionary.prototype.get = function (key) {
@@ -897,6 +865,7 @@ var Dictionary = (function () {
         return this._catalog[newkey];
     };
     ;
+    /** @deprecated */
     Dictionary.prototype.getItem = function (key) {
         console.error("Deprecated: Dictionary.getItem");
         return this.get(key);
@@ -927,7 +896,7 @@ var Dictionary = (function () {
      *
      * @method find
      * @param {function} filt
-     * @param {int} limit
+     * @param {int} limit number of elements to limit result to
      * @return {Array} matches
      */
     Dictionary.prototype.find = function (filt, limit) {
@@ -948,16 +917,14 @@ var Dictionary = (function () {
     ;
     return Dictionary;
 }());
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = Dictionary;
+exports.Dictionary = Dictionary;
 
 },{}],5:[function(require,module,exports){
 "use strict";
 function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
-var dictionary_1 = require("./dictionary");
-exports.Dictionary = dictionary_1.default;
+__export(require("./dictionary"));
 __export(require("./blueprintCatalog"));
 __export(require("./mixinCatalog"));
 
@@ -970,7 +937,7 @@ var dictionary_1 = require("./dictionary");
  */
 var MixinCatalog = (function () {
     function MixinCatalog() {
-        this.mixinDictionary = new dictionary_1.default({
+        this.mixinDictionary = new dictionary_1.Dictionary({
             ignoreCase: true
         });
     }

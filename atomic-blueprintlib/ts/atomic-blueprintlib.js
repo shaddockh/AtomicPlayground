@@ -1,4 +1,3 @@
-// Routines for generating an entity from a blueprint -- very basic implementation here
 "use strict";
 var entity_blueprint_manager_1 = require("entity-blueprint-manager");
 var componentCrossref = null;
@@ -11,33 +10,16 @@ function debug(message) {
         console.log(message);
     }
 }
-/**
- * The internal blueprint catalog that stores the blueprints
- * @type {BlueprintCatalog}
- */
 exports.catalog = new entity_blueprint_manager_1.BlueprintCatalog({
     ignoreCase: false,
     requireInherits: false
 });
-/**
- * Builders for the various types of components.  These are in charge of mapping the blueprint properties to
- * the component.  JSComponents are generic, but native components may require specific builders
- *
- * Component builders must adhere to the interface:
- * {
- *    build: function(node, componentBlueprint, componentName, blueprint) {
- *    ...
- *    }
- *  }
- */
 var componentBuilders = {
-    // Used for mapping the root attributes of a node from a blueprint
     rootNodeComponentBuilder: {
         build: function (node, componentBlueprint, componentName, blueprint) {
             mapBlueprintToNativeComponent(node, blueprint, "Node");
         }
     },
-    // used to create and map a native component
     nativeComponentBuilder: {
         build: function (node, componentBlueprint, componentName) {
             if (DEBUG) {
@@ -47,7 +29,6 @@ var componentBuilders = {
             mapBlueprintToNativeComponent(comp, componentBlueprint, componentName);
         }
     },
-    // Used to create and map a JSComponent
     jsComponentBuilder: {
         build: function (node, componentBlueprint, componentName) {
             if (DEBUG) {
@@ -55,9 +36,8 @@ var componentBuilders = {
             }
             var component = resolveJSComponent(componentName);
             var jsComp = node.createJSComponent(component, componentBlueprint);
-            // Need to set the attributes so that when generating the prefab, it gets persisted properly
             for (var prop in componentBlueprint) {
-                jsComp.setAttribute(prop, componentBlueprint[prop]); // for generating the prefab
+                jsComp.setAttribute(prop, componentBlueprint[prop]);
             }
             node[componentName] = jsComp;
             return jsComp;
@@ -65,13 +45,6 @@ var componentBuilders = {
     }
 };
 var cachedNativeComponentProps = {};
-/**
- * maps blueprint properties to a native component.  Will cache the native component type attributes for speed.
- * @method
- * @param {AObject} component the component to map
- * @param {object} blueprint the blueprint to map to the component
- * @param {string} the name of the component
- */
 function mapBlueprintToNativeComponent(component, blueprint, componentName) {
     var compPropertyXref = cachedNativeComponentProps[componentName];
     if (!compPropertyXref) {
@@ -92,15 +65,14 @@ function mapBlueprintToNativeComponent(component, blueprint, componentName) {
             continue;
         }
         switch (attribute.type) {
-            case Atomic.VAR_BOOL: // true or false
-            case Atomic.VAR_INT: // 0
-            case Atomic.VAR_FLOAT: // 0.0
-            case Atomic.VAR_STRING: // "string"
-            case Atomic.VAR_VECTOR2: // [0,0]
-            case Atomic.VAR_VECTOR3: // [0,0,0]
-            case Atomic.VAR_QUATERNION: // [0,0,0]
+            case Atomic.VAR_BOOL:
+            case Atomic.VAR_INT:
+            case Atomic.VAR_FLOAT:
+            case Atomic.VAR_STRING:
+            case Atomic.VAR_VECTOR2:
+            case Atomic.VAR_VECTOR3:
+            case Atomic.VAR_QUATERNION:
             case Atomic.VAR_COLOR:
-                // blueprint already has the value in the right format, so let's just set it
                 if (DEBUG) {
                     console.log("setting attribute: " + attribute.name + " to value: " + blueprint[prop]);
                 }
@@ -119,10 +91,8 @@ function mapBlueprintToNativeComponent(component, blueprint, componentName) {
         }
     }
 }
-// TODO: need to find a better way to get the project root
 function getProjectRoot() {
     if (ToolCore) {
-        // Are we runningin the editor?
         return ToolCore.toolSystem.project.projectPath;
     }
     else {
@@ -141,24 +111,14 @@ function generatePrefab(scene, blueprint, path) {
     if (DEBUG) {
         console.log("Generating prefab: " + blueprint.name + " at " + path);
     }
-    // build the prefab
-    // TODO: Need to figure out how update an existing prefab if it exists
     var node = createChild(scene, blueprint, true);
     var file = new Atomic.File(path, Atomic.FILE_WRITE);
     node.saveXML(file);
     file.close();
-    // Delete the node
     node.removeAllComponents();
     node.remove();
 }
-/**
- * Generate prefabs from the blueprints located in the blueprint catalog.  Any
- * blueprints with the isPrefab value set to true will be generated.  Additionally, if the prefabDir
- * value is specified, the prefab will be placed in that directory.  Default directory that prefabs
- * are generated to is: Resources/Prefabs/Generated
- */
 function generatePrefabs() {
-    // Let's create an edit-time scene..one that doesn't update or start the component
     var projectRoot = getProjectRoot();
     if (!projectRoot || projectRoot === "") {
         console.log("Cannot generate prefabs without --project command line argument or outside the editor environment.");
@@ -167,8 +127,6 @@ function generatePrefabs() {
     projectRoot = Atomic.addTrailingSlash(projectRoot);
     var scene = new Atomic.Scene();
     scene.setUpdateEnabled(false);
-    // Build the directory that our generated prefabs will go into
-    // TODO: Could be cleaner
     var fs = Atomic.fileSystem;
     var defaultPath = Atomic.addTrailingSlash(RESOURCES_DIR) + GENERATED_PREFABS_DIR;
     if (fs.checkAccess(projectRoot + defaultPath)) {
@@ -193,10 +151,6 @@ function generatePrefabs() {
     }
 }
 exports.generatePrefabs = generatePrefabs;
-/**
- * Scans for component files in the workspace and generated an index of componentname=componentpath entries
- * This will be loaded up in order to resolve blueprint components at runtime
- */
 function generateComponentIndex(projectRoot, componentXrefFn) {
     var fs = Atomic.fileSystem;
     var idxPath = Atomic.addTrailingSlash(projectRoot) + Atomic.addTrailingSlash(RESOURCES_DIR) + componentXrefFn;
@@ -215,25 +169,19 @@ function generateComponentIndex(projectRoot, componentXrefFn) {
             }
             var componentFiles = fs.scanDir(pth, "*.js", Atomic.SCAN_FILES, true);
             for (var f = 0, fEnd = componentFiles.length; f < fEnd; f++) {
-                // check to see if this is a component
-                // TODO: for now, we just want to try and load components under a Components/ directory
                 if (componentFiles[f].toLowerCase().indexOf("components" + slash) === -1) {
-                    // skip it.
                     continue;
                 }
                 var resource = Atomic.cache.getTempResource("JSComponentFile", componentFiles[f], false);
                 if (resource) {
                     var internalComponentPath = componentFiles[f];
-                    // if the path to the component starts with Resources/, then we need to peel that part off of it
                     if (internalComponentPath.indexOf(Atomic.addTrailingSlash(RESOURCES_DIR)) === 0) {
                         internalComponentPath = internalComponentPath.replace(Atomic.addTrailingSlash(RESOURCES_DIR), "");
                     }
                     var componentName = internalComponentPath.replace(".js", "");
-                    // Grabbing just the filename part
                     if (componentName.indexOf(slash) >= 0) {
                         componentName = componentName.split(slash).pop();
                     }
-                    // See if we have already registered this component
                     var oldComponent = xref[componentName];
                     if (oldComponent && oldComponent !== internalComponentPath && oldComponent.indexOf(internalComponentPath) === -1 && internalComponentPath.indexOf(oldComponent) === -1) {
                         throw new Error("Component names must be unique.  Component: " + componentName + " already registered as " + xref[componentName] + "; trying to re-register as " + internalComponentPath);
@@ -253,16 +201,7 @@ function generateComponentIndex(projectRoot, componentXrefFn) {
     idxFile.flush();
     idxFile.close();
 }
-/**
- * Utility function that will scan the Components directory for components and build a cross reference so that
- * when the blueprint system tries to attach a component, it knows where the component file is.
- * Note, that this will be cached so that it only builds the cross reference on game startup.
- * @method
- * @returns object Component cross reference file.
- */
 function buildComponentCrossref() {
-    // TODO: look at having a way of registering js components.  There may be a scenario where these components don't live in the Components folder and may be supplied by a library.
-    // Cached
     if (componentCrossref) {
         return componentCrossref;
     }
@@ -270,9 +209,6 @@ function buildComponentCrossref() {
     var componentXrefFn = "_componentXref.txt";
     var projectRoot = getProjectRoot();
     if (projectRoot !== "") {
-        // We have a project root, which means the --project command line param was passed.
-        // this indicates that we are not running as a packaged build so we should
-        // re-build the component index.
         generateComponentIndex(projectRoot, componentXrefFn);
     }
     var xrefFile = Atomic.cache.getFile(componentXrefFn);
@@ -287,15 +223,6 @@ function buildComponentCrossref() {
     xrefFile.close();
     return componentCrossref;
 }
-/**
- * Will extend either a blueprint of a sub component of a blueprint.
- *
- * @method extend
- * @param {Object} orig the original object to extend
- * @param extendwith
- * @return {Object|Array} Returns a brand new object that contains the merged values.  This differs from
- *                  most implementations that actually manipulate the orig object.
- */
 function extend(orig, extendwith) {
     var result = {};
     for (var i in orig) {
@@ -310,7 +237,6 @@ function extend(orig, extendwith) {
                     result[i] = null;
                 }
                 else if (Array.isArray(extendwith[i])) {
-                    // handle array types
                     result[i] = extendwith[i];
                 }
                 else {
@@ -324,61 +250,31 @@ function extend(orig, extendwith) {
     }
     return result;
 }
-/**
- * Returns a blueprint from the library with the specified name.  If the blueprint has
- * an 'inherits' property, it will walk up the inheritance and fill in the values of the blueprint
- * appropriately from it's ancestors
- * @method
- * @param {string} name the name of the blueprint to retrieve
- */
 function getBlueprint(name) {
     return exports.catalog.getBlueprint(name);
 }
 exports.getBlueprint = getBlueprint;
-/**
- * Resets the library to defaults.  Clears the catalog and releases any cached settings
- */
 function reset() {
     exports.catalog.clear();
 }
 exports.reset = reset;
-/**
- * Resolve the component name to the actual path of the component
- * @method
- * @param {string} componentName the name of the component.  If the component contains slashes, it will be assumed that the component is referenced by absolute path.  Otherwise, the component will be looked up in componentCrossref.js.json
- * @returns {string} the absolute path to the component
- */
 function resolveJSComponent(componentName) {
     buildComponentCrossref();
     var comp;
     if (new RegExp("\\ | \/", "g").test(componentName)) {
-        // We have an absolute path to the component.  Let's assume the blueprint writer knows what they are doing and just return it.
         comp = componentName;
     }
     else {
-        // We need to look up the component in the component cross-ref.  If it's there, return the full path
         comp = componentCrossref[componentName] || null;
     }
     return comp;
 }
-/**
- * Returns true if the component is a registered JSComponent
- * @method
- * @param componentName The name of the component to check
- */
 function isRegisteredJSComponent(componentName) {
-    // walk through the componentCrossref and see if we have any matches.  Assuming that if there
-    // are no matches then either it's a native component or a bogus component
     if (resolveJSComponent(componentName)) {
         return true;
     }
     return false;
 }
-/**
- * Returns the component builder required to construct a component from a blueprint
- * @method
- * @param componentName the name of the component to retrieve the builder for
- */
 function getComponentBuilder(componentName) {
     if (isRegisteredJSComponent(componentName)) {
         return componentBuilders.jsComponentBuilder;
@@ -387,10 +283,6 @@ function getComponentBuilder(componentName) {
         return componentBuilders.nativeComponentBuilder;
     }
 }
-/**
- * Returns the comnponent builder required to map the root node values from a blueprint
- * @method
- */
 function getRootComponentBuilder() {
     return componentBuilders.rootNodeComponentBuilder;
 }
@@ -403,7 +295,6 @@ function buildEntity(node, blueprint) {
         console.log("Building entity: " + blueprint.name);
     }
     var builder;
-    // first lets map over the root of the node
     builder = getRootComponentBuilder();
     builder.build(node, null, null, blueprint);
     for (var componentName in blueprint) {
