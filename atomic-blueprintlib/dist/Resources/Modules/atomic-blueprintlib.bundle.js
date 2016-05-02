@@ -47,7 +47,6 @@ function debug(message) {
 }
 /**
  * The internal blueprint catalog that stores the blueprints
- * @type {BlueprintCatalog}
  */
 exports.catalog = new entity_blueprint_manager_1.BlueprintCatalog({
     ignoreCase: false,
@@ -363,7 +362,7 @@ function extend(orig, extendwith) {
  * an 'inherits' property, it will walk up the inheritance and fill in the values of the blueprint
  * appropriately from it's ancestors
  * @method
- * @param {string} name the name of the blueprint to retrieve
+ * @param name the name of the blueprint to retrieve
  */
 function getBlueprint(name) {
     return exports.catalog.getBlueprint(name);
