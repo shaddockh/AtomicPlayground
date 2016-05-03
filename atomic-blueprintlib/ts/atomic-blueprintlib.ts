@@ -1,6 +1,3 @@
-// Routines for generating an entity from a blueprint -- very basic implementation here
-"use strict";
-
 import {BlueprintCatalog} from "entity-blueprint-manager";
 import {Blueprint} from "entity-blueprint-manager";
 
@@ -95,7 +92,6 @@ const componentBuilders = {
 const cachedNativeComponentProps = {};
 /**
  * maps blueprint properties to a native component.  Will cache the native component type attributes for speed.
- * @method
  * @param {AObject} component the component to map
  * @param {object} blueprint the blueprint to map to the component
  * @param {string} the name of the component
@@ -305,7 +301,6 @@ function generateComponentIndex(projectRoot: string, componentXrefFn: string) {
  * Utility function that will scan the Components directory for components and build a cross reference so that
  * when the blueprint system tries to attach a component, it knows where the component file is.
  * Note, that this will be cached so that it only builds the cross reference on game startup.
- * @method
  * @returns object Component cross reference file.
  */
 function buildComponentCrossref(): Object {
@@ -341,8 +336,7 @@ function buildComponentCrossref(): Object {
 /**
  * Will extend either a blueprint of a sub component of a blueprint.
  *
- * @method extend
- * @param {Object} orig the original object to extend
+ * @param orig the original object to extend
  * @param extendwith
  * @return {Object|Array} Returns a brand new object that contains the merged values.  This differs from
  *                  most implementations that actually manipulate the orig object.
@@ -379,7 +373,6 @@ function extend(orig: Object, extendwith: Object): Object {
  * Returns a blueprint from the library with the specified name.  If the blueprint has
  * an 'inherits' property, it will walk up the inheritance and fill in the values of the blueprint
  * appropriately from it's ancestors
- * @method
  * @param name the name of the blueprint to retrieve
  */
 export function getBlueprint(name: string): AtomicBlueprint {
@@ -395,7 +388,6 @@ export function reset() {
 
 /**
  * Resolve the component name to the actual path of the component
- * @method
  * @param {string} componentName the name of the component.  If the component contains slashes, it will be assumed that the component is referenced by absolute path.  Otherwise, the component will be looked up in componentCrossref.js.json
  * @returns {string} the absolute path to the component
  */
@@ -414,7 +406,6 @@ function resolveJSComponent(componentName: string): string {
 
 /**
  * Returns true if the component is a registered JSComponent
- * @method
  * @param componentName The name of the component to check
  */
 function isRegisteredJSComponent(componentName: string): boolean {
@@ -428,7 +419,6 @@ function isRegisteredJSComponent(componentName: string): boolean {
 
 /**
  * Returns the component builder required to construct a component from a blueprint
- * @method
  * @param componentName the name of the component to retrieve the builder for
  */
 function getComponentBuilder(componentName: string): Builder {
@@ -441,19 +431,15 @@ function getComponentBuilder(componentName: string): Builder {
 
 /**
  * Returns the comnponent builder required to map the root node values from a blueprint
- * @method
  */
 function getRootComponentBuilder(): Builder {
     return componentBuilders.rootNodeComponentBuilder;
 }
 
 /**
- * Builds an entity from a blueprint.  If the blueprint has the isPrefab value set to true
- * then it will simply load the prefab and return it.  Otherwise it will generate a new object.
- * Note that to generate a new object and not a prefab will involve a slight performance hit.
- * The entity will not be attached to anything.  The preferred way of generating an entity is by
- * using createChild or createChildAtPosition.
- * @return {Atomic.Node}
+ * Maps components defined within a blueprint to the passed in node object.  This routine
+ * is used internally by the createChild and createChildAtPostion methods
+ * @return the node that was passed in
  */
 export function buildEntity(node: Atomic.Node, blueprint: string): Atomic.Node;
 export function buildEntity(node: Atomic.Node, blueprint: AtomicBlueprint): Atomic.Node;
@@ -493,7 +479,10 @@ export function buildEntity(node: Atomic.Node, blueprint: any): Atomic.Node {
  * If the blueprint has the isPrefab value set to true
  * then it will simply load the prefab and return it.  Otherwise it will generate a new object.
  * Note that to generate a new object and not a prefab will involve a slight performance hit.
- * @return {Atomic.Node}
+ * @param parent The ```Atomic.Node``` or ```Atomic.Scene``` to attach the generated entity to
+ * @param blueprint The blueprint that defines the entity to be created
+ * @param forceCreateFromBlueprint If true, this will force a regeneration of the node, even if a prefab exists
+ * @return The ```Atomic.Node``` that was created and populated from the blueprint
  */
 export function createChild(parent: Atomic.Node, blueprint: string, forceCreateFromBlueprint?: boolean): Atomic.Node;
 export function createChild(parent: Atomic.Node, blueprint: Blueprint, forceCreateFromBlueprint?: boolean): Atomic.Node;
@@ -522,7 +511,10 @@ export function createChild(parent: Atomic.Node, blueprint: any, forceCreateFrom
  * If the blueprint has the isPrefab value set to true
  * then it will simply load the prefab and return it.  Otherwise it will generate a new object.
  * Note that to generate a new object and not a prefab will involve a slight performance hit.
- * @return {Atomic.Node}
+ * @param parent The ```Atomic.Node``` or ```Atomic.Scene``` to attach the generated entity to
+ * @param blueprint The blueprint that defines the entity to be created
+ * @param spawnPosition The 2D or 3D coordinates to create this entity at
+ * @return The ```Atomic.Node``` that was created and populated from the blueprint
  */
 export function createChildAtPosition(parent: Atomic.Node, blueprint: string, spawnPosition: number[]): Atomic.Node;
 export function createChildAtPosition(parent: Atomic.Node, blueprint: Blueprint, spawnPosition: number[]): Atomic.Node;
