@@ -32,7 +32,6 @@ Duktape.modSearch = (function (origModSearch, vendorMap) {
 }));
 
 },{"./atomic-blueprintlib.js":2}],2:[function(require,module,exports){
-// Routines for generating an entity from a blueprint -- very basic implementation here
 "use strict";
 var entity_blueprint_manager_1 = require("entity-blueprint-manager");
 var componentCrossref = null;
@@ -100,7 +99,6 @@ var componentBuilders = {
 var cachedNativeComponentProps = {};
 /**
  * maps blueprint properties to a native component.  Will cache the native component type attributes for speed.
- * @method
  * @param {AObject} component the component to map
  * @param {object} blueprint the blueprint to map to the component
  * @param {string} the name of the component
@@ -290,7 +288,6 @@ function generateComponentIndex(projectRoot, componentXrefFn) {
  * Utility function that will scan the Components directory for components and build a cross reference so that
  * when the blueprint system tries to attach a component, it knows where the component file is.
  * Note, that this will be cached so that it only builds the cross reference on game startup.
- * @method
  * @returns object Component cross reference file.
  */
 function buildComponentCrossref() {
@@ -323,8 +320,7 @@ function buildComponentCrossref() {
 /**
  * Will extend either a blueprint of a sub component of a blueprint.
  *
- * @method extend
- * @param {Object} orig the original object to extend
+ * @param orig the original object to extend
  * @param extendwith
  * @return {Object|Array} Returns a brand new object that contains the merged values.  This differs from
  *                  most implementations that actually manipulate the orig object.
@@ -361,7 +357,6 @@ function extend(orig, extendwith) {
  * Returns a blueprint from the library with the specified name.  If the blueprint has
  * an 'inherits' property, it will walk up the inheritance and fill in the values of the blueprint
  * appropriately from it's ancestors
- * @method
  * @param name the name of the blueprint to retrieve
  */
 function getBlueprint(name) {
@@ -377,7 +372,6 @@ function reset() {
 exports.reset = reset;
 /**
  * Resolve the component name to the actual path of the component
- * @method
  * @param {string} componentName the name of the component.  If the component contains slashes, it will be assumed that the component is referenced by absolute path.  Otherwise, the component will be looked up in componentCrossref.js.json
  * @returns {string} the absolute path to the component
  */
@@ -396,7 +390,6 @@ function resolveJSComponent(componentName) {
 }
 /**
  * Returns true if the component is a registered JSComponent
- * @method
  * @param componentName The name of the component to check
  */
 function isRegisteredJSComponent(componentName) {
@@ -409,7 +402,6 @@ function isRegisteredJSComponent(componentName) {
 }
 /**
  * Returns the component builder required to construct a component from a blueprint
- * @method
  * @param componentName the name of the component to retrieve the builder for
  */
 function getComponentBuilder(componentName) {
@@ -422,7 +414,6 @@ function getComponentBuilder(componentName) {
 }
 /**
  * Returns the comnponent builder required to map the root node values from a blueprint
- * @method
  */
 function getRootComponentBuilder() {
     return componentBuilders.rootNodeComponentBuilder;

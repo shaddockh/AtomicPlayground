@@ -30,7 +30,6 @@ declare module 'atomic-blueprintlib' {
 	 * Returns a blueprint from the library with the specified name.  If the blueprint has
 	 * an 'inherits' property, it will walk up the inheritance and fill in the values of the blueprint
 	 * appropriately from it's ancestors
-	 * @method
 	 * @param name the name of the blueprint to retrieve
 	 */
 	export function getBlueprint(name: string): AtomicBlueprint;
@@ -39,12 +38,9 @@ declare module 'atomic-blueprintlib' {
 	 */
 	export function reset(): void;
 	/**
-	 * Builds an entity from a blueprint.  If the blueprint has the isPrefab value set to true
-	 * then it will simply load the prefab and return it.  Otherwise it will generate a new object.
-	 * Note that to generate a new object and not a prefab will involve a slight performance hit.
-	 * The entity will not be attached to anything.  The preferred way of generating an entity is by
-	 * using createChild or createChildAtPosition.
-	 * @return {Atomic.Node}
+	 * Maps components defined within a blueprint to the passed in node object.  This routine
+	 * is used internally by the createChild and createChildAtPostion methods
+	 * @return the node that was passed in
 	 */
 	export function buildEntity(node: Atomic.Node, blueprint: string): Atomic.Node;
 	export function buildEntity(node: Atomic.Node, blueprint: AtomicBlueprint): Atomic.Node;
@@ -53,7 +49,10 @@ declare module 'atomic-blueprintlib' {
 	 * If the blueprint has the isPrefab value set to true
 	 * then it will simply load the prefab and return it.  Otherwise it will generate a new object.
 	 * Note that to generate a new object and not a prefab will involve a slight performance hit.
-	 * @return {Atomic.Node}
+	 * @param parent The ```Atomic.Node``` or ```Atomic.Scene``` to attach the generated entity to
+	 * @param blueprint The blueprint that defines the entity to be created
+	 * @param forceCreateFromBlueprint If true, this will force a regeneration of the node, even if a prefab exists
+	 * @return The ```Atomic.Node``` that was created and populated from the blueprint
 	 */
 	export function createChild(parent: Atomic.Node, blueprint: string, forceCreateFromBlueprint?: boolean): Atomic.Node;
 	export function createChild(parent: Atomic.Node, blueprint: Blueprint, forceCreateFromBlueprint?: boolean): Atomic.Node;
@@ -63,7 +62,10 @@ declare module 'atomic-blueprintlib' {
 	 * If the blueprint has the isPrefab value set to true
 	 * then it will simply load the prefab and return it.  Otherwise it will generate a new object.
 	 * Note that to generate a new object and not a prefab will involve a slight performance hit.
-	 * @return {Atomic.Node}
+	 * @param parent The ```Atomic.Node``` or ```Atomic.Scene``` to attach the generated entity to
+	 * @param blueprint The blueprint that defines the entity to be created
+	 * @param spawnPosition The 2D or 3D coordinates to create this entity at
+	 * @return The ```Atomic.Node``` that was created and populated from the blueprint
 	 */
 	export function createChildAtPosition(parent: Atomic.Node, blueprint: string, spawnPosition: number[]): Atomic.Node;
 	export function createChildAtPosition(parent: Atomic.Node, blueprint: Blueprint, spawnPosition: number[]): Atomic.Node;
