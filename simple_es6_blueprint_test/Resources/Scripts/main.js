@@ -1,20 +1,25 @@
+"use strict";
+
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.update = update;
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+require("atomic-blueprintLib.bundle");
 
-var _blueprintLib = require('blueprintLib');
+var _atomicBlueprintlib = require("atomic-blueprintlib");
 
-var _blueprintLib2 = _interopRequireDefault(_blueprintLib);
+var blueprintLib = _interopRequireWildcard(_atomicBlueprintlib);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 // This script is the main entry point of the game
 
 // called at the start of play
 
 // create a 2D scene
-var scene = new Atomic.Scene();
+var scene = new Atomic.Scene(); // need to initialize the library bundle so we can access the contents
+
 scene.createComponent("Octree");
 
 var cameraNode = scene.createChild("Camera");
@@ -31,30 +36,29 @@ Atomic.renderer.setViewport(0, viewport);
 
 // Put some limits on the renderer
 Atomic.engine.setMaxFps(30);
-Atomic.engine.vSync = true;
+// not existant
+// Atomic.engine.vSync = true;
+blueprintLib.catalog.loadBlueprints(require("blueprints"));
 
 // Generate prefabs from any blueprints that specify isPrefab=true
-_blueprintLib2["default"].generatePrefabs();
+blueprintLib.generatePrefabs();
 
 // Use the blueprint system to spawn the blueprints named star1 and star2.  All components that
 // these need are defined in the blueprint and the blueprint system handles attaching the components.
 // Each component, in turn is in charge of initializing itself based upon it's section of the blueprint
-var spaceNode = _blueprintLib2["default"].createChild(scene, 'star1');
-var spaceNode2 = _blueprintLib2["default"].createChild(scene, 'star2');
+var spaceNode = blueprintLib.createChild(scene, "star1");
+var spaceNode2 = blueprintLib.createChild(scene, "star2");
 
 // Specify a start position instead of relying on the blueprint
-var spaceNode3 = _blueprintLib2["default"].createChildAtPosition(scene, 'star2', [2, 2]);
+var spaceNode3 = blueprintLib.createChildAtPosition(scene, "star2", [2, 2]);
 
-// override the speed
-var starOverride = _blueprintLib2["default"].getBlueprint('star2');
+// override the speed -- we know what we are doing so cast to any
+var starOverride = blueprintLib.getBlueprint("star2");
 starOverride.Star.speed = 1000;
-var spaceNode4 = _blueprintLib2["default"].createChildAtPosition(scene, starOverride, [1, 1]);
+
+var spaceNode4 = blueprintLib.createChildAtPosition(scene, starOverride, [1, 1]);
 
 // called per frame
-
 function update(timeStep) {
     // console.log('update');
 }
-
-;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIm1haW4uZXM2Il0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7Ozs7NEJBQXlCLGNBQWM7Ozs7Ozs7OztBQU92QyxJQUFJLEtBQUssR0FBRyxJQUFJLE1BQU0sQ0FBQyxLQUFLLEVBQUUsQ0FBQztBQUMvQixLQUFLLENBQUMsZUFBZSxDQUFDLFFBQVEsQ0FBQyxDQUFDOztBQUVoQyxJQUFJLFVBQVUsR0FBRyxLQUFLLENBQUMsV0FBVyxDQUFDLFFBQVEsQ0FBQyxDQUFDO0FBQzdDLFVBQVUsQ0FBQyxRQUFRLEdBQUcsQ0FBQyxHQUFHLEVBQUUsR0FBRyxFQUFFLENBQUMsSUFBSSxDQUFDLENBQUM7O0FBRXhDLElBQUksTUFBTSxHQUFHLFVBQVUsQ0FBQyxlQUFlLENBQUMsUUFBUSxDQUFDLENBQUM7QUFDbEQsTUFBTSxDQUFDLFlBQVksR0FBRyxJQUFJLENBQUM7QUFDM0IsTUFBTSxDQUFDLFNBQVMsR0FBRyxNQUFNLENBQUMsUUFBUSxDQUFDLE1BQU0sR0FBRyxNQUFNLENBQUMsVUFBVSxDQUFDOztBQUU5RCxJQUFJLFFBQVEsR0FBRyxJQUFJLENBQUM7O0FBRXBCLFFBQVEsR0FBRyxJQUFJLE1BQU0sQ0FBQyxRQUFRLENBQUMsS0FBSyxFQUFFLE1BQU0sQ0FBQyxDQUFDO0FBQzlDLE1BQU0sQ0FBQyxRQUFRLENBQUMsV0FBVyxDQUFDLENBQUMsRUFBRSxRQUFRLENBQUMsQ0FBQzs7O0FBR3pDLE1BQU0sQ0FBQyxNQUFNLENBQUMsU0FBUyxDQUFDLEVBQUUsQ0FBQyxDQUFDO0FBQzVCLE1BQU0sQ0FBQyxNQUFNLENBQUMsS0FBSyxHQUFHLElBQUksQ0FBQzs7O0FBRzNCLDBCQUFhLGVBQWUsRUFBRSxDQUFDOzs7OztBQUsvQixJQUFJLFNBQVMsR0FBRywwQkFBYSxXQUFXLENBQUMsS0FBSyxFQUFFLE9BQU8sQ0FBQyxDQUFDO0FBQ3pELElBQUksVUFBVSxHQUFHLDBCQUFhLFdBQVcsQ0FBQyxLQUFLLEVBQUUsT0FBTyxDQUFDLENBQUM7OztBQUcxRCxJQUFJLFVBQVUsR0FBRywwQkFBYSxxQkFBcUIsQ0FBQyxLQUFLLEVBQUUsT0FBTyxFQUFFLENBQUMsQ0FBQyxFQUFFLENBQUMsQ0FBQyxDQUFDLENBQUM7OztBQUc1RSxJQUFJLFlBQVksR0FBRywwQkFBYSxZQUFZLENBQUMsT0FBTyxDQUFDLENBQUM7QUFDdEQsWUFBWSxDQUFDLElBQUksQ0FBQyxLQUFLLEdBQUcsSUFBSSxDQUFDO0FBQy9CLElBQUksVUFBVSxHQUFHLDBCQUFhLHFCQUFxQixDQUFDLEtBQUssRUFBRSxZQUFZLEVBQUUsQ0FBQyxDQUFDLEVBQUUsQ0FBQyxDQUFDLENBQUMsQ0FBQzs7OztBQUcxRSxTQUFTLE1BQU0sQ0FBQyxRQUFRLEVBQUU7O0NBRWhDOztBQUFBLENBQUMiLCJmaWxlIjoibWFpbi5qcyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBibHVlcHJpbnRMaWIgZnJvbSAnYmx1ZXByaW50TGliJztcblxuLy8gVGhpcyBzY3JpcHQgaXMgdGhlIG1haW4gZW50cnkgcG9pbnQgb2YgdGhlIGdhbWVcblxuLy8gY2FsbGVkIGF0IHRoZSBzdGFydCBvZiBwbGF5XG5cbi8vIGNyZWF0ZSBhIDJEIHNjZW5lXG52YXIgc2NlbmUgPSBuZXcgQXRvbWljLlNjZW5lKCk7XG5zY2VuZS5jcmVhdGVDb21wb25lbnQoXCJPY3RyZWVcIik7XG5cbnZhciBjYW1lcmFOb2RlID0gc2NlbmUuY3JlYXRlQ2hpbGQoXCJDYW1lcmFcIik7XG5jYW1lcmFOb2RlLnBvc2l0aW9uID0gWzAuMCwgMC4wLCAtMTAuMF07XG5cbnZhciBjYW1lcmEgPSBjYW1lcmFOb2RlLmNyZWF0ZUNvbXBvbmVudChcIkNhbWVyYVwiKTtcbmNhbWVyYS5vcnRob2dyYXBoaWMgPSB0cnVlO1xuY2FtZXJhLm9ydGhvU2l6ZSA9IEF0b21pYy5ncmFwaGljcy5oZWlnaHQgKiBBdG9taWMuUElYRUxfU0laRTtcblxudmFyIHZpZXdwb3J0ID0gbnVsbDtcblxudmlld3BvcnQgPSBuZXcgQXRvbWljLlZpZXdwb3J0KHNjZW5lLCBjYW1lcmEpO1xuQXRvbWljLnJlbmRlcmVyLnNldFZpZXdwb3J0KDAsIHZpZXdwb3J0KTtcblxuLy8gUHV0IHNvbWUgbGltaXRzIG9uIHRoZSByZW5kZXJlclxuQXRvbWljLmVuZ2luZS5zZXRNYXhGcHMoMzApO1xuQXRvbWljLmVuZ2luZS52U3luYyA9IHRydWU7XG5cbi8vIEdlbmVyYXRlIHByZWZhYnMgZnJvbSBhbnkgYmx1ZXByaW50cyB0aGF0IHNwZWNpZnkgaXNQcmVmYWI9dHJ1ZVxuYmx1ZXByaW50TGliLmdlbmVyYXRlUHJlZmFicygpO1xuXG4vLyBVc2UgdGhlIGJsdWVwcmludCBzeXN0ZW0gdG8gc3Bhd24gdGhlIGJsdWVwcmludHMgbmFtZWQgc3RhcjEgYW5kIHN0YXIyLiAgQWxsIGNvbXBvbmVudHMgdGhhdFxuLy8gdGhlc2UgbmVlZCBhcmUgZGVmaW5lZCBpbiB0aGUgYmx1ZXByaW50IGFuZCB0aGUgYmx1ZXByaW50IHN5c3RlbSBoYW5kbGVzIGF0dGFjaGluZyB0aGUgY29tcG9uZW50cy5cbi8vIEVhY2ggY29tcG9uZW50LCBpbiB0dXJuIGlzIGluIGNoYXJnZSBvZiBpbml0aWFsaXppbmcgaXRzZWxmIGJhc2VkIHVwb24gaXQncyBzZWN0aW9uIG9mIHRoZSBibHVlcHJpbnRcbnZhciBzcGFjZU5vZGUgPSBibHVlcHJpbnRMaWIuY3JlYXRlQ2hpbGQoc2NlbmUsICdzdGFyMScpO1xudmFyIHNwYWNlTm9kZTIgPSBibHVlcHJpbnRMaWIuY3JlYXRlQ2hpbGQoc2NlbmUsICdzdGFyMicpO1xuXG4vLyBTcGVjaWZ5IGEgc3RhcnQgcG9zaXRpb24gaW5zdGVhZCBvZiByZWx5aW5nIG9uIHRoZSBibHVlcHJpbnRcbnZhciBzcGFjZU5vZGUzID0gYmx1ZXByaW50TGliLmNyZWF0ZUNoaWxkQXRQb3NpdGlvbihzY2VuZSwgJ3N0YXIyJywgWzIsIDJdKTtcblxuLy8gb3ZlcnJpZGUgdGhlIHNwZWVkXG52YXIgc3Rhck92ZXJyaWRlID0gYmx1ZXByaW50TGliLmdldEJsdWVwcmludCgnc3RhcjInKTtcbnN0YXJPdmVycmlkZS5TdGFyLnNwZWVkID0gMTAwMDtcbnZhciBzcGFjZU5vZGU0ID0gYmx1ZXByaW50TGliLmNyZWF0ZUNoaWxkQXRQb3NpdGlvbihzY2VuZSwgc3Rhck92ZXJyaWRlLCBbMSwgMV0pO1xuXG4vLyBjYWxsZWQgcGVyIGZyYW1lXG5leHBvcnQgZnVuY3Rpb24gdXBkYXRlKHRpbWVTdGVwKSB7XG4gICAgLy8gY29uc29sZS5sb2coJ3VwZGF0ZScpO1xufTtcbiJdfQ==
