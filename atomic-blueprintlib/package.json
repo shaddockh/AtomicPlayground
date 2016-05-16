@@ -12,7 +12,6 @@
     "build": "browserify ./lib/atomic-blueprintlib.bundleMaker.js > ./dist/Resources/Modules/atomic-blueprintlib.bundle.js",
     "postbuild": "npm run buildplugin && npm run docs",
     "buildplugin": "tsc -p ./plugin",
-    "combineAtomic": "dts-generator --name Atomic --baseDir ./ --file typings/Atomic/*.d.ts ./ --out dist/Atomic.d.ts",
     "docs": "typedoc --out docs ts/*.ts node_modules/entity-blueprint-manager/**/*.ts typings/**/*.ts --module commonjs --excludeNotExported --mode file --theme minimal --readme none --name 'Atomic Blueprint Library'"
   },
   "keywords": [

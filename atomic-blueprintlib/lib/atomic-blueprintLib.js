@@ -118,7 +118,7 @@ function mapBlueprintToNativeComponent(component, blueprint, componentName) {
 }
 // TODO: need to find a better way to get the project root
 function getProjectRoot() {
-    if (ToolCore) {
+    if (ToolCore && ToolCore.toolSystem && ToolCore.toolSystem.project) {
         // Are we runningin the editor?
         return ToolCore.toolSystem.project.projectPath;
     }

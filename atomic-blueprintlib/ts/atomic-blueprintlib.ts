@@ -151,7 +151,7 @@ function mapBlueprintToNativeComponent(component: Atomic.Node | Atomic.Component
 
 // TODO: need to find a better way to get the project root
 function getProjectRoot(): string {
-    if (ToolCore) {
+    if (ToolCore && ToolCore.toolSystem && ToolCore.toolSystem.project) {
         // Are we runningin the editor?
         return ToolCore.toolSystem.project.projectPath;
     } else {
