@@ -1,3 +1,4 @@
+"use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -38,6 +39,6 @@ var EndGameUi = (function (_super) {
         this.txtEndGameReason.setText(model.endGameReason);
     };
     return EndGameUi;
-})(CustomUIWindow_1.default);
+}(CustomUIWindow_1.default));
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = EndGameUi;

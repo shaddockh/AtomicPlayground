@@ -47,5 +47,5 @@ var ROTRogue = (function (_super) {
         this.placeItems();
     };
     return ROTRogue;
-})(BaseLevelGenerator_1.default);
+}(BaseLevelGenerator_1.default));
 module.exports = ROTRogue;

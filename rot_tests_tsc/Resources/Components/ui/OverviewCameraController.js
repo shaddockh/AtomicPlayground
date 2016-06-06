@@ -38,5 +38,5 @@ var OverviewCameraController = (function (_super) {
         //}
     };
     return OverviewCameraController;
-})(Atomic.JSComponent);
+}(Atomic.JSComponent));
 module.exports = OverviewCameraController;

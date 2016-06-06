@@ -43,5 +43,5 @@ var ROTIceyMaze = (function (_super) {
         this.placeItems();
     };
     return ROTIceyMaze;
-})(BaseLevelGenerator_1.default);
+}(BaseLevelGenerator_1.default));
 module.exports = ROTIceyMaze;

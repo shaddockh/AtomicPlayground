@@ -49,5 +49,5 @@ var Potion = (function (_super) {
         }
     };
     return Potion;
-})(CustomJSComponent_1.default);
+}(CustomJSComponent_1.default));
 module.exports = Potion;

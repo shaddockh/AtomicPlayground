@@ -1,3 +1,4 @@
+"use strict";
 /*
  * This file exposes all of the channels that can be subscribed to / sent messages on
  */

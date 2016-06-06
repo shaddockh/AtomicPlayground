@@ -1,3 +1,4 @@
+"use strict";
 exports.tiles = {
     tile_base: {
         Tile: {

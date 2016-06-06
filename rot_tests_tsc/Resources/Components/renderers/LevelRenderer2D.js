@@ -103,11 +103,11 @@ var LevelRenderer2D = (function (_super) {
                     triggerEvent.trigger(tile.node, 'onUpdateFov', false);
                 }
             });
-            var blockLightEntities = {};
+            var blockLightEntities_1 = {};
             mapData.iterateEntities(function (entity) {
                 triggerEvent.trigger(entity.node, 'onUpdateFov', false);
                 if (entity.entityComponent.blocksLight) {
-                    blockLightEntities[entity.x + ',' + entity.y] = true;
+                    blockLightEntities_1[entity.x + ',' + entity.y] = true;
                 }
             });
             // TODO: PreciseShadowcasting is really too slow for web.  Probably need to switch based upon platform
@@ -119,7 +119,7 @@ var LevelRenderer2D = (function (_super) {
                         return false;
                     }
                     else {
-                        if (blockLightEntities[x + ',' + y]) {
+                        if (blockLightEntities_1[x + ',' + y]) {
                             return false;
                         }
                         else {
@@ -176,5 +176,5 @@ var LevelRenderer2D = (function (_super) {
         //node.scale2D = [zoom, zoom];
     };
     return LevelRenderer2D;
-})(CustomJSComponent_1.default);
+}(CustomJSComponent_1.default));
 module.exports = LevelRenderer2D;

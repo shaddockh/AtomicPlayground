@@ -174,7 +174,7 @@ var MapData = (function () {
     MapData.TILE_WALL = 1;
     MapData.TILE_FLOOR = 2;
     return MapData;
-})();
+}());
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = MapData;
 function createEmptyMap(width, height, defaultValue) {
