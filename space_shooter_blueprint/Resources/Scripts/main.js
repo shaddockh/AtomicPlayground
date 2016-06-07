@@ -24,10 +24,7 @@ Atomic.renderer.setViewport(0, viewport);
 
 Atomic.renderer.textureFilterMode = Atomic.FILTER_NEAREST;
 
-blueprintLib.blueprintCatalog.loadBlueprints(require('blueprints'));
-
-// Generate prefabs from any blueprints that specify isPrefab=true
-//blueprintLib.nodeBuilder.generatePrefabs();
+blueprintLib.catalog.loadBlueprints(require('blueprints'));
 
 // create the game component
 var comp = blueprintLib.createChild(scene, 'spaceGame');
