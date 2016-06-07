@@ -1,11 +1,11 @@
 'atomic component';
 
-class Star extends Atomic.JSComponent {
+// Inspector fields will show up in the Atomic Editor scene view to allow editing
+const inspectorFields = {
+    speed: 100,
+};
 
-    // Inspector fields will show up in the Atomic Editor scene view to allow editing
-    inspectorFields = {
-        speed: 100,
-    };
+class Star extends Atomic.JSComponent {
 
     // Start will be called when component is instantiated
     start() {

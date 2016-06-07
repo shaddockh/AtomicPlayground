@@ -9,7 +9,9 @@ Take a look at the following files for how they are configured
 * Modules/blueprints.ts - this is where all the blueprints reside
 * main.ts - this instantiates two different star blueprints that descend from a base star
 * Components/Star.ts - a very simple blueprint aware component
+
 To Build:
+* install node.js if it's not yet installed
 * cd to the simple_es6_blueprint_test root directory
 * ```npm install```
 * ```npm run build```

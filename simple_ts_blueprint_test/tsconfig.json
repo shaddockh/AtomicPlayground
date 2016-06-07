@@ -11,11 +11,12 @@
         "./**/*.ts"
     ],
     "files": [
-        "./Components/Star.ts",
-        "./Modules/blueprints.ts",
-        "./Scripts/main.ts",
-        "./typings/atomic-blueprintlib/atomic-blueprintlib.d.ts",
-        "./typings/Atomic/Atomic.d.ts"
+        "./Resources/Components/Star.ts",
+        "./Resources/Modules/blueprints.ts",
+        "./Resources/Scripts/main.ts",
+        "./Resources/typings/atomic-blueprintlib/atomic-blueprintlib.d.ts",
+        "./Resources/typings/atomic-blueprintlib/typings/atomic-blueprintlib.d.ts",
+        "./Resources/typings/Atomic/Atomic.d.ts"
     ],
     "atom": {
         "rewriteTsconfig": true
