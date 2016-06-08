@@ -3,7 +3,7 @@
 // Atomic Component
 
 const input = Atomic.input;
-export default class TouchInput extends Atomic.JSComponent {
+class TouchInput extends Atomic.JSComponent {
     start() {
         // input.setTouchEmulation(true);
         var layout = Atomic.cache.getResource("XMLFile", "Data/ScreenJoystick.xml");
@@ -11,3 +11,5 @@ export default class TouchInput extends Atomic.JSComponent {
         input.addScreenJoystick(layout, uiStyle);
     }
 }
+
+module.exports = TouchInput;

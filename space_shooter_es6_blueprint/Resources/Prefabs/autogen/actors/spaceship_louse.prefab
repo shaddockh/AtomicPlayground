@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<node id="7">
+	<attribute name="Is Enabled" value="true" />
+	<attribute name="Name" value="spaceship_louse" />
+	<attribute name="Position" value="0 0 0" />
+	<attribute name="Rotation" value="1 0 0 0" />
+	<attribute name="Scale" value="1 1 1" />
+	<attribute name="Variables" />
+	<component type="JSComponent" id="16777233">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/Health.js" />
+	</component>
+	<component type="JSComponent" id="16777234">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/common/SpriteSheet.js" />
+	</component>
+	<component type="JSComponent" id="16777235">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/Enemy.js" />
+	</component>
+	<component type="JSComponent" id="16777236">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/AI.js" />
+	</component>
+</node>

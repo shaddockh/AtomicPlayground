@@ -1,12 +1,13 @@
 'use strict';
 'atomic component';
-import * as blueprintLib from 'blueprintLib';
+import * as blueprintLib from 'atomic-blueprintlib';
+import Globals from "Globals";
 
 const SpaceGame = Globals.SpaceGame;
 
-export default class AI extends Atomic.JSComponent {
+class AI extends Atomic.JSComponent {
 
-    inspectorFields = {
+    static inspectorFields = {
         canMove: false,
         allowShoot: false,
         bulletBlueprint: 'enemyBullet'
@@ -51,3 +52,5 @@ export default class AI extends Atomic.JSComponent {
         }
     }
 }
+
+module.exports = AI;

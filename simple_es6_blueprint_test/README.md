@@ -1,6 +1,8 @@
 
 This is an example project using the [Atomic Blueprint Library](https://github.com/shaddockh/AtomicPlayground/tree/master/atomic-blueprintlib), but written in ES6 and transpiled with babelJS
 
+### WIP - The upgrade to babelJS 6 broke the way the blueprint system overrides settings...still researching
+
 More information about blueprints can be found in the **atomic-blueprintlib** documentation.
 
 Some things to note about this project:

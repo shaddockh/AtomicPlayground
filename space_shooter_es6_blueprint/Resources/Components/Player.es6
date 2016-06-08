@@ -1,18 +1,21 @@
 'use strict';
 "atomic component";
-import * as blueprintLib from 'blueprintLib';
+import * as blueprintLib from 'atomic-blueprintlib';
+import Globals from "Globals";
 
 const input = Atomic.input;
 const SpaceGame = Globals.SpaceGame;
-export default class Player extends Atomic.JSComponent {
 
-    inspectorFields = {
+class Player extends Atomic.JSComponent {
+
+    static inspectorFields = {
         allowMove: true,
         allowShoot: true,
         shootDelta: 0,
         sprite: 'spaceship_mantis',
         bulletBlueprint: 'playerBullet'
     };
+
 
     // using start to initialize the script component
     start() {
@@ -89,3 +92,5 @@ export default class Player extends Atomic.JSComponent {
         }
     }
 }
+
+module.exports = Player;

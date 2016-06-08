@@ -1,6 +1,4 @@
 {
-    "sourceMaps": "inline",
-    "only": ["*.es6"],
-    "optional": ["es7.classProperties"],
-    "blacklist": ["strict"]
+    "plugins": ["transform-class-properties"],
+    "presets": ["es2015"]
 }

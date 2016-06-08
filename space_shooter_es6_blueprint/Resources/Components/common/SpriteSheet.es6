@@ -1,9 +1,9 @@
 'use strict';
 "atomic component";
 
-export default class SpriteSheet extends Atomic.JSComponent {
+class SpriteSheet extends Atomic.JSComponent {
 
-    inspectorFields = {
+    static inspectorFields = {
         spriteSheet: null,
         spriteName: null,
         blendMode: Atomic.BLEND_ALPHA,
@@ -25,3 +25,5 @@ export default class SpriteSheet extends Atomic.JSComponent {
         }
     }
 }
+
+module.exports = SpriteSheet;

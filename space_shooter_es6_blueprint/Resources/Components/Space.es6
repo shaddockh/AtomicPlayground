@@ -1,9 +1,9 @@
 'use strict';
 'atomic component';
 
-export default class Space extends Atomic.JSComponent {
+class Space extends Atomic.JSComponent {
 
-    inspectorFields = {
+    static inspectorFields = {
         speed: 0.75
     };
 
@@ -11,3 +11,5 @@ export default class Space extends Atomic.JSComponent {
         this.node.translate([0, -timeStep * this.speed, 0]);
     }
 }
+
+module.exports = Space;

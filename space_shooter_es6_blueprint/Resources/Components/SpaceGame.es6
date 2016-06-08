@@ -1,12 +1,17 @@
 'use strict';
 'atomic component';
-import * as blueprintLib from 'blueprintLib';
+import * as blueprintLib from 'atomic-blueprintlib';
+import Globals from "Globals";
 
-// This is used to defer deleted until the next iteration of the event loop so that we don't destroy elements while they 
+// This is used to defer deleted until the next iteration of the event loop so that we don't destroy elements while they
 // are still being referenced within the current event loop.  for instance, sending on onHit to an enemy could cause the onDie to trigger before the onHit for
 // a subsequent component.  the onDie will then schedule a deletion.
 const deleteQueue = [];
-export default class SpaceGame extends Atomic.JSComponent {
+class SpaceGame extends Atomic.JSComponent {
+
+    static inspectorFields = {
+        backgroundMusic: 'Music/battle.ogg'
+    };
 
     constructor() {
 
@@ -24,9 +29,6 @@ export default class SpaceGame extends Atomic.JSComponent {
         this.score = 0;
 
         console.log('constructor5');
-        this.inspectorFields = {
-            backgroundMusic: 'Music/battle.ogg'
-        };
         console.log('exit constructor');
     }
 
@@ -54,8 +56,8 @@ export default class SpaceGame extends Atomic.JSComponent {
     }
 
     spawnBullet(pos, blueprint) {
-        if (typeof (blueprint) === 'string') {
-            blueprint = blueprintLib.getBlueprint(blueprint);
+        if (typeof(blueprint) === 'string') {
+            blueprint = blueprintLib.catalog.getBlueprint(blueprint);
         }
 
         blueprintLib.createChildAtPosition(this.scene, blueprint, pos);
@@ -149,3 +151,5 @@ export default class SpaceGame extends Atomic.JSComponent {
         this.updateEnemies(timeStep);
     }
 }
+
+module.exports = SpaceGame;

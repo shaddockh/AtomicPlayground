@@ -1,14 +1,17 @@
 # Space Shooter example with blueprints
 
+### WIP - The upgrade to babelJS 6 broke the way the blueprint system overrides settings...still researching
+
 This is a deep modification of the space shooter example located at: https://github.com/AtomicGameEngine/AtomicExamples/tree/master/SpaceGame
 
 The main goal for this is to test out whether the blueprint system would work for a more real-world example.  Not everything is optimized, but the concept looks like it's viable.
 
 To Build:
+* install node if it is not yet installed
 * cd to the space_shooter_es6_blueprint root directory
-* ```npm install -g babel```
-* ```babel -d . **/*.es6```
-*  if you wish to have babel compile your .es6 files while you edit them, use: ```babel -d . **/*.es6 -w```
+* ```npm install```
+* ```npm run build```
+*  if you wish to have babel compile your .es6 files while you edit them, use: ```npm run watch```
 
 
 The major changes include:
@@ -18,7 +21,7 @@ The major changes include:
 # Notes
 * Converting to es6 made the code seem a little cleaner looking.  I'm still new to es6, but figured that since it's now an approved standard, it would be time to start using it.  It all transpiles to pure js, so if you are more comfortable looking at that, just build the project and browse the build folder.
 * I needed to create a couple new components to make the blueprints more generic.  **Health** for example is now part of a component and when it reaches zero, will trigger an onDie event on the node it's attached to
-* I needed to implement my own form of event system as the built in atomic system wasn't working quite right.  In order to handle this, I added a new trigger method that basically walks the components on the passed 
+* I needed to implement my own form of event system as the built in atomic system wasn't working quite right.  In order to handle this, I added a new trigger method that basically walks the components on the passed
 in node and will auto-call any function that matches the name of the event being called.
 ```
 import * as triggerSys from 'atomicTriggerEvent';
@@ -53,7 +56,7 @@ export default class MyClass {
   inspectorFields = {
      myCustomValue: 42
   };
-  
+
   myFunction() {
      console.log(this.myCustomValue);
   }

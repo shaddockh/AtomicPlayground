@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<node id="6">
+	<attribute name="Is Enabled" value="true" />
+	<attribute name="Name" value="spaceship_scarab" />
+	<attribute name="Position" value="0 0 0" />
+	<attribute name="Rotation" value="1 0 0 0" />
+	<attribute name="Scale" value="1 1 1" />
+	<attribute name="Variables" />
+	<component type="JSComponent" id="16777229">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/Health.js" />
+	</component>
+	<component type="JSComponent" id="16777230">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/common/SpriteSheet.js" />
+	</component>
+	<component type="JSComponent" id="16777231">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/Enemy.js" />
+	</component>
+	<component type="JSComponent" id="16777232">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/AI.js" />
+	</component>
+</node>

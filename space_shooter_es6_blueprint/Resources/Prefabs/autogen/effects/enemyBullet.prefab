@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<node id="10">
+	<attribute name="Is Enabled" value="true" />
+	<attribute name="Name" value="enemyBullet" />
+	<attribute name="Position" value="0 0 0" />
+	<attribute name="Rotation" value="1 0 0 0" />
+	<attribute name="Scale" value="1 1 1" />
+	<attribute name="Variables" />
+	<component type="StaticSprite2D" id="4">
+		<attribute name="Sprite" value="Sprite2D;Sprites/green_beam.png" />
+	</component>
+	<component type="JSComponent" id="16777239">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/Bullet.js" />
+	</component>
+</node>

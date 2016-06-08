@@ -2,16 +2,18 @@
 'atomic component';
 
 import * as triggerEvent from 'atomicTriggerEvent';
+import Globals from "Globals";
 
 const SpaceGame = Globals.SpaceGame;
 
-export default class Bullet extends Atomic.JSComponent {
+class Bullet extends Atomic.JSComponent {
 
-    inspectorFields = {
+    static inspectorFields = {
         isPlayer: false,
         laserSound: '',
         speed: 5
     };
+
 
     start() {
         this.laserSound = Atomic.cache.getResource("Sound", this.laserSound);
@@ -104,3 +106,5 @@ export default class Bullet extends Atomic.JSComponent {
         }
     }
 }
+
+module.exports = Bullet;
