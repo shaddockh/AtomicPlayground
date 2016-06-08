@@ -18,14 +18,14 @@
     "AtomicGameEngine"
   ],
   "author": "T. Shaddock Heath",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "browserify": "^10.2.4",
     "dts-generator": "^1.7.0",
     "entity-blueprint-manager": "github:shaddockh/entity-blueprint-manager",
     "shx": "^0.1.2",
     "tslint": "^3.8.0",
-    "typedoc": "^0.3.12",
+    "typedoc": "~0.3.12",
     "typescript": "^1.8.10"
   }
 }

@@ -149,61 +149,14 @@ function generatePrefab(scene, blueprint, path) {
     node.remove();
 }
 /**
- * Generate prefabs from the blueprints located in the blueprint catalog.  Any
- * blueprints with the isPrefab value set to true will be generated.  Additionally, if the prefabDir
- * value is specified, the prefab will be placed in that directory.  Default directory that prefabs
- * are generated to is: Resources/Prefabs/Generated
- */
-function generatePrefabs() {
-    // Let's create an edit-time scene..one that doesn't update or start the component
-    var projectRoot = getProjectRoot();
-    if (!projectRoot || projectRoot === "") {
-        console.log("Cannot generate prefabs without --project command line argument or outside the editor environment.");
-        return;
-    }
-    projectRoot = Atomic.addTrailingSlash(projectRoot);
-    var scene = new Atomic.Scene();
-    scene.setUpdateEnabled(false);
-    // Build the directory that our generated prefabs will go into
-    // TODO: Could be cleaner
-    var fs = Atomic.fileSystem;
-    var defaultPath = Atomic.addTrailingSlash(RESOURCES_DIR) + GENERATED_PREFABS_DIR;
-    if (fs.checkAccess(projectRoot + defaultPath)) {
-        var blueprintNames = exports.catalog.getAllBlueprintNames();
-        for (var i = 0; i < blueprintNames.length; i++) {
-            var blueprint = exports.catalog.getBlueprint(blueprintNames[i]);
-            if (blueprint.isPrefab) {
-                var path = defaultPath;
-                if (blueprint.prefabDir) {
-                    path = Atomic.addTrailingSlash(RESOURCES_DIR) + blueprint.prefabDir;
-                }
-                fs.createDirs(projectRoot, path);
-                debug("Generating prefab: " + Atomic.addTrailingSlash(path) + blueprintNames[i] + ".prefab");
-                generatePrefab(scene, blueprint, projectRoot + Atomic.addTrailingSlash(path) + blueprintNames[i] + ".prefab");
-            }
-        }
-    }
-    else {
-        if (DEBUG) {
-            console.log("Access denied writing to: " + defaultPath);
-        }
-    }
-}
-exports.generatePrefabs = generatePrefabs;
-/**
  * Scans for component files in the workspace and generated an index of componentname=componentpath entries
  * This will be loaded up in order to resolve blueprint components at runtime
  */
 function generateComponentIndex(projectRoot, componentXrefFn) {
     var fs = Atomic.fileSystem;
-    var idxPath = Atomic.addTrailingSlash(projectRoot) + Atomic.addTrailingSlash(RESOURCES_DIR) + componentXrefFn;
-    var idxFile = new Atomic.File(idxPath, Atomic.FILE_WRITE);
     var xref = {};
     var componentsFound = 0;
     var slash = Atomic.addTrailingSlash("1")[1];
-    if (DEBUG) {
-        console.log("Writing component xref file to: " + idxPath);
-    }
     for (var i = 0, iEnd = Atomic.cache.resourceDirs.length; i < iEnd; i++) {
         var pth = Atomic.addTrailingSlash(Atomic.cache.resourceDirs[i]);
         if (fs.checkAccess(pth) && fs.dirExists(pth)) {
@@ -237,18 +190,24 @@ function generateComponentIndex(projectRoot, componentXrefFn) {
                     }
                     if (!oldComponent || (oldComponent.indexOf(internalComponentPath) === -1 && internalComponentPath.indexOf(oldComponent) === -1)) {
                         xref[componentName] = internalComponentPath;
-                        if (componentsFound > 0) {
-                            idxFile.writeString("\n");
-                        }
-                        idxFile.writeString(componentName + "=" + internalComponentPath);
                         componentsFound++;
                     }
                 }
             }
         }
     }
-    idxFile.flush();
-    idxFile.close();
+    var idxPath = Atomic.addTrailingSlash(projectRoot) + Atomic.addTrailingSlash(RESOURCES_DIR) + componentXrefFn;
+    var idxFile = new Atomic.File(idxPath, Atomic.FILE_WRITE);
+    try {
+        if (DEBUG) {
+            console.log("Writing component xref file to: " + idxPath);
+        }
+        idxFile.writeString(JSON.stringify(xref, null, 2));
+    }
+    finally {
+        idxFile.flush();
+        idxFile.close();
+    }
 }
 /**
  * Utility function that will scan the Components directory for components and build a cross reference so that
@@ -263,7 +222,7 @@ function buildComponentCrossref() {
         return componentCrossref;
     }
     componentCrossref = {};
-    var componentXrefFn = "_componentXref.txt";
+    var componentXrefFn = "componentCrossRef.json";
     var projectRoot = getProjectRoot();
     if (projectRoot !== "") {
         // We have a project root, which means the --project command line param was passed.
@@ -272,15 +231,12 @@ function buildComponentCrossref() {
         generateComponentIndex(projectRoot, componentXrefFn);
     }
     var xrefFile = Atomic.cache.getFile(componentXrefFn);
-    var fileContents = xrefFile.readText().split("\n");
-    for (var c = 0; c < fileContents.length; c++) {
-        var namePathSplit = fileContents[c].split("=");
-        componentCrossref[namePathSplit[0]] = namePathSplit[1];
-        if (DEBUG) {
-            console.log("Registering component: " + namePathSplit[0] + " at " + namePathSplit[1]);
-        }
+    try {
+        componentCrossref = JSON.parse(xrefFile.readText());
     }
-    xrefFile.close();
+    finally {
+        xrefFile.close();
+    }
     return componentCrossref;
 }
 /**
@@ -320,41 +276,6 @@ function extend(orig, extendwith) {
     return result;
 }
 /**
- * Returns a blueprint from the library with the specified name.  If the blueprint has
- * an 'inherits' property, it will walk up the inheritance and fill in the values of the blueprint
- * appropriately from it's ancestors
- * @param name the name of the blueprint to retrieve
- */
-function getBlueprint(name) {
-    return exports.catalog.getBlueprint(name);
-}
-exports.getBlueprint = getBlueprint;
-/**
- * Resets the library to defaults.  Clears the catalog and releases any cached settings
- */
-function reset() {
-    exports.catalog.clear();
-}
-exports.reset = reset;
-/**
- * Resolve the component name to the actual path of the component
- * @param {string} componentName the name of the component.  If the component contains slashes, it will be assumed that the component is referenced by absolute path.  Otherwise, the component will be looked up in componentCrossref.js.json
- * @returns {string} the absolute path to the component
- */
-function resolveJSComponent(componentName) {
-    buildComponentCrossref();
-    var comp;
-    if (new RegExp("\\ | \/", "g").test(componentName)) {
-        // We have an absolute path to the component.  Let's assume the blueprint writer knows what they are doing and just return it.
-        comp = componentName;
-    }
-    else {
-        // We need to look up the component in the component cross-ref.  If it's there, return the full path
-        comp = componentCrossref[componentName] || null;
-    }
-    return comp;
-}
-/**
  * Returns true if the component is a registered JSComponent
  * @param componentName The name of the component to check
  */
@@ -384,6 +305,85 @@ function getComponentBuilder(componentName) {
 function getRootComponentBuilder() {
     return componentBuilders.rootNodeComponentBuilder;
 }
+/**
+ * Resolve the component name to the actual path of the component
+ * @param {string} componentName the name of the component.  If the component contains slashes, it will be assumed that the component is referenced by absolute path.  Otherwise, the component will be looked up in componentCrossref.js.json
+ * @returns {string} the absolute path to the component
+ */
+function resolveJSComponent(componentName) {
+    buildComponentCrossref();
+    var comp;
+    if (new RegExp("\\ | \/", "g").test(componentName)) {
+        // We have an absolute path to the component.  Let's assume the blueprint writer knows what they are doing and just return it.
+        comp = componentName;
+    }
+    else {
+        // We need to look up the component in the component cross-ref.  If it's there, return the full path
+        comp = componentCrossref[componentName] || null;
+    }
+    return comp;
+}
+/**
+ * Generate prefabs from the blueprints located in the blueprint catalog.  Any
+ * blueprints with the isPrefab value set to true will be generated.  Additionally, if the prefabDir
+ * value is specified, the prefab will be placed in that directory.  Default directory that prefabs
+ * are generated to is: Resources/Prefabs/Generated
+ *
+ * Note: This method really should only be called from an editor extension and not from the player
+ */
+function generatePrefabs() {
+    // Let's create an edit-time scene..one that doesn't update or start the component
+    var projectRoot = getProjectRoot();
+    if (!projectRoot || projectRoot === "") {
+        console.log("Cannot generate prefabs without --project command line argument or outside the editor environment.");
+        return;
+    }
+    projectRoot = Atomic.addTrailingSlash(projectRoot);
+    var scene = new Atomic.Scene();
+    scene.setUpdateEnabled(false);
+    // Build the directory that our generated prefabs will go into
+    // TODO: Could be cleaner
+    var fs = Atomic.fileSystem;
+    var defaultPath = Atomic.addTrailingSlash(RESOURCES_DIR) + GENERATED_PREFABS_DIR;
+    if (fs.checkAccess(projectRoot + defaultPath)) {
+        var blueprintNames = exports.catalog.getAllBlueprintNames();
+        for (var i = 0; i < blueprintNames.length; i++) {
+            var blueprint = exports.catalog.getBlueprint(blueprintNames[i]);
+            if (blueprint.isPrefab) {
+                var path = defaultPath;
+                if (blueprint.prefabDir) {
+                    path = Atomic.addTrailingSlash(RESOURCES_DIR) + blueprint.prefabDir;
+                }
+                fs.createDirs(projectRoot, path);
+                debug("Generating prefab: " + Atomic.addTrailingSlash(path) + blueprintNames[i] + ".prefab");
+                generatePrefab(scene, blueprint, projectRoot + Atomic.addTrailingSlash(path) + blueprintNames[i] + ".prefab");
+            }
+        }
+    }
+    else {
+        if (DEBUG) {
+            console.log("Access denied writing to: " + defaultPath);
+        }
+    }
+}
+exports.generatePrefabs = generatePrefabs;
+/**
+ * Returns a blueprint from the library with the specified name.  If the blueprint has
+ * an 'inherits' property, it will walk up the inheritance and fill in the values of the blueprint
+ * appropriately from it's ancestors
+ * @param name the name of the blueprint to retrieve
+ */
+function getBlueprint(name) {
+    return exports.catalog.getBlueprint(name);
+}
+exports.getBlueprint = getBlueprint;
+/**
+ * Resets the library to defaults.  Clears the catalog and releases any cached settings
+ */
+function reset() {
+    exports.catalog.clear();
+}
+exports.reset = reset;
 function buildEntity(node, blueprint) {
     var blueprintObj;
     if (typeof (blueprint) === "string") {

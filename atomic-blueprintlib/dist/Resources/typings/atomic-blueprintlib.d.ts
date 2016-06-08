@@ -24,6 +24,8 @@ declare module 'atomic-blueprintlib' {
 	 * blueprints with the isPrefab value set to true will be generated.  Additionally, if the prefabDir
 	 * value is specified, the prefab will be placed in that directory.  Default directory that prefabs
 	 * are generated to is: Resources/Prefabs/Generated
+	 *
+	 * Note: This method really should only be called from an editor extension and not from the player
 	 */
 	export function generatePrefabs(): void;
 	/**
