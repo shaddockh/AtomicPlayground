@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<node id="37">
+	<attribute name="Is Enabled" value="true" />
+	<attribute name="Name" value="health_potion" />
+	<attribute name="Position" value="0 0 0" />
+	<attribute name="Rotation" value="1 0 0 0" />
+	<attribute name="Scale" value="1 1 1" />
+	<attribute name="Variables" />
+	<component type="JSComponent" id="16777337">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/common/Entity.js" />
+		<attribute name="FieldValues">
+			<variant hash="3427235179" type="Bool" value="false" />
+			<variant hash="421471792" type="Bool" value="false" />
+			<variant hash="1215768336" type="Bool" value="true" />
+			<variant hash="1835252826" type="Bool" value="false" />
+		</attribute>
+	</component>
+	<component type="StaticSprite2D" id="29">
+		<attribute name="Order in Layer" value="10" />
+		<attribute name="Sprite" value="Sprite2D;Sprites/Potion_00.png" />
+	</component>
+	<component type="JSComponent" id="16777338">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/interactive/Potion.js" />
+		<attribute name="FieldValues">
+			<variant hash="339510355" type="Bool" value="false" />
+			<variant hash="4251997213" type="Float" value="5" />
+			<variant hash="1581901527" type="ResourceRef" value="Sound;Sounds/bottle.ogg" />
+		</attribute>
+	</component>
+</node>

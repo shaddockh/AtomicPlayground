@@ -9,8 +9,6 @@ var triggerEvent = require('atomicTriggerEvent');
 var metrics = require('metricsGatherer');
 var gameState_1 = require('../../Modules/gameState');
 var CustomJSComponent_1 = require('CustomJSComponent');
-//import { nodeBuilder } from 'atomic-blueprintLib';
-//import MapData from 'MapData';
 var PlayerActions = (function () {
     function PlayerActions() {
     }

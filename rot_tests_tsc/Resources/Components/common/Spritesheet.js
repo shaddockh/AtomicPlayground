@@ -12,8 +12,8 @@ var SpriteSheet = (function (_super) {
         _super.apply(this, arguments);
         this.inspectorFields = {
             debug: false,
-            spriteSheet: null,
-            spriteName: null
+            spriteSheet: [Atomic.VAR_STRING],
+            spriteName: [Atomic.VAR_STRING]
         };
         this.spriteSheet = null;
         this.spriteName = null;

@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<node id="35">
+	<attribute name="Is Enabled" value="true" />
+	<attribute name="Name" value="physicsHero" />
+	<attribute name="Position" value="0 0 0" />
+	<attribute name="Rotation" value="1 0 0 0" />
+	<attribute name="Scale" value="1 1 1" />
+	<attribute name="Variables" />
+	<component type="JSComponent" id="16777323">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/common/Entity.js" />
+		<attribute name="FieldValues">
+			<variant hash="3427235179" type="Bool" value="true" />
+			<variant hash="421471792" type="Bool" value="false" />
+			<variant hash="1215768336" type="Bool" value="true" />
+			<variant hash="2894794562" type="Bool" value="true" />
+			<variant hash="2263931415" type="String" value="Hero" />
+		</attribute>
+	</component>
+	<component type="JSComponent" id="16777324">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/common/MessageDispatcher.js" />
+	</component>
+	<component type="StaticSprite2D" id="23">
+		<attribute name="Order in Layer" value="12" />
+		<attribute name="Sprite" value="Sprite2D;Sprites/hero_0.png" />
+	</component>
+	<component type="JSComponent" id="16777325">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/common/PlayerInputHandler.js" />
+		<attribute name="FieldValues">
+			<variant hash="339510355" type="Bool" value="false" />
+		</attribute>
+	</component>
+	<component type="PointLight2D" id="24">
+		<attribute name="Color" value="0.9 0.7 0.5 0.7" />
+		<attribute name="Cast Shadows" value="true" />
+		<attribute name="Num Rays" value="64" />
+		<attribute name="Backtrace" value="true" />
+		<attribute name="Radius" value="2" />
+	</component>
+	<component type="JSComponent" id="16777326">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/actionHandlers/GridMover.js" />
+		<attribute name="FieldValues">
+			<variant hash="339510355" type="Bool" value="false" />
+			<variant hash="273365031" type="Float" value="0.25" />
+		</attribute>
+	</component>
+	<component type="JSComponent" id="16777327">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/common/ActionLogger.js" />
+	</component>
+	<component type="JSComponent" id="16777328">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/common/EventSound.js" />
+	</component>
+	<component type="JSComponent" id="16777329">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/ai/HeroAi.js" />
+		<attribute name="FieldValues">
+			<variant hash="339510355" type="Bool" value="false" />
+		</attribute>
+	</component>
+	<component type="JSComponent" id="16777330">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/common/Health.js" />
+		<attribute name="FieldValues">
+			<variant hash="3573188092" type="Float" value="10" />
+		</attribute>
+	</component>
+	<component type="CollisionBox2D" id="25">
+		<attribute name="Size" value="0.07 0.07" />
+		<attribute name="Category Bits" value="1" />
+		<attribute name="Mask Bits" value="65535" />
+		<attribute name="Density" value="19" />
+		<attribute name="Friction" value="15" />
+		<attribute name="Restitution" value="0.1" />
+	</component>
+	<component type="RigidBody2D" id="26">
+		<attribute name="Fixed Rotation" value="true" />
+		<attribute name="CastShadows" value="false" />
+	</component>
+</node>

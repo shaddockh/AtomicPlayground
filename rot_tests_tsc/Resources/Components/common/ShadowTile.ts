@@ -10,7 +10,7 @@ import gameState from '../../Modules/gameState';
  */
 class ShadowTile extends CustomJSComponent {
     inspectorFields = {
-        platformDisable: ['HTML5'],
+        platformDisable: [Atomic.VAR_STRINGVECTOR, ['HTML5']],
         debug: false
     };
 

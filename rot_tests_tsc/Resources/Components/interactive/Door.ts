@@ -1,8 +1,6 @@
 'use strict';
 'atomic component';
 import * as triggerEvent from 'atomicTriggerEvent';
-//import { nodeBuilder } from 'atomic-blueprintLib';
-//import MapData from 'MapData';
 
 import Entity = require('../common/Entity');
 import CustomJSComponent from '../../Modules/CustomJSComponent';
@@ -14,7 +12,7 @@ class Door extends CustomJSComponent {
         openSprite: ['Sprite2D', 'Sprites/door_ns_o.png'],
         closedSprite: ['Sprite2D', 'Sprites/door_ns_c.png'],
         openSound: ['Sound', 'Sounds/doorOpen_1.ogg'],
-        closeSound: ['Sound']
+        closeSound: ['Sound', '']
     };
 
     sprite2D: Atomic.StaticSprite2D;
@@ -22,10 +20,10 @@ class Door extends CustomJSComponent {
     body: Atomic.RigidBody2D;
 
     open: boolean = false;
-    openSprite;
-    closedSprite;
-    openSound;
-    closeSound;
+    openSprite: any = null;
+    closedSprite: any = null;
+    openSound: Atomic.Sound = null;
+    closeSound: Atomic.Sound = null;
 
     start() {
         this.sprite2D = this.node.getComponent<Atomic.StaticSprite2D>('StaticSprite2D');
@@ -40,7 +38,8 @@ class Door extends CustomJSComponent {
         }
 
         if (this.open) {
-            this.sprite2D.sprite = Atomic.cache.getResource<Atomic.Sprite2D>('Sprite2D', this.openSprite);
+            this.sprite2D.sprite = this.openSprite; //this.resolve2DResource(this.openSprite);
+
             this.entity.blocksLight = false;
             this.entity.blocksPath = false;
             this.entity.bumpable = false;
@@ -49,7 +48,7 @@ class Door extends CustomJSComponent {
                 this.body.enabled = false;
             }
         } else {
-            this.sprite2D.sprite = Atomic.cache.getResource<Atomic.Sprite2D>('Sprite2D', this.closedSprite);
+            this.sprite2D.sprite = this.closedSprite; //this.resolve2DResource(this.closedSprite);
             this.entity.blocksLight = true;
             this.entity.blocksPath = true;
             this.entity.bumpable = true;
@@ -74,7 +73,7 @@ class Door extends CustomJSComponent {
                 // TODO no Atomic.SOUND_EFFECT
                 //soundSource.soundType = Atomic.SOUND_EFFECT;
                 soundSource.gain = 0.75;
-                let sound = Atomic.cache.getResource<Atomic.Sound>('Sound', this.openSound);
+                let sound = this.openSound; //Atomic.cache.getResource<Atomic.Sound>('Sound', this.openSound);
                 soundSource.play(sound);
                 soundSource.setAutoRemove(true);
             }

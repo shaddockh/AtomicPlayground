@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<node id="31">
+	<attribute name="Is Enabled" value="true" />
+	<attribute name="Name" value="levelGeneratorCellularConnected" />
+	<attribute name="Position" value="0 0 0" />
+	<attribute name="Rotation" value="1 0 0 0" />
+	<attribute name="Scale" value="1 1 1" />
+	<attribute name="Variables" />
+	<component type="JSComponent" id="16777307">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/levelGenerators/CreatureGenerator.js" />
+		<attribute name="FieldValues">
+			<variant hash="2472318960" type="Vector2" value="3 5" />
+			<variant hash="4234199741" type="String" value="fred" />
+		</attribute>
+	</component>
+	<component type="JSComponent" id="16777308">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/levelGenerators/ItemGenerator.js" />
+		<attribute name="FieldValues">
+			<variant hash="340880220" type="Vector2" value="3 5" />
+			<variant hash="1843680337" type="String" value="health_potion" />
+		</attribute>
+	</component>
+	<component type="JSComponent" id="16777309">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/renderers/LevelRenderer2D.js" />
+	</component>
+	<component type="JSComponent" id="16777310">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/levelGenerators/ROTCellular.js" />
+		<attribute name="FieldValues">
+			<variant hash="2477224502" type="Float" value="2" />
+			<variant hash="3436837921" type="Float" value="0.5" />
+			<variant hash="3909952937" type="Bool" value="true" />
+		</attribute>
+	</component>
+</node>

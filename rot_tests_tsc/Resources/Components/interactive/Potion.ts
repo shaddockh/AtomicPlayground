@@ -1,8 +1,6 @@
 'use strict';
 'atomic component';
 import * as triggerEvent from 'atomicTriggerEvent';
-//import { nodeBuilder } from 'atomic-blueprintLib';
-//import MapData from 'MapData';
 
 import CustomJSComponent from 'CustomJSComponent';
 class Potion extends CustomJSComponent {
@@ -15,7 +13,7 @@ class Potion extends CustomJSComponent {
     };
 
     addHealth: number = 0;
-    drinkSound: string;
+    drinkSound: Atomic.Sound;
     drinkMessage: string;
 
     onBump(bumperComponent, bumperNode) {
@@ -29,7 +27,7 @@ class Potion extends CustomJSComponent {
             // TODO: Atomic.SOUND_EFFECT is undefined
             // soundSource.soundType = Atomic.SOUND_EFFECT;
             soundSource.gain = 0.75;
-            let sound = Atomic.cache.getResource<Atomic.Sound>('Sound', this.drinkSound);
+            let sound = this.drinkSound;
             soundSource.play(sound);
             soundSource.setAutoRemove(true);
         }

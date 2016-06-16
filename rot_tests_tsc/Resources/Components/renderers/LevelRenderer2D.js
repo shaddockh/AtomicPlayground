@@ -6,7 +6,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var ROT = require('rot-js');
-var atomic_blueprintLib_1 = require('atomic-blueprintLib');
+var blueprintLib = require('atomic-blueprintlib');
 var MapData_1 = require('../../Modules/MapData');
 var triggerEvent = require('atomicTriggerEvent');
 var CustomJSComponent_1 = require('CustomJSComponent');
@@ -16,7 +16,7 @@ var LevelRenderer2D = (function (_super) {
     function LevelRenderer2D() {
         _super.apply(this, arguments);
         this.inspectorFields = {
-            debug: false,
+            debug: true,
             cellPixelSize: 16,
             theme: 'tile_floor'
         };
@@ -56,7 +56,7 @@ var LevelRenderer2D = (function (_super) {
             if (tile.terrainType !== MapData_1.default.TILE_NONE) {
                 blueprint = tile.blueprint || tilexref[tile.edge] || tilexref.defaultTile;
                 _this.DEBUG("Construction cell [" + x + "," + y + "] - " + blueprint);
-                var tileNode = atomic_blueprintLib_1.nodeBuilder.createChildAtPosition(_this.node, blueprint, [x * scale, y * scale]);
+                var tileNode = blueprintLib.createChildAtPosition(_this.node, blueprint, [x * scale, y * scale]);
                 var tileComponent = tileNode.getJSComponent('Tile');
                 if (tileComponent) {
                     tileComponent.setMapReference(tile);
@@ -68,7 +68,7 @@ var LevelRenderer2D = (function (_super) {
             if (entity.blueprint) {
                 blueprint = entity.blueprint;
                 _this.DEBUG("Constructing entity [" + entity.x + "," + entity.y + "] - " + blueprint);
-                var entityNode = atomic_blueprintLib_1.nodeBuilder.createChildAtPosition(_this.node, blueprint, [entity.x * scale, entity.y * scale]);
+                var entityNode = blueprintLib.createChildAtPosition(_this.node, blueprint, [entity.x * scale, entity.y * scale]);
                 var entityComponent = entityNode.getJSComponent('Entity');
                 if (entityComponent) {
                     entityComponent.setMapReference(entity);
@@ -84,7 +84,7 @@ var LevelRenderer2D = (function (_super) {
      */
     LevelRenderer2D.prototype.addVisualEffect = function (blueprint, worldPos) {
         this.DEBUG("Constructing effect [" + worldPos[0] + "," + worldPos[1] + "] - " + blueprint);
-        var entityNode = atomic_blueprintLib_1.nodeBuilder.createChildAtPosition(this.node, blueprint, [worldPos[0], worldPos[1]]);
+        var entityNode = blueprintLib.createChildAtPosition(this.node, blueprint, [worldPos[0], worldPos[1]]);
         this.children.push(entityNode);
     };
     LevelRenderer2D.prototype.onLevelGenerated = function (mapData) {

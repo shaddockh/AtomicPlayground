@@ -17,7 +17,7 @@ var ShadowTile = (function (_super) {
     function ShadowTile() {
         _super.apply(this, arguments);
         this.inspectorFields = {
-            platformDisable: ['HTML5'],
+            platformDisable: [Atomic.VAR_STRINGVECTOR, ['HTML5']],
             debug: false
         };
         this.platformDisable = ['HTML5'];

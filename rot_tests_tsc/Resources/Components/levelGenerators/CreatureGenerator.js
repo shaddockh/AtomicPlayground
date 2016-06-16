@@ -14,19 +14,20 @@ var CreatureGenerator = (function (_super) {
         _super.apply(this, arguments);
         this.inspectorFields = {
             debug: false,
-            creatureCount: [Atomic.VAR_INTVECTOR2, [0, 0]],
-            creatureList: ['']
+            creatureCount: [Atomic.VAR_VECTOR2, [0, 0]],
+            creatureList: [Atomic.VAR_STRING, '']
         };
         this.creatureCount = [0, 0];
-        this.creatureList = [''];
+        this.creatureList = '';
         this.onPlaceCreatures = this.buildCreatures;
     }
     CreatureGenerator.prototype.buildCreatures = function (mapData /*, roomData*/) {
+        var creatures = this.creatureList.split(',');
         for (var i = 0; i < utils.randomNumber(this.creatureCount[0], this.creatureCount[1]); i++) {
             // TODO if roomdata, then use that for storing creatures
             // TODO 2 maybe the map generator should place spawn points and then the creature generator can just use those
             var _a = mapData.getRandomEmptyPosition(), x = _a[0], y = _a[1];
-            var entity = MapData_1.default.buildRandomEntity(this.creatureList);
+            var entity = MapData_1.default.buildRandomEntity(creatures);
             this.DEBUG("Adding " + entity.blueprint + " at " + (x, y));
             mapData.addEntityAtPosition(x, y, entity);
         }

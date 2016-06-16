@@ -6,8 +6,6 @@ var __extends = (this && this.__extends) || function (d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var triggerEvent = require('atomicTriggerEvent');
-//import { nodeBuilder } from 'atomic-blueprintLib';
-//import MapData from 'MapData';
 var CustomJSComponent_1 = require('CustomJSComponent');
 var Potion = (function (_super) {
     __extends(Potion, _super);
@@ -31,7 +29,7 @@ var Potion = (function (_super) {
             // TODO: Atomic.SOUND_EFFECT is undefined
             // soundSource.soundType = Atomic.SOUND_EFFECT;
             soundSource.gain = 0.75;
-            var sound = Atomic.cache.getResource('Sound', this.drinkSound);
+            var sound = this.drinkSound;
             soundSource.play(sound);
             soundSource.setAutoRemove(true);
         }

@@ -31,7 +31,6 @@ Duktape.modSearch = (function (origModSearch, vendorMap) {
        They will get bundled up into a vendor.js file in the Resources/Modules directory
        and you will just need to require that in within your Resources/Scripts/main.js
        */
-    'atomic-blueprintLib': require('atomic-blueprintLib'),
     'rot-js': require('rot-js'),
 
 }));

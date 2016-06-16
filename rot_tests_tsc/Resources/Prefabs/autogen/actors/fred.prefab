@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<node id="36">
+	<attribute name="Is Enabled" value="true" />
+	<attribute name="Name" value="fred" />
+	<attribute name="Position" value="0 0 0" />
+	<attribute name="Rotation" value="1 0 0 0" />
+	<attribute name="Scale" value="1 1 1" />
+	<attribute name="Variables" />
+	<component type="JSComponent" id="16777331">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/common/Entity.js" />
+		<attribute name="FieldValues">
+			<variant hash="3427235179" type="Bool" value="true" />
+			<variant hash="421471792" type="Bool" value="false" />
+			<variant hash="1215768336" type="Bool" value="true" />
+			<variant hash="2894794562" type="Bool" value="true" />
+			<variant hash="2263931415" type="String" value="a rat" />
+		</attribute>
+	</component>
+	<component type="JSComponent" id="16777332">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/common/MessageDispatcher.js" />
+	</component>
+	<component type="JSComponent" id="16777333">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/actionHandlers/GridMover.js" />
+		<attribute name="FieldValues">
+			<variant hash="273365031" type="Float" value="0.25" />
+		</attribute>
+	</component>
+	<component type="StaticSprite2D" id="28">
+		<attribute name="Order in Layer" value="12" />
+		<attribute name="Sprite" value="Sprite2D;Sprites/rodent0_10.png" />
+	</component>
+	<component type="JSComponent" id="16777334">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/ai/MonsterAi.js" />
+		<attribute name="FieldValues">
+			<variant hash="339510355" type="Bool" value="false" />
+		</attribute>
+	</component>
+	<component type="JSComponent" id="16777335">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/common/Health.js" />
+		<attribute name="FieldValues">
+			<variant hash="3573188092" type="Float" value="5" />
+		</attribute>
+	</component>
+	<component type="JSComponent" id="16777336">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/common/EventSound.js" />
+	</component>
+</node>
