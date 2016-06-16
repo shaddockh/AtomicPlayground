@@ -53,12 +53,16 @@ var componentBuilders = {
             }
             var component = resolveJSComponent(componentName);
             var jsComp = node.createJSComponent(component, componentBlueprint);
+            mapBlueprintToNativeComponent(jsComp, componentBlueprint, componentName);
+            /*
+            console.log(JSON.stringify(jsComp.getAttributes(), null, 2));
             // Need to set the attributes so that when generating the prefab, it gets persisted properly
-            for (var prop in componentBlueprint) {
+            for (let prop in componentBlueprint) {
                 jsComp.setAttribute(prop, componentBlueprint[prop]); // for generating the prefab
             }
             node[componentName] = jsComp;
             return jsComp;
+            */
         }
     }
 };
@@ -96,7 +100,10 @@ function mapBlueprintToNativeComponent(component, blueprint, componentName) {
             case Atomic.VAR_VECTOR2: // [0,0]
             case Atomic.VAR_VECTOR3: // [0,0,0]
             case Atomic.VAR_QUATERNION: // [0,0,0]
-            case Atomic.VAR_COLOR:
+            case Atomic.VAR_COLOR: // [0,0,0,0]
+            case Atomic.VAR_STRINGVECTOR: // ["a","b"]
+            case Atomic.VAR_INTVECTOR2: // [1, 2]
+            case Atomic.VAR_BUFFER:
                 // blueprint already has the value in the right format, so let's just set it
                 if (DEBUG) {
                     console.log("setting attribute: " + attribute.name + " to value: " + blueprint[prop]);
@@ -112,7 +119,7 @@ function mapBlueprintToNativeComponent(component, blueprint, componentName) {
                 }
                 break;
             default:
-                throw new Error("Unknown attribute type: " + attribute.type + " on " + componentName);
+                throw new Error("Unknown attribute type: " + attribute.type + " for attribute: " + prop + " on component: " + componentName);
         }
     }
 }
@@ -420,9 +427,15 @@ function createChild(parent, blueprint, forceCreateFromBlueprint) {
         if (blueprint.prefabDir) {
             prefabPath = blueprint.prefabDir;
         }
+        if (DEBUG) {
+            console.log("Loading " + blueprint.name + " prefab from " + prefabPath);
+        }
         node = parent.createChildPrefab(blueprint.name, Atomic.addTrailingSlash(prefabPath) + blueprint.name + ".prefab");
     }
     else {
+        if (DEBUG) {
+            console.log("Constructing new child " + blueprint.name + ".  ForceCreateFromBlueprint: " + (forceCreateFromBlueprint ? "On" : "Off"));
+        }
         node = parent.createChild(blueprint.name);
         buildEntity(node, blueprint);
     }
