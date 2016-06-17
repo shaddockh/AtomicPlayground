@@ -1,8 +1,6 @@
 
 This is an example project using the [Atomic Blueprint Library](https://github.com/shaddockh/AtomicPlayground/tree/master/atomic-blueprintlib), but written in ES6 and transpiled with babelJS
 
-### WIP - The upgrade to babelJS 6 broke the way the blueprint system overrides settings...still researching
-
 More information about blueprints can be found in the **atomic-blueprintlib** documentation.
 
 Some things to note about this project:
@@ -22,32 +20,22 @@ To Build:
 The major changes include:
 * converting it all to es6 and transpiling it with BabelJs
 
-* take a look at ```.babelrc``` for the options that are in effect.  es7 Class Properties are enabled to make the ```inspectorFields``` nicer to look at and to align the code more to how it looks in TypeScript so that it's easier to port between the two languages.  Ideally, any es6 code should be able to be used in Typescript without much, if any, modification.
+* take a look at ```.babelrc``` for the options that are in effect.  
+
+* Note that babel will not transpile class properties to a format that the Atomic Game Engine likes, the ```inspectorFields``` object needs to reside outside of the class.
 
 How to use inspector fields in ES6 code without resorting to Class Properties:
 ``` javascript
+ var inspectorFields = {
+      myCustomValue: 42
+};
+
 export default class MyClass {
   constructor() {
-     this.inspectorFields = {
-          myCustomValue: 42
-    };
   }
   myFunction() {
      console.log(this.myCustomValue);
   }
 
-}
-```
-
-Using them with Class Properties:
-``` javascript
-export default class MyClass {
-  inspectorFields = {
-     myCustomValue: 42
-  };
-
-  myFunction() {
-     console.log(this.myCustomValue);
-  }
 }
 ```

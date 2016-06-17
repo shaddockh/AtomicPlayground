@@ -66,7 +66,7 @@ var componentBuilders = {
     // Used for mapping the root attributes of a node from a blueprint
     rootNodeComponentBuilder: {
         build: function (node, componentBlueprint, componentName, blueprint) {
-            mapBlueprintToNativeComponent(node, blueprint, "Node");
+            mapBlueprintToComponent(node, blueprint, "Node");
         }
     },
     // used to create and map a native component
@@ -76,7 +76,7 @@ var componentBuilders = {
                 console.log("Attaching Native Component: " + componentName + " to node.");
             }
             var comp = node.createComponent(componentName);
-            mapBlueprintToNativeComponent(comp, componentBlueprint, componentName);
+            mapBlueprintToComponent(comp, componentBlueprint, componentName);
         }
     },
     // Used to create and map a JSComponent
@@ -86,25 +86,20 @@ var componentBuilders = {
                 console.log("Attaching JSComponent: " + componentName + " to node.");
             }
             var component = resolveJSComponent(componentName);
-            var jsComp = node.createJSComponent(component, componentBlueprint);
-            // Need to set the attributes so that when generating the prefab, it gets persisted properly
-            for (var prop in componentBlueprint) {
-                jsComp.setAttribute(prop, componentBlueprint[prop]); // for generating the prefab
-            }
-            node[componentName] = jsComp;
-            return jsComp;
+            var jsComp = node.getJSComponent(component) || node.createJSComponent(component, componentBlueprint);
+            mapBlueprintToComponent(jsComp, componentBlueprint, componentName);
         }
     }
 };
-var cachedNativeComponentProps = {};
+var cachedComponentProps = {};
 /**
  * maps blueprint properties to a native component.  Will cache the native component type attributes for speed.
  * @param {AObject} component the component to map
  * @param {object} blueprint the blueprint to map to the component
  * @param {string} the name of the component
  */
-function mapBlueprintToNativeComponent(component, blueprint, componentName) {
-    var compPropertyXref = cachedNativeComponentProps[componentName];
+function mapBlueprintToComponent(component, blueprint, componentName) {
+    var compPropertyXref = cachedComponentProps[componentName];
     if (!compPropertyXref) {
         compPropertyXref = {};
         var attributes = component.getAttributes();
@@ -112,7 +107,7 @@ function mapBlueprintToNativeComponent(component, blueprint, componentName) {
             var attr = attributes[i];
             compPropertyXref[attr.name.toLowerCase().replace(/\ /g, "")] = attr;
         }
-        cachedNativeComponentProps[componentName] = compPropertyXref;
+        cachedComponentProps[componentName] = compPropertyXref;
     }
     for (var prop in blueprint) {
         if (typeof (blueprint[prop]) === "object" && !Array.isArray(blueprint[prop])) {
@@ -130,7 +125,10 @@ function mapBlueprintToNativeComponent(component, blueprint, componentName) {
             case Atomic.VAR_VECTOR2: // [0,0]
             case Atomic.VAR_VECTOR3: // [0,0,0]
             case Atomic.VAR_QUATERNION: // [0,0,0]
-            case Atomic.VAR_COLOR:
+            case Atomic.VAR_COLOR: // [0,0,0,0]
+            case Atomic.VAR_STRINGVECTOR: // ["a","b"]
+            case Atomic.VAR_INTVECTOR2: // [1, 2]
+            case Atomic.VAR_BUFFER:
                 // blueprint already has the value in the right format, so let's just set it
                 if (DEBUG) {
                     console.log("setting attribute: " + attribute.name + " to value: " + blueprint[prop]);
@@ -146,7 +144,7 @@ function mapBlueprintToNativeComponent(component, blueprint, componentName) {
                 }
                 break;
             default:
-                throw new Error("Unknown attribute type: " + attribute.type + " on " + componentName);
+                throw new Error("Unknown attribute type: " + attribute.type + " for attribute: " + prop + " on component: " + componentName);
         }
     }
 }
@@ -314,11 +312,14 @@ function extend(orig, extendwith) {
  * @param componentName The name of the component to check
  */
 function isRegisteredJSComponent(componentName) {
+    debug("Searching for JS Component: " + componentName);
     // walk through the componentCrossref and see if we have any matches.  Assuming that if there
     // are no matches then either it's a native component or a bogus component
     if (resolveJSComponent(componentName)) {
+        debug("Found registered JS Component: " + componentName);
         return true;
     }
+    debug("Could not find registered JS Component: " + componentName);
     return false;
 }
 /**
@@ -454,9 +455,15 @@ function createChild(parent, blueprint, forceCreateFromBlueprint) {
         if (blueprint.prefabDir) {
             prefabPath = blueprint.prefabDir;
         }
+        if (DEBUG) {
+            console.log("Loading " + blueprint.name + " prefab from " + prefabPath);
+        }
         node = parent.createChildPrefab(blueprint.name, Atomic.addTrailingSlash(prefabPath) + blueprint.name + ".prefab");
     }
     else {
+        if (DEBUG) {
+            console.log("Constructing new child " + blueprint.name + ".  ForceCreateFromBlueprint: " + (forceCreateFromBlueprint ? "On" : "Off"));
+        }
         node = parent.createChild(blueprint.name);
         buildEntity(node, blueprint);
     }
