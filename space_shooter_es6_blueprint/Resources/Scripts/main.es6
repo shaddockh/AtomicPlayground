@@ -1,10 +1,10 @@
+import "atomic-blueprintLib.bundle"; // need to initialize the library bundle so we can access the contents
+import * as blueprintLib from "atomic-blueprintlib";
 
-// Set up a globals ojbect that we can reference since
-// I'm not entirely sure how the module system works
-Globals = {};
+// Set up a globals object that we can reference
+import Globals from "Globals";
+
 // This script is the main entry point of the game
-
-import * as blueprintLib from 'blueprintLib';
 
 // create a 2D scene
 var scene = new Atomic.Scene();
@@ -23,6 +23,7 @@ viewport = new Atomic.Viewport(scene, camera);
 Atomic.renderer.setViewport(0, viewport);
 
 Atomic.renderer.textureFilterMode = Atomic.FILTER_NEAREST;
+blueprintLib.catalog.loadBlueprints(require("blueprints"));
 
 // create the game component
 var comp = blueprintLib.createChild(scene, 'spaceGame');

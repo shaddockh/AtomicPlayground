@@ -14,23 +14,24 @@ var ItemGenerator = (function (_super) {
         _super.apply(this, arguments);
         this.inspectorFields = {
             debug: false,
-            itemCount: [Atomic.VAR_INTVECTOR2, [0, 0]],
-            itemList: ['']
+            itemCount: [Atomic.VAR_VECTOR2, [0, 0]],
+            itemList: ''
         };
         this.itemCount = [0, 0];
-        this.itemList = [''];
+        this.itemList = '';
         this.onPlaceItems = this.buildItems;
     }
     ItemGenerator.prototype.buildItems = function (mapData /*, roomData*/) {
+        var items = this.itemList.split(',');
         for (var i = 0; i < utils.randomNumber(this.itemCount[0], this.itemCount[1]); i++) {
             // TODO if roomdata, then use that for storing items
             // TODO 2 maybe the map generator should place spawn points and then the item generator can just use those
             var _a = mapData.getRandomEmptyPosition(), x = _a[0], y = _a[1];
-            var entity = MapData_1.default.buildRandomEntity(this.itemList);
+            var entity = MapData_1.default.buildRandomEntity(items);
             this.DEBUG("Adding " + entity.blueprint + " at " + (x, y));
             mapData.addEntityAtPosition(x, y, entity);
         }
     };
     return ItemGenerator;
-})(CustomJSComponent_1.default);
+}(CustomJSComponent_1.default));
 module.exports = ItemGenerator;

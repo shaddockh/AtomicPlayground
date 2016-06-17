@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<node id="6">
+	<attribute name="Is Enabled" value="true" />
+	<attribute name="Name" value="spaceship_scarab" />
+	<attribute name="Position" value="0 0 0" />
+	<attribute name="Rotation" value="1 0 0 0" />
+	<attribute name="Scale" value="1 1 1" />
+	<attribute name="Variables" />
+	<component type="JSComponent" id="16777229">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/Health.js" />
+		<attribute name="FieldValues">
+			<variant hash="2768288956" type="Float" value="2" />
+		</attribute>
+	</component>
+	<component type="JSComponent" id="16777230">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/common/SpriteSheet.js" />
+		<attribute name="FieldValues">
+			<variant hash="4150063834" type="ResourceRef" value="SpriteSheet2D;Sprites/spacegame_sheet.xml" />
+			<variant hash="2167772624" type="String" value="spaceship_scarab" />
+		</attribute>
+	</component>
+	<component type="JSComponent" id="16777231">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/Enemy.js" />
+	</component>
+	<component type="JSComponent" id="16777232">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/AI.js" />
+		<attribute name="FieldValues">
+			<variant hash="1870765793" type="Bool" value="false" />
+			<variant hash="3632049366" type="Bool" value="true" />
+			<variant hash="3350165329" type="String" value="enemyBullet" />
+		</attribute>
+	</component>
+</node>

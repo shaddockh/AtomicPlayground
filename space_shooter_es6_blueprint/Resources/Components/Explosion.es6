@@ -4,11 +4,11 @@
 var cache = Atomic.cache;
 var sprites = [];
 
-export default class Explosion extends Atomic.JSComponent {
+const inspectorFields = {
+    spriteSheet: ''
+}
 
-    inspectorFields = {
-        spriteSheet: ''
-    };
+class Explosion extends Atomic.JSComponent {
 
     // using start to initialize the script component
     start() {
@@ -45,3 +45,5 @@ export default class Explosion extends Atomic.JSComponent {
         }
     }
 }
+
+module.exports = Explosion;

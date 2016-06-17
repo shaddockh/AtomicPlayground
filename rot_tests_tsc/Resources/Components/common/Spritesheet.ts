@@ -5,11 +5,11 @@ import CustomJSComponent from 'CustomJSComponent';
 class SpriteSheet extends CustomJSComponent {
     inspectorFields = {
         debug: false,
-        spriteSheet: null,
-        spriteName: null
+        spriteSheet: [Atomic.VAR_STRING],
+        spriteName: [Atomic.VAR_STRING]
     };
-    spriteSheet:string = null;
-    spriteName:string = null;
+    spriteSheet: string = null;
+    spriteName: string = null;
 
     start() {
         /**
@@ -18,7 +18,7 @@ class SpriteSheet extends CustomJSComponent {
         // see if we have a sprite on our node..if not create one
         const sprite2D = this.node.getOrCreateComponent<Atomic.StaticSprite2D>('StaticSprite2D');
         this.DEBUG(`Loading spritesheet ${this.spriteSheet}`);
-        const sheet = Atomic.cache.getResource<Atomic.SpriteSheet2D>('SpriteSheet2D', this.spriteSheet);
+        const sheet = <Atomic.SpriteSheet2D>Atomic.cache.getResource('SpriteSheet2D', this.spriteSheet);
         if (this.spriteName) {
             sprite2D.sprite = sheet.getSprite(this.spriteName);
         }

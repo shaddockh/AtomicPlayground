@@ -142,5 +142,5 @@ var GridMover = (function (_super) {
         }
     };
     return GridMover;
-})(CustomJSComponent_1.default);
+}(CustomJSComponent_1.default));
 module.exports = GridMover;

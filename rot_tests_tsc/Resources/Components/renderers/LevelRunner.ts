@@ -2,7 +2,6 @@
 'atomic component';
 import CustomJSComponent from '../../Modules/CustomJSComponent';
 import * as triggerEvent from 'atomicTriggerEvent';
-//import { nodeBuilder } from 'atomic-blueprintLib';
 import MapData from '../../Modules/MapData';
 import ROT = require('rot-js');
 import { uiChannel, levelChannel } from '../../Modules/gameChannels';

@@ -47,7 +47,7 @@ module.exports.component = function (self) {
 
     self.spawnBullet = function (pos, blueprint) {
         if (typeof (blueprint) === 'string') {
-            blueprint = blueprintLib.blueprintCatalog.getBlueprint(blueprint);
+            blueprint = blueprintLib.catalog.getBlueprint(blueprint);
         }
 
         blueprintLib.createChildAtPosition(scene, blueprint, pos);

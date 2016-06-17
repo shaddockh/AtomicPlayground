@@ -1,10 +1,11 @@
 'atomic component';
+"use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-var atomic_blueprintLib_1 = require('atomic-blueprintLib');
+var blueprintlib = require('atomic-blueprintlib');
 var triggerEvent = require('atomicTriggerEvent');
 var gameChannels_1 = require('../../Modules/gameChannels');
 var LevelGenerationChooser = (function (_super) {
@@ -41,25 +42,20 @@ var LevelGenerationChooser = (function (_super) {
         this.showLevelGen();
     };
     LevelGenerationChooser.prototype.showLevelGen = function () {
-        var blueprints = [];
-        atomic_blueprintLib_1.blueprintCatalog.find(function (blueprint) {
-            if (blueprint.inherits === 'baseLevelGenerator') {
-                blueprints.push(blueprint);
-            }
-        });
+        var blueprints = blueprintlib.catalog.find(function (blueprint) { return blueprint.inherits === 'baseLevelGenerator'; });
         gameChannels_1.uiChannel.sendMessage('show:levelgen', blueprints);
         triggerEvent.trigger(this.node, 'onChoose');
     };
     LevelGenerationChooser.prototype.previewLevel = function (builderName) {
         this.clearGeneratedContent();
-        this.generatorNode = atomic_blueprintLib_1.nodeBuilder.createChild(this.node.scene, builderName);
+        this.generatorNode = blueprintlib.createChild(this.node.scene, builderName);
     };
     LevelGenerationChooser.prototype.runLevel = function () {
         var mapData = triggerEvent.trigger(this.generatorNode, 'onGetMapData');
         // we are getting an array back, so grab the first element
         mapData = mapData[0];
         this.clearGeneratedContent();
-        this.runNode = atomic_blueprintLib_1.nodeBuilder.createChild(this.node.scene, 'customLevelRunner');
+        this.runNode = blueprintlib.createChild(this.node.scene, 'customLevelRunner');
         triggerEvent.trigger(this.runNode, 'onSetMapData', mapData);
         triggerEvent.trigger(this.node, 'onRun');
     };
@@ -80,5 +76,5 @@ var LevelGenerationChooser = (function (_super) {
         }
     };
     return LevelGenerationChooser;
-})(Atomic.JSComponent);
+}(Atomic.JSComponent));
 module.exports = LevelGenerationChooser;

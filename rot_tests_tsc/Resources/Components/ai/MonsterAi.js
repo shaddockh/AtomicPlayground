@@ -86,22 +86,22 @@ var MonsterAi = (function (_super) {
             var astar = new ROT.Path.AStar(playerPos[0], playerPos[1], function (x, y) { return _this.canWalk([x, y]); }, {
                 topology: 4
             });
-            var path = [];
+            var path_1 = [];
             var pos = this.node.getJSComponent('Entity').getPosition();
             astar.compute(pos[0], pos[1], function (x, y) {
-                path.push([x, y]);
+                path_1.push([x, y]);
             });
-            path.shift(); // remove current position
+            path_1.shift(); // remove current position
             // TODO ideally we would want to scan the sight radius, but for now we are just going to see if
             // we are in range of the hero
             // get a direction vector
-            if (!this.isHunting && path.length < this.sightRadius && path.length > 0) {
+            if (!this.isHunting && path_1.length < this.sightRadius && path_1.length > 0) {
                 this.isHunting = true;
                 this.DEBUG('enemy seen.  switching to hunting.');
             }
-            if (this.isHunting && path.length < this.trackingRadius && path.length > 0) {
-                this.DEBUG("hunting enemy located " + path.length + " steps away.");
-                var target = path.shift();
+            if (this.isHunting && path_1.length < this.trackingRadius && path_1.length > 0) {
+                this.DEBUG("hunting enemy located " + path_1.length + " steps away.");
+                var target = path_1.shift();
                 var dir = gl_matrix_1.vec2.sub(gl_matrix_1.vec2.create(), target, pos);
                 gl_matrix_1.vec2.normalize(dir, dir);
                 triggerEvent.trigger(this.node, 'onTryMove', dir);
@@ -151,5 +151,5 @@ var MonsterAi = (function (_super) {
         triggerEvent.trigger(this.node, 'onActionComplete', this, this.node);
     };
     return MonsterAi;
-})(CustomJSComponent_1.default);
+}(CustomJSComponent_1.default));
 module.exports = MonsterAi;

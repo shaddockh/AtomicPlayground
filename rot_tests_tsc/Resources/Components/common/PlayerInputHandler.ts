@@ -4,8 +4,6 @@ import * as triggerEvent from 'atomicTriggerEvent';
 import * as metrics from 'metricsGatherer';
 import gameState from '../../Modules/gameState';
 import CustomJSComponent from 'CustomJSComponent';
-//import { nodeBuilder } from 'atomic-blueprintLib';
-//import MapData from 'MapData';
 
 class PlayerActions {
     static NO_ACTION = 0;

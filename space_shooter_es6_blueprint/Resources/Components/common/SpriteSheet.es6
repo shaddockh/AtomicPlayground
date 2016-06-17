@@ -1,14 +1,14 @@
 'use strict';
 "atomic component";
 
-export default class SpriteSheet extends Atomic.JSComponent {
+const inspectorFields = {
+    spriteSheet: ["SpriteSheet2D"],
+    spriteName: '',
+    blendMode: Atomic.BLEND_ALPHA,
+    orderInLayer: 0,
+};
 
-    inspectorFields = {
-        spriteSheet: null,
-        spriteName: null,
-        blendMode: Atomic.BLEND_ALPHA,
-        orderInLayer: 0,
-    };
+class SpriteSheet extends Atomic.JSComponent {
 
     start() {
         /**
@@ -19,9 +19,11 @@ export default class SpriteSheet extends Atomic.JSComponent {
         sprite2D.blendMode = this.blendMode;
         sprite2D.orderInLayer = this.orderInLayer;
 
-        var sheet = Atomic.cache.getResource("SpriteSheet2D", this.spriteSheet);
+        //var sheet = Atomic.cache.getResource("SpriteSheet2D", this.spriteSheet);
         if (this.spriteName) {
-            sprite2D.sprite = sheet.getSprite(this.spriteName);
+            sprite2D.sprite = this.spriteSheet.getSprite(this.spriteName);
         }
     }
 }
+
+module.exports = SpriteSheet;

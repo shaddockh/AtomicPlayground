@@ -1,3 +1,4 @@
+"use strict";
 /**
  * Very minimalist message channel.  Will send topic and message to any subscriber
  */
@@ -51,6 +52,6 @@ var MessageChannel = (function () {
         }
     };
     return MessageChannel;
-})();
+}());
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = MessageChannel;

@@ -1,10 +1,11 @@
 'use strict';
 'atomic component';
 
-import * as blueprintLib from 'blueprintLib';
+import * as blueprintLib from 'atomic-blueprintlib';
+import Globals from "Globals";
 
 const SpaceGame = Globals.SpaceGame;
-export default class Enemty extends Atomic.JSComponent {
+class Enemy extends Atomic.JSComponent {
 
     // using start to initialize the script component
     start() {
@@ -45,3 +46,5 @@ export default class Enemty extends Atomic.JSComponent {
         this.node.position2D = pos;
     }
 }
+
+module.exports = Enemy;

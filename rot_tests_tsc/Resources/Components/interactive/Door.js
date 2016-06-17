@@ -17,10 +17,14 @@ var Door = (function (_super) {
             openSprite: ['Sprite2D', 'Sprites/door_ns_o.png'],
             closedSprite: ['Sprite2D', 'Sprites/door_ns_c.png'],
             openSound: ['Sound', 'Sounds/doorOpen_1.ogg'],
-            closeSound: ['Sound']
+            closeSound: ['Sound', '']
         };
         this.entity = null;
         this.open = false;
+        this.openSprite = null;
+        this.closedSprite = null;
+        this.openSound = null;
+        this.closeSound = null;
     }
     Door.prototype.start = function () {
         this.sprite2D = this.node.getComponent('StaticSprite2D');
@@ -33,7 +37,7 @@ var Door = (function (_super) {
             this.body = this.node.getComponent('RigidBody2D');
         }
         if (this.open) {
-            this.sprite2D.sprite = Atomic.cache.getResource('Sprite2D', this.openSprite);
+            this.sprite2D.sprite = this.openSprite; //this.resolve2DResource(this.openSprite);
             this.entity.blocksLight = false;
             this.entity.blocksPath = false;
             this.entity.bumpable = false;
@@ -43,7 +47,7 @@ var Door = (function (_super) {
             }
         }
         else {
-            this.sprite2D.sprite = Atomic.cache.getResource('Sprite2D', this.closedSprite);
+            this.sprite2D.sprite = this.closedSprite; //this.resolve2DResource(this.closedSprite);
             this.entity.blocksLight = true;
             this.entity.blocksPath = true;
             this.entity.bumpable = true;
@@ -66,12 +70,12 @@ var Door = (function (_super) {
                 // TODO no Atomic.SOUND_EFFECT
                 //soundSource.soundType = Atomic.SOUND_EFFECT;
                 soundSource.gain = 0.75;
-                var sound = Atomic.cache.getResource('Sound', this.openSound);
+                var sound = this.openSound; //Atomic.cache.getResource<Atomic.Sound>('Sound', this.openSound);
                 soundSource.play(sound);
                 soundSource.setAutoRemove(true);
             }
         }
     };
     return Door;
-})(CustomJSComponent_1.default);
+}(CustomJSComponent_1.default));
 module.exports = Door;

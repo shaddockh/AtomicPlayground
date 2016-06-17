@@ -1,18 +1,21 @@
 'use strict';
 "atomic component";
-import * as blueprintLib from 'blueprintLib';
+import * as blueprintLib from 'atomic-blueprintlib';
+import Globals from "Globals";
 
 const input = Atomic.input;
 const SpaceGame = Globals.SpaceGame;
-export default class Player extends Atomic.JSComponent {
 
-    inspectorFields = {
-        allowMove: true,
-        allowShoot: true,
-        shootDelta: 0,
-        sprite: 'spaceship_mantis',
-        bulletBlueprint: 'playerBullet'
-    };
+const inspectorFields = {
+    allowMove: true,
+    allowShoot: true,
+    shootDelta: 0,
+    sprite: 'spaceship_mantis',
+    bulletBlueprint: 'playerBullet'
+};
+
+class Player extends Atomic.JSComponent {
+    healthComponent = null;
 
     // using start to initialize the script component
     start() {
@@ -22,7 +25,10 @@ export default class Player extends Atomic.JSComponent {
 
     onHit(pos) {
         blueprintLib.createChildAtPosition(this.node.scene, 'explosion', pos);
-        SpaceGame.node.HUD.updateHealth(this.node.Health.health);
+        if (!this.healthComponent) {
+            this.healthComponent = this.node.getJSComponent("Health");
+        }
+        SpaceGame.HUD.updateHealth(this.healthComponent.health);
     }
 
     onDie() {
@@ -89,3 +95,5 @@ export default class Player extends Atomic.JSComponent {
         }
     }
 }
+
+module.exports = Player;

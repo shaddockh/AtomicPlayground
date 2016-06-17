@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<node id="32">
+	<attribute name="Is Enabled" value="true" />
+	<attribute name="Name" value="entity_base" />
+	<attribute name="Position" value="0 0 0" />
+	<attribute name="Rotation" value="1 0 0 0" />
+	<attribute name="Scale" value="1 1 1" />
+	<attribute name="Variables" />
+	<component type="JSComponent" id="16777311">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/common/Entity.js" />
+	</component>
+	<component type="JSComponent" id="16777312">
+		<attribute name="ComponentFile" value="JSComponentFile;Components/common/MessageDispatcher.js" />
+	</component>
+</node>

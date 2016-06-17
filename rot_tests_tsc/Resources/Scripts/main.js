@@ -1,11 +1,17 @@
+"use strict";
 // This script is the main entry point of the game
-require('vendor');
-require('Blueprints/blueprints'); // Load all the blueprints into the catalog
+// Add the vendor scripts to the global namespace
+require('AtomicEventLoop');
+require('vendor.bundle');
+require('atomic-blueprintlib.bundle');
+var blueprintlib = require('atomic-blueprintlib');
+var blueprints_1 = require('../Modules/blueprints'); // Load all the blueprints into the catalog
 require('Ui/ui'); // Let the ui system register itself
 var gameChannels_1 = require('../Modules/gameChannels');
-var atomic_blueprintLib_1 = require('atomic-blueprintLib');
-atomic_blueprintLib_1.nodeBuilder.setDebug(false);
-// Add the vendor scripts to the global namespace
+blueprintlib.catalog.loadBlueprints(blueprints_1.blueprints, function (bp) {
+    console.log("Loading blueprint: " + bp);
+});
+blueprintlib.catalog.hydrateAllBlueprints();
 // create a 2D scene
 var scene = new Atomic.Scene();
 scene.createComponent('Octree');
@@ -42,7 +48,7 @@ gameChannels_1.gameChannel.subscribe(function (topic) {
             break;
         case 'launch:levelgen':
             if (!currentLevelGen) {
-                currentLevelGen = atomic_blueprintLib_1.nodeBuilder.createChild(scene, 'uiLevelGenerationChooser');
+                currentLevelGen = blueprintlib.createChild(scene, 'uiLevelGenerationChooser');
             }
             break;
     }

@@ -1,0 +1,18 @@
+{
+  "name": "simple_es6_blueprint_test",
+  "version": "1.0.0",
+  "description": "This project mirrors the same project as the ```simple_blueprint_test``` project, however it is done in es6 and transpiled with babelJs.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel -d . ./**/*.es6",
+    "watch": "babel -d . ./**/*.es6 -w"
+  },
+  "author": "",
+  "devDependencies": {
+    "babel-cli": "^6.8.0",
+    "babel-eslint": "^6.0.4",
+    "babel-preset-es2015": "^6.9.0",
+    "eslint": "^2.10.1"
+  }
+}

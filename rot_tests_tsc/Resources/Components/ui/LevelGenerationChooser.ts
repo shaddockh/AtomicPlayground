@@ -1,5 +1,5 @@
 'atomic component';
-import { nodeBuilder, blueprintCatalog } from 'atomic-blueprintLib';
+import * as blueprintlib from 'atomic-blueprintlib';
 import * as triggerEvent from 'atomicTriggerEvent';
 import { uiChannel, levelChannel } from '../../Modules/gameChannels';
 
@@ -39,19 +39,14 @@ class LevelGenerationChooser extends Atomic.JSComponent {
     }
 
     showLevelGen() {
-        let blueprints = [];
-        blueprintCatalog.find(blueprint => {
-            if (blueprint.inherits === 'baseLevelGenerator') {
-                blueprints.push(blueprint);
-            }
-        });
+        let blueprints = blueprintlib.catalog.find(blueprint => blueprint.inherits === 'baseLevelGenerator');
         uiChannel.sendMessage('show:levelgen', blueprints);
         triggerEvent.trigger(this.node, 'onChoose');
     }
 
     previewLevel(builderName) {
         this.clearGeneratedContent();
-        this.generatorNode = nodeBuilder.createChild(this.node.scene, builderName);
+        this.generatorNode = blueprintlib.createChild(this.node.scene, builderName);
     }
 
     runLevel() {
@@ -59,7 +54,7 @@ class LevelGenerationChooser extends Atomic.JSComponent {
         // we are getting an array back, so grab the first element
         mapData = mapData[0];
         this.clearGeneratedContent();
-        this.runNode = nodeBuilder.createChild(this.node.scene, 'customLevelRunner');
+        this.runNode = blueprintlib.createChild(this.node.scene, 'customLevelRunner');
         triggerEvent.trigger(this.runNode, 'onSetMapData', mapData);
         triggerEvent.trigger(this.node, 'onRun');
     }

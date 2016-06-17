@@ -109,5 +109,5 @@ var PhysicsMover = (function (_super) {
         triggerEvent.trigger(this.node, 'onTurnTaken', this, this.node);
     };
     return PhysicsMover;
-})(CustomJSComponent_1.default);
+}(CustomJSComponent_1.default));
 module.exports = PhysicsMover;

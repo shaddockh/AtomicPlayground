@@ -1,7 +1,7 @@
 'use strict';
 'atomic component';
 import ROT = require('rot-js');
-import { nodeBuilder } from 'atomic-blueprintLib';
+import * as blueprintLib from 'atomic-blueprintlib';
 import MapData from '../../Modules/MapData';
 import * as triggerEvent from 'atomicTriggerEvent';
 import CustomJSComponent from 'CustomJSComponent';
@@ -12,7 +12,7 @@ import Tile = require('../common/Tile'); // Need to use 'require' when pulling i
 class LevelRenderer2D extends CustomJSComponent {
 
     inspectorFields = {
-        debug: false,
+        debug: true,
         cellPixelSize: 16,
         theme: 'tile_floor'
     };
@@ -64,7 +64,7 @@ class LevelRenderer2D extends CustomJSComponent {
             if (tile.terrainType !== MapData.TILE_NONE) {
                 blueprint = tile.blueprint || tilexref[tile.edge] || tilexref.defaultTile;
                 this.DEBUG(`Construction cell [${x},${y}] - ${blueprint}`);
-                let tileNode = nodeBuilder.createChildAtPosition(this.node, blueprint, [x * scale, y * scale]);
+                let tileNode = blueprintLib.createChildAtPosition(this.node, blueprint, [x * scale, y * scale]);
                 let tileComponent = tileNode.getJSComponent<Tile>('Tile');
                 if (tileComponent) {
                     tileComponent.setMapReference(tile);
@@ -77,7 +77,7 @@ class LevelRenderer2D extends CustomJSComponent {
             if (entity.blueprint) {
                 blueprint = entity.blueprint;
                 this.DEBUG(`Constructing entity [${entity.x},${entity.y}] - ${blueprint}`);
-                let entityNode = nodeBuilder.createChildAtPosition(this.node, blueprint, [entity.x * scale, entity.y * scale]);
+                let entityNode = blueprintLib.createChildAtPosition(this.node, blueprint, [entity.x * scale, entity.y * scale]);
                 let entityComponent = entityNode.getJSComponent<Entity>('Entity');
                 if (entityComponent) {
                     entityComponent.setMapReference(entity);
@@ -95,7 +95,7 @@ class LevelRenderer2D extends CustomJSComponent {
      */
     addVisualEffect(blueprint, worldPos) {
         this.DEBUG(`Constructing effect [${worldPos[0]},${worldPos[1]}] - ${blueprint}`);
-        let entityNode = nodeBuilder.createChildAtPosition(this.node, blueprint, [worldPos[0], worldPos[1]]);
+        let entityNode = blueprintLib.createChildAtPosition(this.node, blueprint, [worldPos[0], worldPos[1]]);
         this.children.push(entityNode);
     }
 

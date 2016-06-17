@@ -125,5 +125,5 @@ var HeroAi = (function (_super) {
         gameState_1.default.getCurrentLevel().updateUi();
     };
     return HeroAi;
-})(CustomJSComponent_1.default);
+}(CustomJSComponent_1.default));
 module.exports = HeroAi;

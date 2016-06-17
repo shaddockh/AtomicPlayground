@@ -1,3 +1,4 @@
+"use strict";
 var gameChannels_1 = require('../Modules/gameChannels');
 /**
  * wrapper to be used for ui windows.  Will handle loading up the layout and
@@ -40,6 +41,6 @@ var CustomUIWindow = (function () {
         gameChannels_1.uiChannel.unsubscribe(this.channelId);
     };
     return CustomUIWindow;
-})();
+}());
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = CustomUIWindow;

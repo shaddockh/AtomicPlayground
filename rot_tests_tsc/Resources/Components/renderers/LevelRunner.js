@@ -7,7 +7,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var CustomJSComponent_1 = require('../../Modules/CustomJSComponent');
 var triggerEvent = require('atomicTriggerEvent');
-//import { nodeBuilder } from 'atomic-blueprintLib';
 var MapData_1 = require('../../Modules/MapData');
 var ROT = require('rot-js');
 var gameChannels_1 = require('../../Modules/gameChannels');
@@ -161,5 +160,5 @@ var LevelRunner = (function (_super) {
         triggerEvent.trigger(this.node, 'onSetCameraTarget', targetNode);
     };
     return LevelRunner;
-})(CustomJSComponent_1.default);
+}(CustomJSComponent_1.default));
 module.exports = LevelRunner;

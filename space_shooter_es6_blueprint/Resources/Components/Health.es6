@@ -3,14 +3,15 @@
 'atomic component';
 
 import * as triggerEvent from 'atomicTriggerEvent';
+import Globals from "Globals";
 
 const SpaceGame = Globals.SpaceGame;
-export default class Health extends Atomic.JSComponent {
 
-    inspectorFields = {
-        health: 1,
-    };
+const inspectorFields = {
+    health: 1,
+};
 
+class Health extends Atomic.JSComponent {
     // using start to initialize the script component
     //start() {}
 
@@ -22,3 +23,5 @@ export default class Health extends Atomic.JSComponent {
         return true;
     }
 }
+
+module.exports = Health;

@@ -21,7 +21,17 @@ class AtomicBlueprintlibPlugin implements Editor.HostExtensions.HostEditorServic
     private loadBlueprintCatalog() {
         let blueprints;
         try {
-            blueprints = require(this.blueprintPath);
+            let blueprintFile = require(this.blueprintPath);
+
+            // look for an export called default and if it
+            // exists then that contains all the blueprints
+            if (blueprintFile["default"]) {
+                blueprints = blueprintFile["default"];
+            } else if (blueprintFile["blueprints"]) {
+                blueprints = blueprintFile["blueprints"];
+            } else {
+                blueprints = blueprintFile;
+            }
         } catch (e) {
             throw new Error("Could not load blueprints.  Ensure that 'Resources/Modules/blueprints.js' exists");
         }

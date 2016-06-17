@@ -141,7 +141,7 @@ exports.testSubBlueprint = {
     inherits: 'testBlueprint',
 };
 ```
-*** Resources/scripts/main.js ***
+**Resources/scripts/main.js**
 ```javascript
 var blueprintLib = require('atomic-blueprintlib');
 
@@ -164,9 +164,9 @@ blueprintLib.createChildAtLocation(game.scene, 'testBlueprint', [1,1]);
 Full examples can be found in the AtomicPlayground (http://www.github.com/shaddockh/atomicplayground)
 * [simple_blueprint_test](https://github.com/shaddockh/AtomicPlayground/tree/master/simple_blueprint_test)
 * [simple_ts_blueprint_test](https://github.com/shaddockh/AtomicPlayground/tree/master/simple_ts_blueprint_test)
-* simple_es6_blueprint_test (in progress)
-* [space_shooter_blueprint](https://github.com/shaddockh/AtomicPlayground/tree/master/space_shooter_blueprint)
-* space_shooter_es6_blueprint (in progress)
+* [simple_es6_blueprint_test](https://github.com/shaddockh/AtomicPlayground/tree/master/simple_es6_blueprint_test)
+* [space_shooter_blueprint](https://github.com/shaddockh/AtomicPlayground/tree/master/space_shooter_blueprint) (in progress)
+* [space_shooter_es6_blueprint](https://github.com/shaddockh/AtomicPlayground/tree/master/space_shooter_es6_blueprint) 
 
 # Blueprint Library plugin (Pre-Alpha)
 There is an editor plugin that is in the really early stages of development that can be used.  It is located in ```dist/Resources/EditorData``` and can be placed in the ```Resources/EditorData``` folder of your project.  At this point the only thing it does is autogenerate prefabs for any blueprints found in the file:

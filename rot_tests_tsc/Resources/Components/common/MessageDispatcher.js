@@ -72,5 +72,5 @@ var MessageDispatcher = (function (_super) {
         return results;
     };
     return MessageDispatcher;
-})(CustomJSComponent_1.default);
+}(CustomJSComponent_1.default));
 module.exports = MessageDispatcher;

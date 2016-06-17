@@ -35,7 +35,7 @@ class EventSound extends CustomJSComponent {
         let soundName = this.eventMap[eventName];
         if (soundName) {
             this.DEBUG(`Playing sound: ${soundName}`);
-            let sound = Atomic.cache.getResource<Atomic.Sound>('Sound', soundName);
+            let sound = <Atomic.Sound>Atomic.cache.getResource('Sound', soundName);
             this.soundSource.play(sound);
         }
     }

@@ -1,13 +1,19 @@
 // This script is the main entry point of the game
-import 'vendor';
-import 'Blueprints/blueprints'; // Load all the blueprints into the catalog
+// Add the vendor scripts to the global namespace
+import 'AtomicEventLoop';
+import 'vendor.bundle';
+import 'atomic-blueprintlib.bundle';
+
+import * as blueprintlib from 'atomic-blueprintlib';
+import {blueprints} from '../Modules/blueprints'; // Load all the blueprints into the catalog
 import 'Ui/ui'; // Let the ui system register itself
 import { gameChannel } from '../Modules/gameChannels';
 
-import { nodeBuilder } from 'atomic-blueprintLib';
+blueprintlib.catalog.loadBlueprints(blueprints, bp => {
+    console.log(`Loading blueprint: ${bp}`);
+});
+blueprintlib.catalog.hydrateAllBlueprints();
 
-nodeBuilder.setDebug(false);
-// Add the vendor scripts to the global namespace
 
 // create a 2D scene
 let scene = new Atomic.Scene();
@@ -54,7 +60,7 @@ gameChannel.subscribe((topic) => {
             break;
         case 'launch:levelgen':
             if (!currentLevelGen) {
-                currentLevelGen = nodeBuilder.createChild(scene, 'uiLevelGenerationChooser');
+                currentLevelGen = blueprintlib.createChild(scene, 'uiLevelGenerationChooser');
             }
             break;
     }
