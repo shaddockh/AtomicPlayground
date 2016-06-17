@@ -23,6 +23,12 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var SpaceGame = _Globals2.default.SpaceGame;
 
+var inspectorFields = {
+    isPlayer: false,
+    laserSound: '',
+    speed: 5
+};
+
 var Bullet = function (_Atomic$JSComponent) {
     _inherits(Bullet, _Atomic$JSComponent);
 
@@ -128,12 +134,5 @@ var Bullet = function (_Atomic$JSComponent) {
 
     return Bullet;
 }(Atomic.JSComponent);
-
-Bullet.inspectorFields = {
-    isPlayer: false,
-    laserSound: '',
-    speed: 5
-};
-
 
 module.exports = Bullet;

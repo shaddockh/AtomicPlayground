@@ -1,7 +1,5 @@
 # Space Shooter example with blueprints
 
-### WIP - The upgrade to babelJS 6 broke the way the blueprint system overrides settings...still researching
-
 This is a deep modification of the space shooter example located at: https://github.com/AtomicGameEngine/AtomicExamples/tree/master/SpaceGame
 
 The main goal for this is to test out whether the blueprint system would work for a more real-world example.  Not everything is optimized, but the concept looks like it's viable.

@@ -11,5 +11,10 @@
 	</component>
 	<component type="JSComponent" id="16777238">
 		<attribute name="ComponentFile" value="JSComponentFile;Components/Bullet.js" />
+		<attribute name="FieldValues">
+			<variant hash="1337798891" type="Bool" value="true" />
+			<variant hash="1454346852" type="String" value="Sounds/laser01.wav" />
+			<variant hash="273365031" type="Float" value="8" />
+		</attribute>
 	</component>
 </node>

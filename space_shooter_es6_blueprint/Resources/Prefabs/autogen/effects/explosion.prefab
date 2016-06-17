@@ -11,5 +11,8 @@
 	</component>
 	<component type="JSComponent" id="16777237">
 		<attribute name="ComponentFile" value="JSComponentFile;Components/Explosion.js" />
+		<attribute name="FieldValues">
+			<variant hash="4150063834" type="String" value="Sprites/explosions_sheet.xml" />
+		</attribute>
 	</component>
 </node>

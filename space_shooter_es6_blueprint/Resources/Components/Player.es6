@@ -6,16 +6,16 @@ import Globals from "Globals";
 const input = Atomic.input;
 const SpaceGame = Globals.SpaceGame;
 
+const inspectorFields = {
+    allowMove: true,
+    allowShoot: true,
+    shootDelta: 0,
+    sprite: 'spaceship_mantis',
+    bulletBlueprint: 'playerBullet'
+};
+
 class Player extends Atomic.JSComponent {
-
-    static inspectorFields = {
-        allowMove: true,
-        allowShoot: true,
-        shootDelta: 0,
-        sprite: 'spaceship_mantis',
-        bulletBlueprint: 'playerBullet'
-    };
-
+    healthComponent = null;
 
     // using start to initialize the script component
     start() {
@@ -25,7 +25,10 @@ class Player extends Atomic.JSComponent {
 
     onHit(pos) {
         blueprintLib.createChildAtPosition(this.node.scene, 'explosion', pos);
-        SpaceGame.node.HUD.updateHealth(this.node.Health.health);
+        if (!this.healthComponent) {
+            this.healthComponent = this.node.getJSComponent("Health");
+        }
+        SpaceGame.HUD.updateHealth(this.healthComponent.health);
     }
 
     onDie() {

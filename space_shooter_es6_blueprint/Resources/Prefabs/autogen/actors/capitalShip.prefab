@@ -8,14 +8,26 @@
 	<attribute name="Variables" />
 	<component type="JSComponent" id="16777221">
 		<attribute name="ComponentFile" value="JSComponentFile;Components/Health.js" />
+		<attribute name="FieldValues">
+			<variant hash="2768288956" type="Float" value="40" />
+		</attribute>
 	</component>
 	<component type="JSComponent" id="16777222">
 		<attribute name="ComponentFile" value="JSComponentFile;Components/common/SpriteSheet.js" />
+		<attribute name="FieldValues">
+			<variant hash="4150063834" type="ResourceRef" value="SpriteSheet2D;Sprites/spacegame_sheet.xml" />
+			<variant hash="2167772624" type="String" value="spaceship_locust" />
+		</attribute>
 	</component>
 	<component type="JSComponent" id="16777223">
 		<attribute name="ComponentFile" value="JSComponentFile;Components/CapitalShip.js" />
 	</component>
 	<component type="JSComponent" id="16777224">
 		<attribute name="ComponentFile" value="JSComponentFile;Components/AI.js" />
+		<attribute name="FieldValues">
+			<variant hash="1870765793" type="Bool" value="true" />
+			<variant hash="3632049366" type="Bool" value="true" />
+			<variant hash="3350165329" type="String" value="enemyBullet" />
+		</attribute>
 	</component>
 </node>

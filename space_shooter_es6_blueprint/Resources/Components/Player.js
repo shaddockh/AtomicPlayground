@@ -24,13 +24,29 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var input = Atomic.input;
 var SpaceGame = _Globals2.default.SpaceGame;
 
+var inspectorFields = {
+    allowMove: true,
+    allowShoot: true,
+    shootDelta: 0,
+    sprite: 'spaceship_mantis',
+    bulletBlueprint: 'playerBullet'
+};
+
 var Player = function (_Atomic$JSComponent) {
     _inherits(Player, _Atomic$JSComponent);
 
     function Player() {
+        var _Object$getPrototypeO;
+
+        var _temp, _this, _ret;
+
         _classCallCheck(this, Player);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Player).apply(this, arguments));
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
+
+        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Player)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.healthComponent = null, _temp), _possibleConstructorReturn(_this, _ret);
     }
 
     _createClass(Player, [{
@@ -46,7 +62,10 @@ var Player = function (_Atomic$JSComponent) {
         key: 'onHit',
         value: function onHit(pos) {
             blueprintLib.createChildAtPosition(this.node.scene, 'explosion', pos);
-            SpaceGame.node.HUD.updateHealth(this.node.Health.health);
+            if (!this.healthComponent) {
+                this.healthComponent = this.node.getJSComponent("Health");
+            }
+            SpaceGame.HUD.updateHealth(this.healthComponent.health);
         }
     }, {
         key: 'onDie',
@@ -119,14 +138,5 @@ var Player = function (_Atomic$JSComponent) {
 
     return Player;
 }(Atomic.JSComponent);
-
-Player.inspectorFields = {
-    allowMove: true,
-    allowShoot: true,
-    shootDelta: 0,
-    sprite: 'spaceship_mantis',
-    bulletBlueprint: 'playerBullet'
-};
-
 
 module.exports = Player;

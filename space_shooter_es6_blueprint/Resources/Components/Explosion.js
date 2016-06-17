@@ -12,6 +12,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var cache = Atomic.cache;
 var sprites = [];
 
+var inspectorFields = {
+    spriteSheet: ''
+};
+
 var Explosion = function (_Atomic$JSComponent) {
     _inherits(Explosion, _Atomic$JSComponent);
 
@@ -66,10 +70,5 @@ var Explosion = function (_Atomic$JSComponent) {
 
     return Explosion;
 }(Atomic.JSComponent);
-
-Explosion.inspectorFields = {
-    spriteSheet: ''
-};
-
 
 module.exports = Explosion;

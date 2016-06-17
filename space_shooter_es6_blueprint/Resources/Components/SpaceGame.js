@@ -26,28 +26,29 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 // a subsequent component.  the onDie will then schedule a deletion.
 var deleteQueue = [];
 
+var inspectorFields = {
+    backgroundMusic: 'Music/battle.ogg'
+};
+
 var SpaceGame = function (_Atomic$JSComponent) {
     _inherits(SpaceGame, _Atomic$JSComponent);
 
     function SpaceGame() {
         _classCallCheck(this, SpaceGame);
 
+        // expose ourselves as a global
+
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SpaceGame).call(this));
 
-        console.log('constructor');
-        // expose ourselves as a global
+        _this.HUD = null;
         _Globals2.default.SpaceGame = _this;
-        console.log('constructor3');
         _this.halfWidth = Atomic.graphics.width * Atomic.PIXEL_SIZE * 0.5;
         _this.halfHeight = Atomic.graphics.height * Atomic.PIXEL_SIZE * 0.5;
 
-        console.log('constructor4');
         _this.enemyBaseDir = false;
         _this.enemyBasePosX = 0;
         _this.score = 0;
 
-        console.log('constructor5');
-        console.log('exit constructor');
         return _this;
     }
 
@@ -57,8 +58,9 @@ var SpaceGame = function (_Atomic$JSComponent) {
     _createClass(SpaceGame, [{
         key: 'start',
         value: function start() {
-            console.log('start');
+            this.HUD = this.node.getJSComponent("HUD");
             this.enemyBaseNode = this.scene.createChild("EnemyBaseNode");
+
             this.gameOver = false;
             this.enemies = [];
             this.spawnSpace();
@@ -96,7 +98,7 @@ var SpaceGame = function (_Atomic$JSComponent) {
 
             // CHANGED! For the event system to work, we need to schedule this to get deleted on the next update
             deleteQueue.push(enemy.node);
-            this.node.HUD.updateScore(this.score);
+            this.HUD.updateScore(this.score);
         }
     }, {
         key: 'capitalShipDestroyed',
@@ -105,7 +107,7 @@ var SpaceGame = function (_Atomic$JSComponent) {
             deleteQueue.push(this.capitalShipNode);
 
             this.capitalShipNode = null;
-            this.node.HUD.updateScore(this.score);
+            this.HUD.updateScore(this.score);
         }
     }, {
         key: 'spawnSpace',
@@ -125,7 +127,7 @@ var SpaceGame = function (_Atomic$JSComponent) {
 
                 for (var x = 0; x < 12; x++) {
                     var enemyNode = blueprintLib.createChildAtPosition(this.enemyBaseNode, Math.random() < 0.85 ? 'spaceship_louse' : 'spaceship_scarab', [pos[0], pos[1]]);
-                    this.enemies.push(enemyNode.Enemy);
+                    this.enemies.push(enemyNode.getJSComponent('Enemy'));
 
                     pos[0] += 0.75;
                 }
@@ -159,20 +161,20 @@ var SpaceGame = function (_Atomic$JSComponent) {
     }, {
         key: 'win',
         value: function win() {
-            this.node.HUD.updateGameText("YOU WIN!!!!");
+            this.HUD.updateGameText("YOU WIN!!!!");
             this.gameOver = true;
         }
     }, {
         key: 'lose',
         value: function lose() {
-            this.node.HUD.updateGameText("YOU LOSE!!!!");
+            this.HUD.updateGameText("YOU LOSE!!!!");
             this.gameOver = true;
         }
     }, {
         key: 'spawnPlayer',
         value: function spawnPlayer() {
             this.playerNode = blueprintLib.createChild(this.scene, 'player');
-            this.player = this.playerNode.Player;
+            this.player = this.playerNode.getJSComponent('Player');
         }
     }, {
         key: 'update',
@@ -186,10 +188,5 @@ var SpaceGame = function (_Atomic$JSComponent) {
 
     return SpaceGame;
 }(Atomic.JSComponent);
-
-SpaceGame.inspectorFields = {
-    backgroundMusic: 'Music/battle.ogg'
-};
-
 
 module.exports = SpaceGame;

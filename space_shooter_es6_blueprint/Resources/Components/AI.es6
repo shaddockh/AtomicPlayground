@@ -5,13 +5,13 @@ import Globals from "Globals";
 
 const SpaceGame = Globals.SpaceGame;
 
-class AI extends Atomic.JSComponent {
+const inspectorFields = {
+    canMove: false,
+    allowShoot: false,
+    bulletBlueprint: 'enemyBullet'
+};
 
-    static inspectorFields = {
-        canMove: false,
-        allowShoot: false,
-        bulletBlueprint: 'enemyBullet'
-    };
+class AI extends Atomic.JSComponent {
 
     update(timeStep) {
 

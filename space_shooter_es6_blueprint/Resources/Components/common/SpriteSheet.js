@@ -9,6 +9,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var inspectorFields = {
+    spriteSheet: ["SpriteSheet2D"],
+    spriteName: '',
+    blendMode: Atomic.BLEND_ALPHA,
+    orderInLayer: 0
+};
+
 var SpriteSheet = function (_Atomic$JSComponent) {
     _inherits(SpriteSheet, _Atomic$JSComponent);
 
@@ -29,22 +36,14 @@ var SpriteSheet = function (_Atomic$JSComponent) {
             sprite2D.blendMode = this.blendMode;
             sprite2D.orderInLayer = this.orderInLayer;
 
-            var sheet = Atomic.cache.getResource("SpriteSheet2D", this.spriteSheet);
+            //var sheet = Atomic.cache.getResource("SpriteSheet2D", this.spriteSheet);
             if (this.spriteName) {
-                sprite2D.sprite = sheet.getSprite(this.spriteName);
+                sprite2D.sprite = this.spriteSheet.getSprite(this.spriteName);
             }
         }
     }]);
 
     return SpriteSheet;
 }(Atomic.JSComponent);
-
-SpriteSheet.inspectorFields = {
-    spriteSheet: null,
-    spriteName: null,
-    blendMode: Atomic.BLEND_ALPHA,
-    orderInLayer: 0
-};
-
 
 module.exports = SpriteSheet;

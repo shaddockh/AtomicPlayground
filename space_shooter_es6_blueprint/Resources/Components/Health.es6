@@ -7,12 +7,11 @@ import Globals from "Globals";
 
 const SpaceGame = Globals.SpaceGame;
 
+const inspectorFields = {
+    health: 1,
+};
+
 class Health extends Atomic.JSComponent {
-
-    static inspectorFields = {
-        health: 1,
-    };
-
     // using start to initialize the script component
     //start() {}
 

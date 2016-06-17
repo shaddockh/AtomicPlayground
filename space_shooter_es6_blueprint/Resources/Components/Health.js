@@ -24,6 +24,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var SpaceGame = _Globals2.default.SpaceGame;
 
+var inspectorFields = {
+    health: 1
+};
+
 var Health = function (_Atomic$JSComponent) {
     _inherits(Health, _Atomic$JSComponent);
 
@@ -35,7 +39,6 @@ var Health = function (_Atomic$JSComponent) {
 
     _createClass(Health, [{
         key: 'onHit',
-
 
         // using start to initialize the script component
         //start() {}
@@ -51,10 +54,5 @@ var Health = function (_Atomic$JSComponent) {
 
     return Health;
 }(Atomic.JSComponent);
-
-Health.inspectorFields = {
-    health: 1
-};
-
 
 module.exports = Health;

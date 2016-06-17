@@ -1,11 +1,11 @@
 'use strict';
 'atomic component';
 
-class Space extends Atomic.JSComponent {
+const inspectorFields = {
+    speed: 0.75
+};
 
-    static inspectorFields = {
-        speed: 0.75
-    };
+class Space extends Atomic.JSComponent {
 
     update(timeStep) {
         this.node.translate([0, -timeStep * this.speed, 0]);

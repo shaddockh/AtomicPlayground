@@ -8,6 +8,9 @@
 	<attribute name="Variables" />
 	<component type="JSComponent" id="16777241">
 		<attribute name="ComponentFile" value="JSComponentFile;Components/SpaceGame.js" />
+		<attribute name="FieldValues">
+			<variant hash="1234707223" type="String" value="Music/battle.ogg" />
+		</attribute>
 	</component>
 	<component type="JSComponent" id="16777242">
 		<attribute name="ComponentFile" value="JSComponentFile;Components/HUD.js" />

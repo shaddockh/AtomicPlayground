@@ -6,14 +6,14 @@ import Globals from "Globals";
 
 const SpaceGame = Globals.SpaceGame;
 
+const inspectorFields = {
+    isPlayer: false,
+    laserSound: '',
+    speed: 5
+};
+
+
 class Bullet extends Atomic.JSComponent {
-
-    static inspectorFields = {
-        isPlayer: false,
-        laserSound: '',
-        speed: 5
-    };
-
 
     start() {
         this.laserSound = Atomic.cache.getResource("Sound", this.laserSound);
