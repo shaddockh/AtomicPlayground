@@ -66,7 +66,7 @@ var componentBuilders = {
     // Used for mapping the root attributes of a node from a blueprint
     rootNodeComponentBuilder: {
         build: function (node, componentBlueprint, componentName, blueprint) {
-            mapBlueprintToNativeComponent(node, blueprint, "Node");
+            mapBlueprintToComponent(node, blueprint, "Node");
         }
     },
     // used to create and map a native component
@@ -76,7 +76,7 @@ var componentBuilders = {
                 console.log("Attaching Native Component: " + componentName + " to node.");
             }
             var comp = node.createComponent(componentName);
-            mapBlueprintToNativeComponent(comp, componentBlueprint, componentName);
+            mapBlueprintToComponent(comp, componentBlueprint, componentName);
         }
     },
     // Used to create and map a JSComponent
@@ -86,29 +86,20 @@ var componentBuilders = {
                 console.log("Attaching JSComponent: " + componentName + " to node.");
             }
             var component = resolveJSComponent(componentName);
-            var jsComp = node.createJSComponent(component, componentBlueprint);
-            mapBlueprintToNativeComponent(jsComp, componentBlueprint, componentName);
-            /*
-            console.log(JSON.stringify(jsComp.getAttributes(), null, 2));
-            // Need to set the attributes so that when generating the prefab, it gets persisted properly
-            for (let prop in componentBlueprint) {
-                jsComp.setAttribute(prop, componentBlueprint[prop]); // for generating the prefab
-            }
-            node[componentName] = jsComp;
-            return jsComp;
-            */
+            var jsComp = node.getJSComponent(component) || node.createJSComponent(component, componentBlueprint);
+            mapBlueprintToComponent(jsComp, componentBlueprint, componentName);
         }
     }
 };
-var cachedNativeComponentProps = {};
+var cachedComponentProps = {};
 /**
  * maps blueprint properties to a native component.  Will cache the native component type attributes for speed.
  * @param {AObject} component the component to map
  * @param {object} blueprint the blueprint to map to the component
  * @param {string} the name of the component
  */
-function mapBlueprintToNativeComponent(component, blueprint, componentName) {
-    var compPropertyXref = cachedNativeComponentProps[componentName];
+function mapBlueprintToComponent(component, blueprint, componentName) {
+    var compPropertyXref = cachedComponentProps[componentName];
     if (!compPropertyXref) {
         compPropertyXref = {};
         var attributes = component.getAttributes();
@@ -116,7 +107,7 @@ function mapBlueprintToNativeComponent(component, blueprint, componentName) {
             var attr = attributes[i];
             compPropertyXref[attr.name.toLowerCase().replace(/\ /g, "")] = attr;
         }
-        cachedNativeComponentProps[componentName] = compPropertyXref;
+        cachedComponentProps[componentName] = compPropertyXref;
     }
     for (var prop in blueprint) {
         if (typeof (blueprint[prop]) === "object" && !Array.isArray(blueprint[prop])) {
