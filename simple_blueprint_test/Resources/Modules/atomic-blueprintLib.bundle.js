@@ -312,14 +312,11 @@ function extend(orig, extendwith) {
  * @param componentName The name of the component to check
  */
 function isRegisteredJSComponent(componentName) {
-    debug("Searching for JS Component: " + componentName);
     // walk through the componentCrossref and see if we have any matches.  Assuming that if there
     // are no matches then either it's a native component or a bogus component
     if (resolveJSComponent(componentName)) {
-        debug("Found registered JS Component: " + componentName);
         return true;
     }
-    debug("Could not find registered JS Component: " + componentName);
     return false;
 }
 /**
