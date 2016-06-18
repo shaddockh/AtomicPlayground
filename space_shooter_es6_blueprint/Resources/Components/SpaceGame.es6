@@ -9,7 +9,7 @@ import Globals from "Globals";
 const deleteQueue = [];
 
 const inspectorFields = {
-    backgroundMusic: 'Music/battle.ogg'
+    backgroundMusic: ["Sound"]
 };
 
 class SpaceGame extends Atomic.JSComponent {
@@ -40,13 +40,12 @@ class SpaceGame extends Atomic.JSComponent {
         this.spawnPlayer();
         this.spawnEnemies();
 
-        var musicFile = Atomic.cache.getResource("Sound", this.backgroundMusic);
-        musicFile.looped = true;
+        this.backgroundMusic.looped = true;
         var musicNode = this.scene.createChild("MusicNode");
         var musicSource = musicNode.createComponent("SoundSource");
         musicSource.gain = 0.5;
         musicSource.soundType = Atomic.SOUND_MUSIC;
-        musicSource.play(musicFile);
+        musicSource.play(this.backgroundMusic);
     }
 
     random(min, max) {

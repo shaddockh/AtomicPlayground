@@ -27,7 +27,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var deleteQueue = [];
 
 var inspectorFields = {
-    backgroundMusic: 'Music/battle.ogg'
+    backgroundMusic: ["Sound"]
 };
 
 var SpaceGame = function (_Atomic$JSComponent) {
@@ -67,13 +67,12 @@ var SpaceGame = function (_Atomic$JSComponent) {
             this.spawnPlayer();
             this.spawnEnemies();
 
-            var musicFile = Atomic.cache.getResource("Sound", this.backgroundMusic);
-            musicFile.looped = true;
+            this.backgroundMusic.looped = true;
             var musicNode = this.scene.createChild("MusicNode");
             var musicSource = musicNode.createComponent("SoundSource");
             musicSource.gain = 0.5;
             musicSource.soundType = Atomic.SOUND_MUSIC;
-            musicSource.play(musicFile);
+            musicSource.play(this.backgroundMusic);
         }
     }, {
         key: 'random',

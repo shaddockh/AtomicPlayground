@@ -23,5 +23,5 @@ cp -R atomic-blueprintLib/dist/Resources/EditorData rot_tests/Resources
 cp -R atomic-blueprintLib/dist/Resources/EditorData rot_tests_tsc/Resources
 
 # Typescript
-cp -R atomic-blueprintLib/dist/Resources/typings simple_ts_blueprint_test/Resources/typings/atomic-blueprintlib
-cp -R atomic-blueprintLib/dist/Resources/typings rot_tests_tsc/Resources/typings/atomic-blueprintlib
+cp -R atomic-blueprintLib/dist/Resources/typings/ simple_ts_blueprint_test/Resources/typings/atomic-blueprintlib
+cp -R atomic-blueprintLib/dist/Resources/typings/ rot_tests_tsc/Resources/typings/atomic-blueprintlib

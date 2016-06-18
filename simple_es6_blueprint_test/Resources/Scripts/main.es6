@@ -1,4 +1,4 @@
-import "atomic-blueprintLib.bundle"; // need to initialize the library bundle so we can access the contents
+import "atomic-blueprintlib.bundle"; // need to initialize the library bundle so we can access the contents
 import * as blueprintLib from "atomic-blueprintlib";
 
 

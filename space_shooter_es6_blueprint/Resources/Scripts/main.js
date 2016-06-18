@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.update = update;
 
-require("atomic-blueprintLib.bundle");
+require("atomic-blueprintlib.bundle");
 
 var _atomicBlueprintlib = require("atomic-blueprintlib");
 

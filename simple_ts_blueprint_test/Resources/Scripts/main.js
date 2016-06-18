@@ -1,5 +1,5 @@
 "use strict";
-require("atomic-blueprintLib.bundle"); // need to initialize the library bundle so we can access the contents
+require("atomic-blueprintlib.bundle"); // need to initialize the library bundle so we can access the contents
 var blueprintLib = require("atomic-blueprintlib");
 // This script is the main entry point of the game
 // called at the start of play
