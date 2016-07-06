@@ -150,7 +150,7 @@ function mapBlueprintToComponent(component, blueprint, componentName) {
 }
 // TODO: need to find a better way to get the project root
 function getProjectRoot() {
-    if (ToolCore && ToolCore.toolSystem && ToolCore.toolSystem.project) {
+    if (typeof (ToolCore) !== "undefined" && ToolCore.toolSystem && ToolCore.toolSystem.project) {
         // Are we runningin the editor?
         return ToolCore.toolSystem.project.projectPath;
     }
