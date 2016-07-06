@@ -9,6 +9,7 @@ import {blueprints} from '../Modules/blueprints'; // Load all the blueprints int
 import 'Ui/ui'; // Let the ui system register itself
 import { gameChannel } from '../Modules/gameChannels';
 
+
 blueprintlib.catalog.loadBlueprints(blueprints, bp => {
     console.log(`Loading blueprint: ${bp}`);
 });

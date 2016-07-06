@@ -7,7 +7,21 @@ import gameState from '../../Modules/gameState';
 import * as triggerEvent from 'atomicTriggerEvent';
 import {vec2} from 'gl-matrix';
 
-class GridMover extends CustomJSComponent {
+class MoveTimer {
+    elapsed = 0;
+    duration = 0;
+    init(duration) {
+        this.duration = duration;
+        this.elapsed = 0;
+    }
+    expired(timeStep: number) {
+        this.elapsed += timeStep;
+        // console.log(`elapsed: ${this.elapsed}, duration: ${this.duration}`);
+        return this.elapsed > this.duration;
+    }
+}
+
+export default class GridMover extends CustomJSComponent {
     inspectorFields = {
         debug: false,
         // need speed to be 1 tile per speed per second.
@@ -15,9 +29,9 @@ class GridMover extends CustomJSComponent {
         smoothMovement: true // jump from tile to tile or smoothly move between them
     };
 
-
     speed: number = 1;
     smoothMovement: boolean = true;
+    moveTimer = new MoveTimer();
 
     private postMoveActions = [];
     private targetPos;
@@ -27,7 +41,6 @@ class GridMover extends CustomJSComponent {
     private bumping: boolean = false;
     private t: number;
     private movementVector;
-
 
     queuePostMoveAction(action) {
         this.postMoveActions.push(action);
@@ -51,35 +64,54 @@ class GridMover extends CustomJSComponent {
         this.moving = false;
     }
 
-    update(timeStep) {
+    moveTowards(dest, speed: number): any {
+        let currentPos = vec2.fromValues(this.node.position2D[0], this.node.position2D[1]);
+        if (vec2.equals(currentPos, dest)) {
+            return dest;
+        }
 
+        try {
+            const direction = vec2.normalize(vec2.create(), vec2.subtract(vec2.create(), dest, currentPos));
+
+            // Move in that direction
+            //start += vec2.scale( direction, speed); //direction * speed * elapsed;
+            currentPos = vec2.scaleAndAdd(vec2.create(), currentPos, direction, speed);
+
+            // If we moved PAST the goal, move it back to the goal
+            if (Math.abs(vec2.dot(direction, vec2.normalize(vec2.create(), vec2.subtract(vec2.create(), dest, currentPos))) + 1) < 0.1) {
+                currentPos = dest;
+            }
+
+            // Return whether we've reached the goal or not
+            return (vec2.equals(currentPos, dest));
+        } finally {
+            this.node.position2D = [currentPos[0], currentPos[1]];
+        }
+    }
+
+    update(timeStep) {
         // Let's keep track of our delay
         if (this.moving || this.bumping || this.blocked) {
 
-            // We don't want to do anything except update our position while we are still inside the delay
-            if (this.t < 1) {
-                this.t = Math.min(this.t + timeStep /
-                  (this.speed * gameState.getCurrentLevelRenderer().cellUnitSize), 1); // Sweeps from 0 to 1 in time seconds
-                if (this.moving && this.smoothMovement) {
-                    this.node.position2D = vec2.lerp(vec2.create(), this.startPos, this.targetPos, this.t);
+            if (this.moving) {
+                if (this.moveTowards(this.targetPos, this.speed / 30)) {
+                    // Reset everything
+                    this.moving = false;
+                    this.bumping = false;
+                    this.blocked = false;
+
+                    this.executePostMoveActions();
                 }
-                // Let's bail until the next cycle
-                return;
-            }
-
-            // We are now outside of our delay, let's finish up the action
-            if (this.t >= 1) {
-
-                if (this.moving) {
-                    this.node.position2D = this.targetPos;
-                }
-
+            } else {
+                //TODO: Need to figure out how to delay some time here
                 // Reset everything
-                this.moving = false;
-                this.bumping = false;
-                this.blocked = false;
+                if (this.moveTimer.expired(timeStep)) {
+                    this.moving = false;
+                    this.bumping = false;
+                    this.blocked = false;
 
-                this.executePostMoveActions();
+                    this.executePostMoveActions();
+                }
             }
         }
     }
@@ -131,6 +163,7 @@ class GridMover extends CustomJSComponent {
                         });
                     }
                     if (entity.entityComponent.bumpable) {
+                        this.DEBUG('Bumping by Entity');
                         // Let's exit the loop since we only want to deal with the first entity
                         triggerEvent.trigger(this.node, 'onHandleBump', entity.node);
                         return false;
@@ -152,7 +185,8 @@ class GridMover extends CustomJSComponent {
                 this.entity.setPosition(newMapPos);
                 triggerEvent.trigger(this.node, 'onMoveComplete');
             });
+        } else if (this.blocked || this.bumping) {
+            this.moveTimer.init(0.25);
         }
     }
 }
-export = GridMover;

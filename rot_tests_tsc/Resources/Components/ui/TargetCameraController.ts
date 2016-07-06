@@ -5,7 +5,7 @@ class TargetCameraController extends Atomic.JSComponent {
     inspectorFields = {
         debug: false,
         zoom: 1.5,
-        autoFollow: false
+        autoFollow: true
     };
 
     /** amount to zoom the camera in */

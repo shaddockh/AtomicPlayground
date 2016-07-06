@@ -43,17 +43,17 @@ exports.entities = {
          *},
          */
         GridMover: {
-            debug: false,
-            speed: 0.25,
+            debug: true,
+            speed: 1.5,
             constantMotion: true
         },
         // Make sure our actions are reported to the log
         ActionLogger: {},
         EventSound: {
-            eventMap: {
-                onMoveStart: 'Sounds/footstep02.ogg',
-                onAttack: 'Sounds/knifeSlice.ogg'
-            }
+            eventMessage01: 'onMoveStart',
+            eventSound01: 'Sounds/footstep02.ogg',
+            eventMessage02: 'onAttack',
+            eventSound02: 'Sounds/knifeSlice.ogg'
         },
         HeroAi: {
             debug: false
@@ -88,7 +88,7 @@ exports.entities = {
             screenName: 'a rat'
         },
         GridMover: {
-            speed: 0.25
+            speed: 1.5
         },
         StaticSprite2D: {
             sprite: 'Sprites/rodent0_10.png',
@@ -101,9 +101,8 @@ exports.entities = {
             life: 5
         },
         EventSound: {
-            eventMap: {
-                onAttack: 'Sounds/bite-small2.ogg'
-            }
+            eventMessage01: 'onAttack',
+            eventSound01: 'Sounds/bite-small2.ogg',
         }
     },
     /* ITEMS */

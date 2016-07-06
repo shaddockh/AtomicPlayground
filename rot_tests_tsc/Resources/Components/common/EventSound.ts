@@ -17,25 +17,47 @@ import CustomJSComponent from 'CustomJSComponent';
 class EventSound extends CustomJSComponent {
     inspectorFields = {
         debug: false,
-
-        life: 1,
-        eventMap: {}
+        eventMessage01: [Atomic.VAR_STRING],
+        eventSound01: ['Sound'],
+        eventMessage02: [Atomic.VAR_STRING],
+        eventSound02: ['Sound'],
+        eventMessage03: [Atomic.VAR_STRING],
+        eventSound03: ['Sound'],
+        eventMessage04: [Atomic.VAR_STRING],
+        eventSound04: ['Sound'],
     };
 
     private soundSource: Atomic.SoundSource;
-    eventMap: Object = {};
+    eventMessage01: string;
+    eventSound01: Atomic.Sound;
+    eventMessage02: string;
+    eventSound02: Atomic.Sound;
+    eventMessage03: string;
+    eventSound03: Atomic.Sound;
+    eventMessage04: string;
+    eventSound04: Atomic.Sound;
+    eventMap = {};
+
+    private mapEventToMap(eventMessage: string, eventSound: Atomic.Sound) {
+        if (eventMessage) {
+            this.eventMap[eventMessage] = eventSound;
+        }
+    }
 
     start() {
         this.soundSource = this.node.createComponent<Atomic.SoundSource>('SoundSource');
         //this.soundSource.soundType = Atomic.SOUND_EFFECT;
         this.soundSource.gain = 0.75;
+        this.mapEventToMap(this.eventMessage01, this.eventSound01);
+        this.mapEventToMap(this.eventMessage02, this.eventSound02);
+        this.mapEventToMap(this.eventMessage03, this.eventSound03);
+        this.mapEventToMap(this.eventMessage04, this.eventSound04);
     }
 
     onAny(eventName) {
-        let soundName = this.eventMap[eventName];
-        if (soundName) {
-            this.DEBUG(`Playing sound: ${soundName}`);
-            let sound = <Atomic.Sound>Atomic.cache.getResource('Sound', soundName);
+        let sound = this.eventMap[eventName];
+        if (sound) {
+            this.DEBUG(`Playing sound for event: ${eventName}`);
             this.soundSource.play(sound);
         }
     }

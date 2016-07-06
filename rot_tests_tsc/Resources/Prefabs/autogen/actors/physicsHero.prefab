@@ -39,8 +39,8 @@
 	<component type="JSComponent" id="16777326">
 		<attribute name="ComponentFile" value="JSComponentFile;Components/actionHandlers/GridMover.js" />
 		<attribute name="FieldValues">
-			<variant hash="339510355" type="Bool" value="false" />
-			<variant hash="273365031" type="Float" value="0.25" />
+			<variant hash="339510355" type="Bool" value="true" />
+			<variant hash="273365031" type="Float" value="1.5" />
 		</attribute>
 	</component>
 	<component type="JSComponent" id="16777327">
@@ -48,6 +48,12 @@
 	</component>
 	<component type="JSComponent" id="16777328">
 		<attribute name="ComponentFile" value="JSComponentFile;Components/common/EventSound.js" />
+		<attribute name="FieldValues">
+			<variant hash="436764110" type="String" value="onMoveStart" />
+			<variant hash="327743190" type="ResourceRef" value="Sound;Sounds/footstep02.ogg" />
+			<variant hash="436764111" type="String" value="onAttack" />
+			<variant hash="327743191" type="ResourceRef" value="Sound;Sounds/knifeSlice.ogg" />
+		</attribute>
 	</component>
 	<component type="JSComponent" id="16777329">
 		<attribute name="ComponentFile" value="JSComponentFile;Components/ai/HeroAi.js" />

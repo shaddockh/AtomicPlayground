@@ -12,7 +12,7 @@ var TargetCameraController = (function (_super) {
         this.inspectorFields = {
             debug: false,
             zoom: 1.5,
-            autoFollow: false
+            autoFollow: true
         };
         /** amount to zoom the camera in */
         this.zoom = 1.5;
