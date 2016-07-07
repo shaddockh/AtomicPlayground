@@ -399,6 +399,24 @@ module vec2 {
      * @returns string representation of the vector
      */
     export function str(a: GLM.IArray): string;
+
+	/**
+	 * Returns whether or not the vectors exactly have the same elements in the same position (when compared with ===)
+	 *
+	 * @param {vec2} a The first vector.
+	 * @param {vec2} b The second vector.
+	 * @returns {Boolean} True if the vectors are equal, false otherwise.
+	 */
+	export function exactEquals(a: GLM.IArray, b: GLM.IArray): boolean;
+
+	/**
+	 * Returns whether or not the vectors have approximately the same elements in the same position.
+	 *
+	 * @param {vec2} a The first vector.
+	 * @param {vec2} b The second vector.
+	 * @returns {Boolean} True if the vectors are equal, false otherwise.
+	 */
+	export function equals(a: GLM.IArray, b: GLM.IArray): boolean;
 }
 
 // vec3

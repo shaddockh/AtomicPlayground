@@ -22,7 +22,7 @@
 	<component type="JSComponent" id="16777333">
 		<attribute name="ComponentFile" value="JSComponentFile;Components/actionHandlers/GridMover.js" />
 		<attribute name="FieldValues">
-			<variant hash="273365031" type="Float" value="0.25" />
+			<variant hash="273365031" type="Float" value="1.5" />
 		</attribute>
 	</component>
 	<component type="StaticSprite2D" id="28">
@@ -43,5 +43,9 @@
 	</component>
 	<component type="JSComponent" id="16777336">
 		<attribute name="ComponentFile" value="JSComponentFile;Components/common/EventSound.js" />
+		<attribute name="FieldValues">
+			<variant hash="436764110" type="String" value="onAttack" />
+			<variant hash="327743190" type="ResourceRef" value="Sound;Sounds/bite-small2.ogg" />
+		</attribute>
 	</component>
 </node>

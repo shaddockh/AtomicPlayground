@@ -24,21 +24,35 @@ var EventSound = (function (_super) {
         _super.apply(this, arguments);
         this.inspectorFields = {
             debug: false,
-            life: 1,
-            eventMap: {}
+            eventMessage01: [Atomic.VAR_STRING],
+            eventSound01: ['Sound'],
+            eventMessage02: [Atomic.VAR_STRING],
+            eventSound02: ['Sound'],
+            eventMessage03: [Atomic.VAR_STRING],
+            eventSound03: ['Sound'],
+            eventMessage04: [Atomic.VAR_STRING],
+            eventSound04: ['Sound'],
         };
         this.eventMap = {};
     }
+    EventSound.prototype.mapEventToMap = function (eventMessage, eventSound) {
+        if (eventMessage) {
+            this.eventMap[eventMessage] = eventSound;
+        }
+    };
     EventSound.prototype.start = function () {
         this.soundSource = this.node.createComponent('SoundSource');
         //this.soundSource.soundType = Atomic.SOUND_EFFECT;
         this.soundSource.gain = 0.75;
+        this.mapEventToMap(this.eventMessage01, this.eventSound01);
+        this.mapEventToMap(this.eventMessage02, this.eventSound02);
+        this.mapEventToMap(this.eventMessage03, this.eventSound03);
+        this.mapEventToMap(this.eventMessage04, this.eventSound04);
     };
     EventSound.prototype.onAny = function (eventName) {
-        var soundName = this.eventMap[eventName];
-        if (soundName) {
-            this.DEBUG("Playing sound: " + soundName);
-            var sound = Atomic.cache.getResource('Sound', soundName);
+        var sound = this.eventMap[eventName];
+        if (sound) {
+            this.DEBUG("Playing sound for event: " + eventName);
             this.soundSource.play(sound);
         }
     };

@@ -131,6 +131,7 @@ var background = exports.background = {
 };
 
 var spaceGame = exports.spaceGame = {
+    prefabDir: "Prefabs/autogen",
     isPrefab: true,
     SpaceGame: {
         backgroundMusic: 'Music/battle.ogg'

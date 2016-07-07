@@ -105,15 +105,15 @@ Most of the time you will want to generate prefabs for all of your blueprints as
 
 # Usage
 ## Preparing the library for Usage
-* Place ```atomic-bluerpintLib.bundle.js``` in your ```Resources/Modules``` directory.
+* Place ```atomic-bluerpintlib.bundle.js``` in your ```Resources/Modules``` directory.
 
 * in ```scripts/main.js``` you will need to add the following line to the top
 ``` javascript
-require('atomic-blueprintLib.bundle');
+require('atomic-blueprintlib.bundle');
 ```
 or TypeScript/ES6
 ``` javascript
-import 'atomic-blueprintLib.bundle';
+import 'atomic-blueprintlib.bundle';
 ```
 
 This will bring in the bundled library and allow the components to be required in by the different modules.
@@ -152,9 +152,6 @@ blueprintLib.catalog.loadBlueprints(require('blueprints'), function(bpName) { pr
 // You want to do this at initialization so you aren't hydrating during construction of the game objects.
 blueprintLib.catalog.hydrateAllBlueprints();
 
-// Generate prefabs (if they haven't been generated yet)
-blueprintLib.generatePrefabs();
-
 // Construct a game object
 blueprintLib.createChildAtLocation(game.scene, 'testBlueprint', [1,1]);
 
@@ -166,7 +163,7 @@ Full examples can be found in the AtomicPlayground (http://www.github.com/shaddo
 * [simple_ts_blueprint_test](https://github.com/shaddockh/AtomicPlayground/tree/master/simple_ts_blueprint_test)
 * [simple_es6_blueprint_test](https://github.com/shaddockh/AtomicPlayground/tree/master/simple_es6_blueprint_test)
 * [space_shooter_blueprint](https://github.com/shaddockh/AtomicPlayground/tree/master/space_shooter_blueprint) (in progress)
-* [space_shooter_es6_blueprint](https://github.com/shaddockh/AtomicPlayground/tree/master/space_shooter_es6_blueprint) 
+* [space_shooter_es6_blueprint](https://github.com/shaddockh/AtomicPlayground/tree/master/space_shooter_es6_blueprint)
 
 # Blueprint Library plugin (Pre-Alpha)
 There is an editor plugin that is in the really early stages of development that can be used.  It is located in ```dist/Resources/EditorData``` and can be placed in the ```Resources/EditorData``` folder of your project.  At this point the only thing it does is autogenerate prefabs for any blueprints found in the file:
@@ -185,7 +182,7 @@ exports.blueprint2 = {
     ...
 }
 ```
-Autogeneration can either be selected from the Developer menu or when you hit ```Play``` on the editor.
+Auto-generation can either be selected from the Developer menu or when you hit ```Play``` on the editor.
 
 ## Typescript Support
 There is a generated ```d.ts``` file located in ```dist/Resources/typings``` for use in typescript projects.

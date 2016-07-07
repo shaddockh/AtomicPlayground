@@ -5,6 +5,17 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+var ClampedLog = (function () {
+    function ClampedLog() {
+    }
+    ClampedLog.prototype.log = function (value) {
+        if (value != this.lastLog) {
+            console.log(value);
+            this.lastLog = value;
+        }
+    };
+    return ClampedLog;
+}());
 var TargetCameraController = (function (_super) {
     __extends(TargetCameraController, _super);
     function TargetCameraController() {
@@ -12,7 +23,7 @@ var TargetCameraController = (function (_super) {
         this.inspectorFields = {
             debug: false,
             zoom: 1.5,
-            autoFollow: false
+            autoFollow: true
         };
         /** amount to zoom the camera in */
         this.zoom = 1.5;
@@ -21,6 +32,7 @@ var TargetCameraController = (function (_super) {
         this.cameraTargetNode = null;
         this.camera = null;
         this.cameraNode = null;
+        this.logger = new ClampedLog();
     }
     TargetCameraController.prototype.onSetCameraTarget = function (target) {
         this.cameraTargetNode = target;
@@ -37,7 +49,35 @@ var TargetCameraController = (function (_super) {
         if (this.cameraTargetNode) {
             this.camera.zoom = this.zoom;
             var _a = this.cameraTargetNode.position, x = _a[0], y = _a[1], z = _a[2];
-            this.cameraNode.position = [x - (this.camera.halfViewSize * this.camera.aspectRatio), y - this.camera.halfViewSize, z];
+            // Reverse the aspect ratio to get the vertical and horizontal size
+            var camVertExtent = this.camera.orthoSize;
+            var camHorzExtent = this.camera.aspectRatio * camVertExtent;
+            /*
+            let o = {
+                vertExtent: camVertExtent,
+                horzExtend: camHorzExtent,
+                aspectRatio: this.camera.aspectRatio,
+                orthoSize: this.camera.orthoSize,
+                pixelSize: Atomic.PIXEL_SIZE,
+                halfWidth: this.camera.halfViewSize,
+                x: x - camHorzExtent * .55,
+                y: y - camVertExtent * .28
+            };
+            //console.log(JSON.stringify(o));
+            */
+            //TODO: THIS IS THE WRONG WAY TO DO THIS, BUT IT SEEMS TO WORK.  NEED TO FIGURE OUT THE CORRECT WAY
+            this.cameraNode.position = [x - camHorzExtent * .55, y - camVertExtent * 0.28, z];
+            /*
+            let screenHeight = 2 * this.camera.orthoSize;
+            let screenWidth = screenHeight * this.camera.aspectRatio;
+            let halfScreenWidth = screenWidth / 2;
+            let halfScreenHeight = screenHeight / 2;
+
+            //console.log(halfScreenWidth + " " +this.camera.halfViewSize );
+            //this.cameraNode.position = [x - halfScreenWidth, y - halfScreenHeight, z];
+            //this.cameraNode.position = [x - (this.camera.halfViewSize * this.camera.aspectRatio), y - this.camera.halfViewSize, z];
+            //this.cameraNode.position = [x - (halfScreenWidth * this.camera.aspectRatio), y - halfScreenHeight, z];
+            */
             if (!this.autoFollow) {
                 this.cameraTargetNode = null;
             }

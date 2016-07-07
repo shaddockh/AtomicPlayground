@@ -29,7 +29,7 @@ THE SOFTWARE. */
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
 	else if(typeof define === 'function' && define.amd)
-		define(factory);
+		define([], factory);
 	else {
 		var a = factory();
 		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
@@ -156,7 +156,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	glMatrix.ENABLE_SIMD = false;
 
 	// Capability detection
-	glMatrix.SIMD_AVAILABLE = (glMatrix.ARRAY_TYPE === Float32Array) && ('SIMD' in this);
+	glMatrix.SIMD_AVAILABLE = (glMatrix.ARRAY_TYPE === this.Float32Array) && ('SIMD' in this);
 	glMatrix.USE_SIMD = glMatrix.ENABLE_SIMD && glMatrix.SIMD_AVAILABLE;
 
 	/**
@@ -173,10 +173,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	* Convert Degree To Radian
 	*
-	* @param {Number} Angle in Degrees
+	* @param {Number} a Angle in Degrees
 	*/
 	glMatrix.toRadian = function(a){
 	     return a * degree;
+	}
+
+	/**
+	 * Tests whether or not the arguments have approximately the same value, within an absolute
+	 * or relative tolerance of glMatrix.EPSILON (an absolute tolerance is used for values less
+	 * than or equal to 1.0, and a relative tolerance is used for larger values)
+	 *
+	 * @param {Number} a The first number to test.
+	 * @param {Number} b The second number to test.
+	 * @returns {Boolean} True if the numbers are approximately equal, false otherwise.
+	 */
+	glMatrix.equals = function(a, b) {
+		return Math.abs(a - b) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a), Math.abs(b));
 	}
 
 	module.exports = glMatrix;
@@ -273,6 +286,43 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	/**
+	 * Create a new mat2 with the given values
+	 *
+	 * @param {Number} m00 Component in column 0, row 0 position (index 0)
+	 * @param {Number} m01 Component in column 0, row 1 position (index 1)
+	 * @param {Number} m10 Component in column 1, row 0 position (index 2)
+	 * @param {Number} m11 Component in column 1, row 1 position (index 3)
+	 * @returns {mat2} out A new 2x2 matrix
+	 */
+	mat2.fromValues = function(m00, m01, m10, m11) {
+	    var out = new glMatrix.ARRAY_TYPE(4);
+	    out[0] = m00;
+	    out[1] = m01;
+	    out[2] = m10;
+	    out[3] = m11;
+	    return out;
+	};
+
+	/**
+	 * Set the components of a mat2 to the given values
+	 *
+	 * @param {mat2} out the receiving matrix
+	 * @param {Number} m00 Component in column 0, row 0 position (index 0)
+	 * @param {Number} m01 Component in column 0, row 1 position (index 1)
+	 * @param {Number} m10 Component in column 1, row 0 position (index 2)
+	 * @param {Number} m11 Component in column 1, row 1 position (index 3)
+	 * @returns {mat2} out
+	 */
+	mat2.set = function(out, m00, m01, m10, m11) {
+	    out[0] = m00;
+	    out[1] = m01;
+	    out[2] = m10;
+	    out[3] = m11;
+	    return out;
+	};
+
+
+	/**
 	 * Transpose the values of a mat2
 	 *
 	 * @param {mat2} out the receiving matrix
@@ -291,7 +341,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        out[2] = a[1];
 	        out[3] = a[3];
 	    }
-	    
+
 	    return out;
 	};
 
@@ -312,7 +362,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return null;
 	    }
 	    det = 1.0 / det;
-	    
+
 	    out[0] =  a3 * det;
 	    out[1] = -a1 * det;
 	    out[2] = -a2 * det;
@@ -453,7 +503,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Returns a string representation of a mat2
 	 *
-	 * @param {mat2} mat matrix to represent as a string
+	 * @param {mat2} a matrix to represent as a string
 	 * @returns {String} string representation of the matrix
 	 */
 	mat2.str = function (a) {
@@ -472,20 +522,117 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * Returns L, D and U matrices (Lower triangular, Diagonal and Upper triangular) by factorizing the input matrix
-	 * @param {mat2} L the lower triangular matrix 
-	 * @param {mat2} D the diagonal matrix 
-	 * @param {mat2} U the upper triangular matrix 
+	 * @param {mat2} L the lower triangular matrix
+	 * @param {mat2} D the diagonal matrix
+	 * @param {mat2} U the upper triangular matrix
 	 * @param {mat2} a the input matrix to factorize
 	 */
 
-	mat2.LDU = function (L, D, U, a) { 
-	    L[2] = a[2]/a[0]; 
-	    U[0] = a[0]; 
-	    U[1] = a[1]; 
-	    U[3] = a[3] - L[2] * U[1]; 
-	    return [L, D, U];       
-	}; 
+	mat2.LDU = function (L, D, U, a) {
+	    L[2] = a[2]/a[0];
+	    U[0] = a[0];
+	    U[1] = a[1];
+	    U[3] = a[3] - L[2] * U[1];
+	    return [L, D, U];
+	};
 
+	/**
+	 * Adds two mat2's
+	 *
+	 * @param {mat2} out the receiving matrix
+	 * @param {mat2} a the first operand
+	 * @param {mat2} b the second operand
+	 * @returns {mat2} out
+	 */
+	mat2.add = function(out, a, b) {
+	    out[0] = a[0] + b[0];
+	    out[1] = a[1] + b[1];
+	    out[2] = a[2] + b[2];
+	    out[3] = a[3] + b[3];
+	    return out;
+	};
+
+	/**
+	 * Subtracts matrix b from matrix a
+	 *
+	 * @param {mat2} out the receiving matrix
+	 * @param {mat2} a the first operand
+	 * @param {mat2} b the second operand
+	 * @returns {mat2} out
+	 */
+	mat2.subtract = function(out, a, b) {
+	    out[0] = a[0] - b[0];
+	    out[1] = a[1] - b[1];
+	    out[2] = a[2] - b[2];
+	    out[3] = a[3] - b[3];
+	    return out;
+	};
+
+	/**
+	 * Alias for {@link mat2.subtract}
+	 * @function
+	 */
+	mat2.sub = mat2.subtract;
+
+	/**
+	 * Returns whether or not the matrices have exactly the same elements in the same position (when compared with ===)
+	 *
+	 * @param {mat2} a The first matrix.
+	 * @param {mat2} b The second matrix.
+	 * @returns {Boolean} True if the matrices are equal, false otherwise.
+	 */
+	mat2.exactEquals = function (a, b) {
+	    return a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3];
+	};
+
+	/**
+	 * Returns whether or not the matrices have approximately the same elements in the same position.
+	 *
+	 * @param {mat2} a The first matrix.
+	 * @param {mat2} b The second matrix.
+	 * @returns {Boolean} True if the matrices are equal, false otherwise.
+	 */
+	mat2.equals = function (a, b) {
+	    var a0 = a[0], a1 = a[1], a2 = a[2], a3 = a[3];
+	    var b0 = b[0], b1 = b[1], b2 = b[2], b3 = b[3];
+	    return (Math.abs(a0 - b0) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a0), Math.abs(b0)) &&
+	            Math.abs(a1 - b1) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a1), Math.abs(b1)) &&
+	            Math.abs(a2 - b2) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a2), Math.abs(b2)) &&
+	            Math.abs(a3 - b3) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a3), Math.abs(b3)));
+	};
+
+	/**
+	 * Multiply each element of the matrix by a scalar.
+	 *
+	 * @param {mat2} out the receiving matrix
+	 * @param {mat2} a the matrix to scale
+	 * @param {Number} b amount to scale the matrix's elements by
+	 * @returns {mat2} out
+	 */
+	mat2.multiplyScalar = function(out, a, b) {
+	    out[0] = a[0] * b;
+	    out[1] = a[1] * b;
+	    out[2] = a[2] * b;
+	    out[3] = a[3] * b;
+	    return out;
+	};
+
+	/**
+	 * Adds two mat2's after multiplying each element of the second operand by a scalar value.
+	 *
+	 * @param {mat2} out the receiving vector
+	 * @param {mat2} a the first operand
+	 * @param {mat2} b the second operand
+	 * @param {Number} scale the amount to scale b's elements by before adding
+	 * @returns {mat2} out
+	 */
+	mat2.multiplyScalarAndAdd = function(out, a, b, scale) {
+	    out[0] = a[0] + (b[0] * scale);
+	    out[1] = a[1] + (b[1] * scale);
+	    out[2] = a[2] + (b[2] * scale);
+	    out[3] = a[3] + (b[3] * scale);
+	    return out;
+	};
 
 	module.exports = mat2;
 
@@ -519,8 +666,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * @class 2x3 Matrix
 	 * @name mat2d
-	 * 
-	 * @description 
+	 *
+	 * @description
 	 * A mat2d contains six elements defined as:
 	 * <pre>
 	 * [a, c, tx,
@@ -599,6 +746,50 @@ return /******/ (function(modules) { // webpackBootstrap
 	    out[3] = 1;
 	    out[4] = 0;
 	    out[5] = 0;
+	    return out;
+	};
+
+	/**
+	 * Create a new mat2d with the given values
+	 *
+	 * @param {Number} a Component A (index 0)
+	 * @param {Number} b Component B (index 1)
+	 * @param {Number} c Component C (index 2)
+	 * @param {Number} d Component D (index 3)
+	 * @param {Number} tx Component TX (index 4)
+	 * @param {Number} ty Component TY (index 5)
+	 * @returns {mat2d} A new mat2d
+	 */
+	mat2d.fromValues = function(a, b, c, d, tx, ty) {
+	    var out = new glMatrix.ARRAY_TYPE(6);
+	    out[0] = a;
+	    out[1] = b;
+	    out[2] = c;
+	    out[3] = d;
+	    out[4] = tx;
+	    out[5] = ty;
+	    return out;
+	};
+
+	/**
+	 * Set the components of a mat2d to the given values
+	 *
+	 * @param {mat2d} out the receiving matrix
+	 * @param {Number} a Component A (index 0)
+	 * @param {Number} b Component B (index 1)
+	 * @param {Number} c Component C (index 2)
+	 * @param {Number} d Component D (index 3)
+	 * @param {Number} tx Component TX (index 4)
+	 * @param {Number} ty Component TY (index 5)
+	 * @returns {mat2d} out
+	 */
+	mat2d.set = function(out, a, b, c, d, tx, ty) {
+	    out[0] = a;
+	    out[1] = b;
+	    out[2] = c;
+	    out[3] = d;
+	    out[4] = tx;
+	    out[5] = ty;
 	    return out;
 	};
 
@@ -796,7 +987,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @returns {String} string representation of the matrix
 	 */
 	mat2d.str = function (a) {
-	    return 'mat2d(' + a[0] + ', ' + a[1] + ', ' + a[2] + ', ' + 
+	    return 'mat2d(' + a[0] + ', ' + a[1] + ', ' + a[2] + ', ' +
 	                    a[3] + ', ' + a[4] + ', ' + a[5] + ')';
 	};
 
@@ -806,9 +997,117 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {mat2d} a the matrix to calculate Frobenius norm of
 	 * @returns {Number} Frobenius norm
 	 */
-	mat2d.frob = function (a) { 
+	mat2d.frob = function (a) {
 	    return(Math.sqrt(Math.pow(a[0], 2) + Math.pow(a[1], 2) + Math.pow(a[2], 2) + Math.pow(a[3], 2) + Math.pow(a[4], 2) + Math.pow(a[5], 2) + 1))
-	}; 
+	};
+
+	/**
+	 * Adds two mat2d's
+	 *
+	 * @param {mat2d} out the receiving matrix
+	 * @param {mat2d} a the first operand
+	 * @param {mat2d} b the second operand
+	 * @returns {mat2d} out
+	 */
+	mat2d.add = function(out, a, b) {
+	    out[0] = a[0] + b[0];
+	    out[1] = a[1] + b[1];
+	    out[2] = a[2] + b[2];
+	    out[3] = a[3] + b[3];
+	    out[4] = a[4] + b[4];
+	    out[5] = a[5] + b[5];
+	    return out;
+	};
+
+	/**
+	 * Subtracts matrix b from matrix a
+	 *
+	 * @param {mat2d} out the receiving matrix
+	 * @param {mat2d} a the first operand
+	 * @param {mat2d} b the second operand
+	 * @returns {mat2d} out
+	 */
+	mat2d.subtract = function(out, a, b) {
+	    out[0] = a[0] - b[0];
+	    out[1] = a[1] - b[1];
+	    out[2] = a[2] - b[2];
+	    out[3] = a[3] - b[3];
+	    out[4] = a[4] - b[4];
+	    out[5] = a[5] - b[5];
+	    return out;
+	};
+
+	/**
+	 * Alias for {@link mat2d.subtract}
+	 * @function
+	 */
+	mat2d.sub = mat2d.subtract;
+
+	/**
+	 * Multiply each element of the matrix by a scalar.
+	 *
+	 * @param {mat2d} out the receiving matrix
+	 * @param {mat2d} a the matrix to scale
+	 * @param {Number} b amount to scale the matrix's elements by
+	 * @returns {mat2d} out
+	 */
+	mat2d.multiplyScalar = function(out, a, b) {
+	    out[0] = a[0] * b;
+	    out[1] = a[1] * b;
+	    out[2] = a[2] * b;
+	    out[3] = a[3] * b;
+	    out[4] = a[4] * b;
+	    out[5] = a[5] * b;
+	    return out;
+	};
+
+	/**
+	 * Adds two mat2d's after multiplying each element of the second operand by a scalar value.
+	 *
+	 * @param {mat2d} out the receiving vector
+	 * @param {mat2d} a the first operand
+	 * @param {mat2d} b the second operand
+	 * @param {Number} scale the amount to scale b's elements by before adding
+	 * @returns {mat2d} out
+	 */
+	mat2d.multiplyScalarAndAdd = function(out, a, b, scale) {
+	    out[0] = a[0] + (b[0] * scale);
+	    out[1] = a[1] + (b[1] * scale);
+	    out[2] = a[2] + (b[2] * scale);
+	    out[3] = a[3] + (b[3] * scale);
+	    out[4] = a[4] + (b[4] * scale);
+	    out[5] = a[5] + (b[5] * scale);
+	    return out;
+	};
+
+	/**
+	 * Returns whether or not the matrices have exactly the same elements in the same position (when compared with ===)
+	 *
+	 * @param {mat2d} a The first matrix.
+	 * @param {mat2d} b The second matrix.
+	 * @returns {Boolean} True if the matrices are equal, false otherwise.
+	 */
+	mat2d.exactEquals = function (a, b) {
+	    return a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3] && a[4] === b[4] && a[5] === b[5];
+	};
+
+	/**
+	 * Returns whether or not the matrices have approximately the same elements in the same position.
+	 *
+	 * @param {mat2d} a The first matrix.
+	 * @param {mat2d} b The second matrix.
+	 * @returns {Boolean} True if the matrices are equal, false otherwise.
+	 */
+	mat2d.equals = function (a, b) {
+	    var a0 = a[0], a1 = a[1], a2 = a[2], a3 = a[3], a4 = a[4], a5 = a[5];
+	    var b0 = b[0], b1 = b[1], b2 = b[2], b3 = b[3], b4 = b[4], b5 = b[5];
+	    return (Math.abs(a0 - b0) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a0), Math.abs(b0)) &&
+	            Math.abs(a1 - b1) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a1), Math.abs(b1)) &&
+	            Math.abs(a2 - b2) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a2), Math.abs(b2)) &&
+	            Math.abs(a3 - b3) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a3), Math.abs(b3)) &&
+	            Math.abs(a4 - b4) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a4), Math.abs(b4)) &&
+	            Math.abs(a5 - b5) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a5), Math.abs(b5)));
+	};
 
 	module.exports = mat2d;
 
@@ -925,6 +1224,62 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	/**
+	 * Create a new mat3 with the given values
+	 *
+	 * @param {Number} m00 Component in column 0, row 0 position (index 0)
+	 * @param {Number} m01 Component in column 0, row 1 position (index 1)
+	 * @param {Number} m02 Component in column 0, row 2 position (index 2)
+	 * @param {Number} m10 Component in column 1, row 0 position (index 3)
+	 * @param {Number} m11 Component in column 1, row 1 position (index 4)
+	 * @param {Number} m12 Component in column 1, row 2 position (index 5)
+	 * @param {Number} m20 Component in column 2, row 0 position (index 6)
+	 * @param {Number} m21 Component in column 2, row 1 position (index 7)
+	 * @param {Number} m22 Component in column 2, row 2 position (index 8)
+	 * @returns {mat3} A new mat3
+	 */
+	mat3.fromValues = function(m00, m01, m02, m10, m11, m12, m20, m21, m22) {
+	    var out = new glMatrix.ARRAY_TYPE(9);
+	    out[0] = m00;
+	    out[1] = m01;
+	    out[2] = m02;
+	    out[3] = m10;
+	    out[4] = m11;
+	    out[5] = m12;
+	    out[6] = m20;
+	    out[7] = m21;
+	    out[8] = m22;
+	    return out;
+	};
+
+	/**
+	 * Set the components of a mat3 to the given values
+	 *
+	 * @param {mat3} out the receiving matrix
+	 * @param {Number} m00 Component in column 0, row 0 position (index 0)
+	 * @param {Number} m01 Component in column 0, row 1 position (index 1)
+	 * @param {Number} m02 Component in column 0, row 2 position (index 2)
+	 * @param {Number} m10 Component in column 1, row 0 position (index 3)
+	 * @param {Number} m11 Component in column 1, row 1 position (index 4)
+	 * @param {Number} m12 Component in column 1, row 2 position (index 5)
+	 * @param {Number} m20 Component in column 2, row 0 position (index 6)
+	 * @param {Number} m21 Component in column 2, row 1 position (index 7)
+	 * @param {Number} m22 Component in column 2, row 2 position (index 8)
+	 * @returns {mat3} out
+	 */
+	mat3.set = function(out, m00, m01, m02, m10, m11, m12, m20, m21, m22) {
+	    out[0] = m00;
+	    out[1] = m01;
+	    out[2] = m02;
+	    out[3] = m10;
+	    out[4] = m11;
+	    out[5] = m12;
+	    out[6] = m20;
+	    out[7] = m21;
+	    out[8] = m22;
+	    return out;
+	};
+
+	/**
 	 * Set a mat3 to the identity matrix
 	 *
 	 * @param {mat3} out the receiving matrix
@@ -971,7 +1326,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        out[7] = a[5];
 	        out[8] = a[8];
 	    }
-	    
+
 	    return out;
 	};
 
@@ -994,8 +1349,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // Calculate the determinant
 	        det = a00 * b01 + a01 * b11 + a02 * b21;
 
-	    if (!det) { 
-	        return null; 
+	    if (!det) {
+	        return null;
 	    }
 	    det = 1.0 / det;
 
@@ -1338,8 +1693,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // Calculate the determinant
 	        det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
 
-	    if (!det) { 
-	        return null; 
+	    if (!det) {
+	        return null;
 	    }
 	    det = 1.0 / det;
 
@@ -1361,12 +1716,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Returns a string representation of a mat3
 	 *
-	 * @param {mat3} mat matrix to represent as a string
+	 * @param {mat3} a matrix to represent as a string
 	 * @returns {String} string representation of the matrix
 	 */
 	mat3.str = function (a) {
-	    return 'mat3(' + a[0] + ', ' + a[1] + ', ' + a[2] + ', ' + 
-	                    a[3] + ', ' + a[4] + ', ' + a[5] + ', ' + 
+	    return 'mat3(' + a[0] + ', ' + a[1] + ', ' + a[2] + ', ' +
+	                    a[3] + ', ' + a[4] + ', ' + a[5] + ', ' +
 	                    a[6] + ', ' + a[7] + ', ' + a[8] + ')';
 	};
 
@@ -1378,6 +1733,131 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	mat3.frob = function (a) {
 	    return(Math.sqrt(Math.pow(a[0], 2) + Math.pow(a[1], 2) + Math.pow(a[2], 2) + Math.pow(a[3], 2) + Math.pow(a[4], 2) + Math.pow(a[5], 2) + Math.pow(a[6], 2) + Math.pow(a[7], 2) + Math.pow(a[8], 2)))
+	};
+
+	/**
+	 * Adds two mat3's
+	 *
+	 * @param {mat3} out the receiving matrix
+	 * @param {mat3} a the first operand
+	 * @param {mat3} b the second operand
+	 * @returns {mat3} out
+	 */
+	mat3.add = function(out, a, b) {
+	    out[0] = a[0] + b[0];
+	    out[1] = a[1] + b[1];
+	    out[2] = a[2] + b[2];
+	    out[3] = a[3] + b[3];
+	    out[4] = a[4] + b[4];
+	    out[5] = a[5] + b[5];
+	    out[6] = a[6] + b[6];
+	    out[7] = a[7] + b[7];
+	    out[8] = a[8] + b[8];
+	    return out;
+	};
+
+	/**
+	 * Subtracts matrix b from matrix a
+	 *
+	 * @param {mat3} out the receiving matrix
+	 * @param {mat3} a the first operand
+	 * @param {mat3} b the second operand
+	 * @returns {mat3} out
+	 */
+	mat3.subtract = function(out, a, b) {
+	    out[0] = a[0] - b[0];
+	    out[1] = a[1] - b[1];
+	    out[2] = a[2] - b[2];
+	    out[3] = a[3] - b[3];
+	    out[4] = a[4] - b[4];
+	    out[5] = a[5] - b[5];
+	    out[6] = a[6] - b[6];
+	    out[7] = a[7] - b[7];
+	    out[8] = a[8] - b[8];
+	    return out;
+	};
+
+	/**
+	 * Alias for {@link mat3.subtract}
+	 * @function
+	 */
+	mat3.sub = mat3.subtract;
+
+	/**
+	 * Multiply each element of the matrix by a scalar.
+	 *
+	 * @param {mat3} out the receiving matrix
+	 * @param {mat3} a the matrix to scale
+	 * @param {Number} b amount to scale the matrix's elements by
+	 * @returns {mat3} out
+	 */
+	mat3.multiplyScalar = function(out, a, b) {
+	    out[0] = a[0] * b;
+	    out[1] = a[1] * b;
+	    out[2] = a[2] * b;
+	    out[3] = a[3] * b;
+	    out[4] = a[4] * b;
+	    out[5] = a[5] * b;
+	    out[6] = a[6] * b;
+	    out[7] = a[7] * b;
+	    out[8] = a[8] * b;
+	    return out;
+	};
+
+	/**
+	 * Adds two mat3's after multiplying each element of the second operand by a scalar value.
+	 *
+	 * @param {mat3} out the receiving vector
+	 * @param {mat3} a the first operand
+	 * @param {mat3} b the second operand
+	 * @param {Number} scale the amount to scale b's elements by before adding
+	 * @returns {mat3} out
+	 */
+	mat3.multiplyScalarAndAdd = function(out, a, b, scale) {
+	    out[0] = a[0] + (b[0] * scale);
+	    out[1] = a[1] + (b[1] * scale);
+	    out[2] = a[2] + (b[2] * scale);
+	    out[3] = a[3] + (b[3] * scale);
+	    out[4] = a[4] + (b[4] * scale);
+	    out[5] = a[5] + (b[5] * scale);
+	    out[6] = a[6] + (b[6] * scale);
+	    out[7] = a[7] + (b[7] * scale);
+	    out[8] = a[8] + (b[8] * scale);
+	    return out;
+	};
+
+	/**
+	 * Returns whether or not the matrices have exactly the same elements in the same position (when compared with ===)
+	 *
+	 * @param {mat3} a The first matrix.
+	 * @param {mat3} b The second matrix.
+	 * @returns {Boolean} True if the matrices are equal, false otherwise.
+	 */
+	mat3.exactEquals = function (a, b) {
+	    return a[0] === b[0] && a[1] === b[1] && a[2] === b[2] &&
+	           a[3] === b[3] && a[4] === b[4] && a[5] === b[5] &&
+	           a[6] === b[6] && a[7] === b[7] && a[8] === b[8];
+	};
+
+	/**
+	 * Returns whether or not the matrices have approximately the same elements in the same position.
+	 *
+	 * @param {mat3} a The first matrix.
+	 * @param {mat3} b The second matrix.
+	 * @returns {Boolean} True if the matrices are equal, false otherwise.
+	 */
+	mat3.equals = function (a, b) {
+	    var a0 = a[0], a1 = a[1], a2 = a[2], a3 = a[3], a4 = a[4], a5 = a[5], a6 = a[6], a7 = a[7], a8 = a[8];
+	    var b0 = b[0], b1 = b[1], b2 = b[2], b3 = b[3], b4 = b[4], b5 = b[5], b6 = a[6], b7 = b[7], b8 = b[8];
+	    return (Math.abs(a0 - b0) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a0), Math.abs(b0)) &&
+	            Math.abs(a1 - b1) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a1), Math.abs(b1)) &&
+	            Math.abs(a2 - b2) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a2), Math.abs(b2)) &&
+	            Math.abs(a3 - b3) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a3), Math.abs(b3)) &&
+	            Math.abs(a4 - b4) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a4), Math.abs(b4)) &&
+	            Math.abs(a5 - b5) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a5), Math.abs(b5)) &&
+	            Math.abs(a6 - b6) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a6), Math.abs(b6)) &&
+	            Math.abs(a7 - b7) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a7), Math.abs(b7)) &&
+	            Math.abs(a8 - b8) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a8), Math.abs(b8)));
 	};
 
 
@@ -1416,7 +1896,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	var mat4 = {
 	  scalar: {},
-	  SIMD: {},
+	  SIMD: {}
 	};
 
 	/**
@@ -1498,6 +1978,91 @@ return /******/ (function(modules) { // webpackBootstrap
 	    out[15] = a[15];
 	    return out;
 	};
+
+	/**
+	 * Create a new mat4 with the given values
+	 *
+	 * @param {Number} m00 Component in column 0, row 0 position (index 0)
+	 * @param {Number} m01 Component in column 0, row 1 position (index 1)
+	 * @param {Number} m02 Component in column 0, row 2 position (index 2)
+	 * @param {Number} m03 Component in column 0, row 3 position (index 3)
+	 * @param {Number} m10 Component in column 1, row 0 position (index 4)
+	 * @param {Number} m11 Component in column 1, row 1 position (index 5)
+	 * @param {Number} m12 Component in column 1, row 2 position (index 6)
+	 * @param {Number} m13 Component in column 1, row 3 position (index 7)
+	 * @param {Number} m20 Component in column 2, row 0 position (index 8)
+	 * @param {Number} m21 Component in column 2, row 1 position (index 9)
+	 * @param {Number} m22 Component in column 2, row 2 position (index 10)
+	 * @param {Number} m23 Component in column 2, row 3 position (index 11)
+	 * @param {Number} m30 Component in column 3, row 0 position (index 12)
+	 * @param {Number} m31 Component in column 3, row 1 position (index 13)
+	 * @param {Number} m32 Component in column 3, row 2 position (index 14)
+	 * @param {Number} m33 Component in column 3, row 3 position (index 15)
+	 * @returns {mat4} A new mat4
+	 */
+	mat4.fromValues = function(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33) {
+	    var out = new glMatrix.ARRAY_TYPE(16);
+	    out[0] = m00;
+	    out[1] = m01;
+	    out[2] = m02;
+	    out[3] = m03;
+	    out[4] = m10;
+	    out[5] = m11;
+	    out[6] = m12;
+	    out[7] = m13;
+	    out[8] = m20;
+	    out[9] = m21;
+	    out[10] = m22;
+	    out[11] = m23;
+	    out[12] = m30;
+	    out[13] = m31;
+	    out[14] = m32;
+	    out[15] = m33;
+	    return out;
+	};
+
+	/**
+	 * Set the components of a mat4 to the given values
+	 *
+	 * @param {mat4} out the receiving matrix
+	 * @param {Number} m00 Component in column 0, row 0 position (index 0)
+	 * @param {Number} m01 Component in column 0, row 1 position (index 1)
+	 * @param {Number} m02 Component in column 0, row 2 position (index 2)
+	 * @param {Number} m03 Component in column 0, row 3 position (index 3)
+	 * @param {Number} m10 Component in column 1, row 0 position (index 4)
+	 * @param {Number} m11 Component in column 1, row 1 position (index 5)
+	 * @param {Number} m12 Component in column 1, row 2 position (index 6)
+	 * @param {Number} m13 Component in column 1, row 3 position (index 7)
+	 * @param {Number} m20 Component in column 2, row 0 position (index 8)
+	 * @param {Number} m21 Component in column 2, row 1 position (index 9)
+	 * @param {Number} m22 Component in column 2, row 2 position (index 10)
+	 * @param {Number} m23 Component in column 2, row 3 position (index 11)
+	 * @param {Number} m30 Component in column 3, row 0 position (index 12)
+	 * @param {Number} m31 Component in column 3, row 1 position (index 13)
+	 * @param {Number} m32 Component in column 3, row 2 position (index 14)
+	 * @param {Number} m33 Component in column 3, row 3 position (index 15)
+	 * @returns {mat4} out
+	 */
+	mat4.set = function(out, m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33) {
+	    out[0] = m00;
+	    out[1] = m01;
+	    out[2] = m02;
+	    out[3] = m03;
+	    out[4] = m10;
+	    out[5] = m11;
+	    out[6] = m12;
+	    out[7] = m13;
+	    out[8] = m20;
+	    out[9] = m21;
+	    out[10] = m22;
+	    out[11] = m23;
+	    out[12] = m30;
+	    out[13] = m31;
+	    out[14] = m32;
+	    out[15] = m33;
+	    return out;
+	};
+
 
 	/**
 	 * Set a mat4 to the identity matrix
@@ -1824,10 +2389,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var tmp1;
 	  var minor0, minor1, minor2, minor3;
 
-	  var a0 = SIMD.Float32x4.load(a, 0);
-	  var a1 = SIMD.Float32x4.load(a, 4);
-	  var a2 = SIMD.Float32x4.load(a, 8);
-	  var a3 = SIMD.Float32x4.load(a, 12);
+	  a0 = SIMD.Float32x4.load(a, 0);
+	  a1 = SIMD.Float32x4.load(a, 4);
+	  a2 = SIMD.Float32x4.load(a, 8);
+	  a3 = SIMD.Float32x4.load(a, 12);
 
 	  // Transpose the source matrix.  Sort of.  Not a true transpose operation
 	  tmp1 = SIMD.Float32x4.shuffle(a0, a1, 0, 1, 4, 5);
@@ -2264,14 +2829,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	/**
-	 * Rotates a matrix by the given angle around the X axis
+	 * Rotates a matrix by the given angle around the X axis not using SIMD
 	 *
 	 * @param {mat4} out the receiving matrix
 	 * @param {mat4} a the matrix to rotate
 	 * @param {Number} rad the angle to rotate the matrix by
 	 * @returns {mat4} out
 	 */
-	mat4.rotateX = function (out, a, rad) {
+	mat4.scalar.rotateX = function (out, a, rad) {
 	    var s = Math.sin(rad),
 	        c = Math.cos(rad),
 	        a10 = a[4],
@@ -2307,14 +2872,57 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	/**
-	 * Rotates a matrix by the given angle around the Y axis
+	 * Rotates a matrix by the given angle around the X axis using SIMD
 	 *
 	 * @param {mat4} out the receiving matrix
 	 * @param {mat4} a the matrix to rotate
 	 * @param {Number} rad the angle to rotate the matrix by
 	 * @returns {mat4} out
 	 */
-	mat4.rotateY = function (out, a, rad) {
+	mat4.SIMD.rotateX = function (out, a, rad) {
+	    var s = SIMD.Float32x4.splat(Math.sin(rad)),
+	        c = SIMD.Float32x4.splat(Math.cos(rad));
+
+	    if (a !== out) { // If the source and destination differ, copy the unchanged rows
+	      out[0]  = a[0];
+	      out[1]  = a[1];
+	      out[2]  = a[2];
+	      out[3]  = a[3];
+	      out[12] = a[12];
+	      out[13] = a[13];
+	      out[14] = a[14];
+	      out[15] = a[15];
+	    }
+
+	    // Perform axis-specific matrix multiplication
+	    var a_1 = SIMD.Float32x4.load(a, 4);
+	    var a_2 = SIMD.Float32x4.load(a, 8);
+	    SIMD.Float32x4.store(out, 4,
+	                         SIMD.Float32x4.add(SIMD.Float32x4.mul(a_1, c), SIMD.Float32x4.mul(a_2, s)));
+	    SIMD.Float32x4.store(out, 8,
+	                         SIMD.Float32x4.sub(SIMD.Float32x4.mul(a_2, c), SIMD.Float32x4.mul(a_1, s)));
+	    return out;
+	};
+
+	/**
+	 * Rotates a matrix by the given angle around the X axis using SIMD if availabe and enabled
+	 *
+	 * @param {mat4} out the receiving matrix
+	 * @param {mat4} a the matrix to rotate
+	 * @param {Number} rad the angle to rotate the matrix by
+	 * @returns {mat4} out
+	 */
+	mat4.rotateX = glMatrix.USE_SIMD ? mat4.SIMD.rotateX : mat4.scalar.rotateX;
+
+	/**
+	 * Rotates a matrix by the given angle around the Y axis not using SIMD
+	 *
+	 * @param {mat4} out the receiving matrix
+	 * @param {mat4} a the matrix to rotate
+	 * @param {Number} rad the angle to rotate the matrix by
+	 * @returns {mat4} out
+	 */
+	mat4.scalar.rotateY = function (out, a, rad) {
 	    var s = Math.sin(rad),
 	        c = Math.cos(rad),
 	        a00 = a[0],
@@ -2350,14 +2958,57 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	/**
-	 * Rotates a matrix by the given angle around the Z axis
+	 * Rotates a matrix by the given angle around the Y axis using SIMD
 	 *
 	 * @param {mat4} out the receiving matrix
 	 * @param {mat4} a the matrix to rotate
 	 * @param {Number} rad the angle to rotate the matrix by
 	 * @returns {mat4} out
 	 */
-	mat4.rotateZ = function (out, a, rad) {
+	mat4.SIMD.rotateY = function (out, a, rad) {
+	    var s = SIMD.Float32x4.splat(Math.sin(rad)),
+	        c = SIMD.Float32x4.splat(Math.cos(rad));
+
+	    if (a !== out) { // If the source and destination differ, copy the unchanged rows
+	        out[4]  = a[4];
+	        out[5]  = a[5];
+	        out[6]  = a[6];
+	        out[7]  = a[7];
+	        out[12] = a[12];
+	        out[13] = a[13];
+	        out[14] = a[14];
+	        out[15] = a[15];
+	    }
+
+	    // Perform axis-specific matrix multiplication
+	    var a_0 = SIMD.Float32x4.load(a, 0);
+	    var a_2 = SIMD.Float32x4.load(a, 8);
+	    SIMD.Float32x4.store(out, 0,
+	                         SIMD.Float32x4.sub(SIMD.Float32x4.mul(a_0, c), SIMD.Float32x4.mul(a_2, s)));
+	    SIMD.Float32x4.store(out, 8,
+	                         SIMD.Float32x4.add(SIMD.Float32x4.mul(a_0, s), SIMD.Float32x4.mul(a_2, c)));
+	    return out;
+	};
+
+	/**
+	 * Rotates a matrix by the given angle around the Y axis if SIMD available and enabled
+	 *
+	 * @param {mat4} out the receiving matrix
+	 * @param {mat4} a the matrix to rotate
+	 * @param {Number} rad the angle to rotate the matrix by
+	 * @returns {mat4} out
+	 */
+	 mat4.rotateY = glMatrix.USE_SIMD ? mat4.SIMD.rotateY : mat4.scalar.rotateY;
+
+	/**
+	 * Rotates a matrix by the given angle around the Z axis not using SIMD
+	 *
+	 * @param {mat4} out the receiving matrix
+	 * @param {mat4} a the matrix to rotate
+	 * @param {Number} rad the angle to rotate the matrix by
+	 * @returns {mat4} out
+	 */
+	mat4.scalar.rotateZ = function (out, a, rad) {
 	    var s = Math.sin(rad),
 	        c = Math.cos(rad),
 	        a00 = a[0],
@@ -2391,6 +3042,49 @@ return /******/ (function(modules) { // webpackBootstrap
 	    out[7] = a13 * c - a03 * s;
 	    return out;
 	};
+
+	/**
+	 * Rotates a matrix by the given angle around the Z axis using SIMD
+	 *
+	 * @param {mat4} out the receiving matrix
+	 * @param {mat4} a the matrix to rotate
+	 * @param {Number} rad the angle to rotate the matrix by
+	 * @returns {mat4} out
+	 */
+	mat4.SIMD.rotateZ = function (out, a, rad) {
+	    var s = SIMD.Float32x4.splat(Math.sin(rad)),
+	        c = SIMD.Float32x4.splat(Math.cos(rad));
+
+	    if (a !== out) { // If the source and destination differ, copy the unchanged last row
+	        out[8]  = a[8];
+	        out[9]  = a[9];
+	        out[10] = a[10];
+	        out[11] = a[11];
+	        out[12] = a[12];
+	        out[13] = a[13];
+	        out[14] = a[14];
+	        out[15] = a[15];
+	    }
+
+	    // Perform axis-specific matrix multiplication
+	    var a_0 = SIMD.Float32x4.load(a, 0);
+	    var a_1 = SIMD.Float32x4.load(a, 4);
+	    SIMD.Float32x4.store(out, 0,
+	                         SIMD.Float32x4.add(SIMD.Float32x4.mul(a_0, c), SIMD.Float32x4.mul(a_1, s)));
+	    SIMD.Float32x4.store(out, 4,
+	                         SIMD.Float32x4.sub(SIMD.Float32x4.mul(a_1, c), SIMD.Float32x4.mul(a_0, s)));
+	    return out;
+	};
+
+	/**
+	 * Rotates a matrix by the given angle around the Z axis if SIMD available and enabled
+	 *
+	 * @param {mat4} out the receiving matrix
+	 * @param {mat4} a the matrix to rotate
+	 * @param {Number} rad the angle to rotate the matrix by
+	 * @returns {mat4} out
+	 */
+	 mat4.rotateZ = glMatrix.USE_SIMD ? mat4.SIMD.rotateZ : mat4.scalar.rotateZ;
 
 	/**
 	 * Creates a matrix from a vector translation
@@ -2660,6 +3354,66 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	/**
+	 * Returns the translation vector component of a transformation
+	 *  matrix. If a matrix is built with fromRotationTranslation,
+	 *  the returned vector will be the same as the translation vector
+	 *  originally supplied.
+	 * @param  {vec3} out Vector to receive translation component
+	 * @param  {mat4} mat Matrix to be decomposed (input)
+	 * @return {vec3} out
+	 */
+	mat4.getTranslation = function (out, mat) {
+	  out[0] = mat[12];
+	  out[1] = mat[13];
+	  out[2] = mat[14];
+
+	  return out;
+	};
+
+	/**
+	 * Returns a quaternion representing the rotational component
+	 *  of a transformation matrix. If a matrix is built with
+	 *  fromRotationTranslation, the returned quaternion will be the
+	 *  same as the quaternion originally supplied.
+	 * @param {quat} out Quaternion to receive the rotation component
+	 * @param {mat4} mat Matrix to be decomposed (input)
+	 * @return {quat} out
+	 */
+	mat4.getRotation = function (out, mat) {
+	  // Algorithm taken from http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
+	  var trace = mat[0] + mat[5] + mat[10];
+	  var S = 0;
+
+	  if (trace > 0) {
+	    S = Math.sqrt(trace + 1.0) * 2;
+	    out[3] = 0.25 * S;
+	    out[0] = (mat[6] - mat[9]) / S;
+	    out[1] = (mat[8] - mat[2]) / S;
+	    out[2] = (mat[1] - mat[4]) / S;
+	  } else if ((mat[0] > mat[5])&(mat[0] > mat[10])) {
+	    S = Math.sqrt(1.0 + mat[0] - mat[5] - mat[10]) * 2;
+	    out[3] = (mat[6] - mat[9]) / S;
+	    out[0] = 0.25 * S;
+	    out[1] = (mat[1] + mat[4]) / S;
+	    out[2] = (mat[8] + mat[2]) / S;
+	  } else if (mat[5] > mat[10]) {
+	    S = Math.sqrt(1.0 + mat[5] - mat[0] - mat[10]) * 2;
+	    out[3] = (mat[8] - mat[2]) / S;
+	    out[0] = (mat[1] + mat[4]) / S;
+	    out[1] = 0.25 * S;
+	    out[2] = (mat[6] + mat[9]) / S;
+	  } else {
+	    S = Math.sqrt(1.0 + mat[10] - mat[0] - mat[5]) * 2;
+	    out[3] = (mat[1] - mat[4]) / S;
+	    out[0] = (mat[8] + mat[2]) / S;
+	    out[1] = (mat[6] + mat[9]) / S;
+	    out[2] = 0.25 * S;
+	  }
+
+	  return out;
+	};
+
+	/**
 	 * Creates a matrix from a quaternion rotation, vector translation and vector scale
 	 * This is equivalent to (but much faster than):
 	 *
@@ -2781,6 +3535,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return out;
 	};
 
+	/**
+	 * Calculates a 4x4 matrix from the given quaternion
+	 *
+	 * @param {mat4} out mat4 receiving operation result
+	 * @param {quat} q Quaternion to create matrix from
+	 *
+	 * @returns {mat4} out
+	 */
 	mat4.fromQuat = function (out, q) {
 	    var x = q[0], y = q[1], z = q[2], w = q[3],
 	        x2 = x + x,
@@ -2893,7 +3655,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * with the still experiemental WebVR API.
 	 *
 	 * @param {mat4} out mat4 frustum matrix will be written into
-	 * @param {number} fov Object containing the following values: upDegrees, downDegrees, leftDegrees, rightDegrees
+	 * @param {Object} fov Object containing the following values: upDegrees, downDegrees, leftDegrees, rightDegrees
 	 * @param {number} near Near bound of the frustum
 	 * @param {number} far Far bound of the frustum
 	 * @returns {mat4} out
@@ -3050,7 +3812,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Returns a string representation of a mat4
 	 *
-	 * @param {mat4} mat matrix to represent as a string
+	 * @param {mat4} a matrix to represent as a string
 	 * @returns {String} string representation of the matrix
 	 */
 	mat4.str = function (a) {
@@ -3069,6 +3831,176 @@ return /******/ (function(modules) { // webpackBootstrap
 	mat4.frob = function (a) {
 	    return(Math.sqrt(Math.pow(a[0], 2) + Math.pow(a[1], 2) + Math.pow(a[2], 2) + Math.pow(a[3], 2) + Math.pow(a[4], 2) + Math.pow(a[5], 2) + Math.pow(a[6], 2) + Math.pow(a[7], 2) + Math.pow(a[8], 2) + Math.pow(a[9], 2) + Math.pow(a[10], 2) + Math.pow(a[11], 2) + Math.pow(a[12], 2) + Math.pow(a[13], 2) + Math.pow(a[14], 2) + Math.pow(a[15], 2) ))
 	};
+
+	/**
+	 * Adds two mat4's
+	 *
+	 * @param {mat4} out the receiving matrix
+	 * @param {mat4} a the first operand
+	 * @param {mat4} b the second operand
+	 * @returns {mat4} out
+	 */
+	mat4.add = function(out, a, b) {
+	    out[0] = a[0] + b[0];
+	    out[1] = a[1] + b[1];
+	    out[2] = a[2] + b[2];
+	    out[3] = a[3] + b[3];
+	    out[4] = a[4] + b[4];
+	    out[5] = a[5] + b[5];
+	    out[6] = a[6] + b[6];
+	    out[7] = a[7] + b[7];
+	    out[8] = a[8] + b[8];
+	    out[9] = a[9] + b[9];
+	    out[10] = a[10] + b[10];
+	    out[11] = a[11] + b[11];
+	    out[12] = a[12] + b[12];
+	    out[13] = a[13] + b[13];
+	    out[14] = a[14] + b[14];
+	    out[15] = a[15] + b[15];
+	    return out;
+	};
+
+	/**
+	 * Subtracts matrix b from matrix a
+	 *
+	 * @param {mat4} out the receiving matrix
+	 * @param {mat4} a the first operand
+	 * @param {mat4} b the second operand
+	 * @returns {mat4} out
+	 */
+	mat4.subtract = function(out, a, b) {
+	    out[0] = a[0] - b[0];
+	    out[1] = a[1] - b[1];
+	    out[2] = a[2] - b[2];
+	    out[3] = a[3] - b[3];
+	    out[4] = a[4] - b[4];
+	    out[5] = a[5] - b[5];
+	    out[6] = a[6] - b[6];
+	    out[7] = a[7] - b[7];
+	    out[8] = a[8] - b[8];
+	    out[9] = a[9] - b[9];
+	    out[10] = a[10] - b[10];
+	    out[11] = a[11] - b[11];
+	    out[12] = a[12] - b[12];
+	    out[13] = a[13] - b[13];
+	    out[14] = a[14] - b[14];
+	    out[15] = a[15] - b[15];
+	    return out;
+	};
+
+	/**
+	 * Alias for {@link mat4.subtract}
+	 * @function
+	 */
+	mat4.sub = mat4.subtract;
+
+	/**
+	 * Multiply each element of the matrix by a scalar.
+	 *
+	 * @param {mat4} out the receiving matrix
+	 * @param {mat4} a the matrix to scale
+	 * @param {Number} b amount to scale the matrix's elements by
+	 * @returns {mat4} out
+	 */
+	mat4.multiplyScalar = function(out, a, b) {
+	    out[0] = a[0] * b;
+	    out[1] = a[1] * b;
+	    out[2] = a[2] * b;
+	    out[3] = a[3] * b;
+	    out[4] = a[4] * b;
+	    out[5] = a[5] * b;
+	    out[6] = a[6] * b;
+	    out[7] = a[7] * b;
+	    out[8] = a[8] * b;
+	    out[9] = a[9] * b;
+	    out[10] = a[10] * b;
+	    out[11] = a[11] * b;
+	    out[12] = a[12] * b;
+	    out[13] = a[13] * b;
+	    out[14] = a[14] * b;
+	    out[15] = a[15] * b;
+	    return out;
+	};
+
+	/**
+	 * Adds two mat4's after multiplying each element of the second operand by a scalar value.
+	 *
+	 * @param {mat4} out the receiving vector
+	 * @param {mat4} a the first operand
+	 * @param {mat4} b the second operand
+	 * @param {Number} scale the amount to scale b's elements by before adding
+	 * @returns {mat4} out
+	 */
+	mat4.multiplyScalarAndAdd = function(out, a, b, scale) {
+	    out[0] = a[0] + (b[0] * scale);
+	    out[1] = a[1] + (b[1] * scale);
+	    out[2] = a[2] + (b[2] * scale);
+	    out[3] = a[3] + (b[3] * scale);
+	    out[4] = a[4] + (b[4] * scale);
+	    out[5] = a[5] + (b[5] * scale);
+	    out[6] = a[6] + (b[6] * scale);
+	    out[7] = a[7] + (b[7] * scale);
+	    out[8] = a[8] + (b[8] * scale);
+	    out[9] = a[9] + (b[9] * scale);
+	    out[10] = a[10] + (b[10] * scale);
+	    out[11] = a[11] + (b[11] * scale);
+	    out[12] = a[12] + (b[12] * scale);
+	    out[13] = a[13] + (b[13] * scale);
+	    out[14] = a[14] + (b[14] * scale);
+	    out[15] = a[15] + (b[15] * scale);
+	    return out;
+	};
+
+	/**
+	 * Returns whether or not the matrices have exactly the same elements in the same position (when compared with ===)
+	 *
+	 * @param {mat4} a The first matrix.
+	 * @param {mat4} b The second matrix.
+	 * @returns {Boolean} True if the matrices are equal, false otherwise.
+	 */
+	mat4.exactEquals = function (a, b) {
+	    return a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3] &&
+	           a[4] === b[4] && a[5] === b[5] && a[6] === b[6] && a[7] === b[7] &&
+	           a[8] === b[8] && a[9] === b[9] && a[10] === b[10] && a[11] === b[11] &&
+	           a[12] === b[12] && a[13] === b[13] && a[14] === b[14] && a[15] === b[15];
+	};
+
+	/**
+	 * Returns whether or not the matrices have approximately the same elements in the same position.
+	 *
+	 * @param {mat4} a The first matrix.
+	 * @param {mat4} b The second matrix.
+	 * @returns {Boolean} True if the matrices are equal, false otherwise.
+	 */
+	mat4.equals = function (a, b) {
+	    var a0  = a[0],  a1  = a[1],  a2  = a[2],  a3  = a[3],
+	        a4  = a[4],  a5  = a[5],  a6  = a[6],  a7  = a[7],
+	        a8  = a[8],  a9  = a[9],  a10 = a[10], a11 = a[11],
+	        a12 = a[12], a13 = a[13], a14 = a[14], a15 = a[15];
+
+	    var b0  = b[0],  b1  = b[1],  b2  = b[2],  b3  = b[3],
+	        b4  = b[4],  b5  = b[5],  b6  = b[6],  b7  = b[7],
+	        b8  = b[8],  b9  = b[9],  b10 = b[10], b11 = b[11],
+	        b12 = b[12], b13 = b[13], b14 = b[14], b15 = b[15];
+
+	    return (Math.abs(a0 - b0) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a0), Math.abs(b0)) &&
+	            Math.abs(a1 - b1) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a1), Math.abs(b1)) &&
+	            Math.abs(a2 - b2) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a2), Math.abs(b2)) &&
+	            Math.abs(a3 - b3) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a3), Math.abs(b3)) &&
+	            Math.abs(a4 - b4) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a4), Math.abs(b4)) &&
+	            Math.abs(a5 - b5) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a5), Math.abs(b5)) &&
+	            Math.abs(a6 - b6) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a6), Math.abs(b6)) &&
+	            Math.abs(a7 - b7) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a7), Math.abs(b7)) &&
+	            Math.abs(a8 - b8) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a8), Math.abs(b8)) &&
+	            Math.abs(a9 - b9) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a9), Math.abs(b9)) &&
+	            Math.abs(a10 - b10) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a10), Math.abs(b10)) &&
+	            Math.abs(a11 - b11) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a11), Math.abs(b11)) &&
+	            Math.abs(a12 - b12) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a12), Math.abs(b12)) &&
+	            Math.abs(a13 - b13) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a13), Math.abs(b13)) &&
+	            Math.abs(a14 - b14) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a14), Math.abs(b14)) &&
+	            Math.abs(a15 - b15) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a15), Math.abs(b15)));
+	};
+
 
 
 	module.exports = mat4;
@@ -3273,6 +4205,35 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	/**
+	 * Gets the rotation axis and angle for a given
+	 *  quaternion. If a quaternion is created with
+	 *  setAxisAngle, this method will return the same
+	 *  values as providied in the original parameter list
+	 *  OR functionally equivalent values.
+	 * Example: The quaternion formed by axis [0, 0, 1] and
+	 *  angle -90 is the same as the quaternion formed by
+	 *  [0, 0, 1] and 270. This method favors the latter.
+	 * @param  {vec3} out_axis  Vector receiving the axis of rotation
+	 * @param  {quat} q     Quaternion to be decomposed
+	 * @return {Number}     Angle, in radians, of the rotation
+	 */
+	quat.getAxisAngle = function(out_axis, q) {
+	    var rad = Math.acos(q[3]) * 2.0;
+	    var s = Math.sin(rad / 2.0);
+	    if (s != 0.0) {
+	        out_axis[0] = q[0] / s;
+	        out_axis[1] = q[1] / s;
+	        out_axis[2] = q[2] / s;
+	    } else {
+	        // If s is zero, return any axis (no rotation - axis does not matter)
+	        out_axis[0] = 1;
+	        out_axis[1] = 0;
+	        out_axis[2] = 0;
+	    }
+	    return rad;
+	};
+
+	/**
 	 * Adds two quat's
 	 *
 	 * @param {quat} out the receiving quaternion
@@ -3328,7 +4289,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @returns {quat} out
 	 */
 	quat.rotateX = function (out, a, rad) {
-	    rad *= 0.5; 
+	    rad *= 0.5;
 
 	    var ax = a[0], ay = a[1], az = a[2], aw = a[3],
 	        bx = Math.sin(rad), bw = Math.cos(rad);
@@ -3349,7 +4310,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @returns {quat} out
 	 */
 	quat.rotateY = function (out, a, rad) {
-	    rad *= 0.5; 
+	    rad *= 0.5;
 
 	    var ax = a[0], ay = a[1], az = a[2], aw = a[3],
 	        by = Math.sin(rad), bw = Math.cos(rad);
@@ -3370,7 +4331,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @returns {quat} out
 	 */
 	quat.rotateZ = function (out, a, rad) {
-	    rad *= 0.5; 
+	    rad *= 0.5;
 
 	    var ax = a[0], ay = a[1], az = a[2], aw = a[3],
 	        bz = Math.sin(rad), bw = Math.cos(rad);
@@ -3458,8 +4419,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        sinom  = Math.sin(omega);
 	        scale0 = Math.sin((1.0 - t) * omega) / sinom;
 	        scale1 = Math.sin(t * omega) / sinom;
-	    } else {        
-	        // "from" and "to" quaternions are very close 
+	    } else {
+	        // "from" and "to" quaternions are very close
 	        //  ... so we can do a linear interpolation
 	        scale0 = 1.0 - t;
 	        scale1 = t;
@@ -3469,7 +4430,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    out[1] = scale0 * ay + scale1 * by;
 	    out[2] = scale0 * az + scale1 * bz;
 	    out[3] = scale0 * aw + scale1 * bw;
-	    
+
 	    return out;
 	};
 
@@ -3487,12 +4448,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	quat.sqlerp = (function () {
 	  var temp1 = quat.create();
 	  var temp2 = quat.create();
-	  
+
 	  return function (out, a, b, c, d, t) {
 	    quat.slerp(temp1, a, d, t);
 	    quat.slerp(temp2, b, c, t);
 	    quat.slerp(out, temp1, temp2, 2 * t * (1 - t));
-	    
+
 	    return out;
 	  };
 	}());
@@ -3508,7 +4469,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var a0 = a[0], a1 = a[1], a2 = a[2], a3 = a[3],
 	        dot = a0*a0 + a1*a1 + a2*a2 + a3*a3,
 	        invDot = dot ? 1.0/dot : 0;
-	    
+
 	    // TODO: Would be faster to return [0,0,0,0] immediately if dot == 0
 
 	    out[0] = -a0*invDot;
@@ -3608,7 +4569,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          i = 2;
 	        var j = (i+1)%3;
 	        var k = (i+2)%3;
-	        
+
 	        fRoot = Math.sqrt(m[i*3+i]-m[j*3+j]-m[k*3+k] + 1.0);
 	        out[i] = 0.5 * fRoot;
 	        fRoot = 0.5 / fRoot;
@@ -3616,19 +4577,37 @@ return /******/ (function(modules) { // webpackBootstrap
 	        out[j] = (m[j*3+i] + m[i*3+j]) * fRoot;
 	        out[k] = (m[k*3+i] + m[i*3+k]) * fRoot;
 	    }
-	    
+
 	    return out;
 	};
 
 	/**
 	 * Returns a string representation of a quatenion
 	 *
-	 * @param {quat} vec vector to represent as a string
+	 * @param {quat} a vector to represent as a string
 	 * @returns {String} string representation of the vector
 	 */
 	quat.str = function (a) {
 	    return 'quat(' + a[0] + ', ' + a[1] + ', ' + a[2] + ', ' + a[3] + ')';
 	};
+
+	/**
+	 * Returns whether or not the quaternions have exactly the same elements in the same position (when compared with ===)
+	 *
+	 * @param {quat} a The first quaternion.
+	 * @param {quat} b The second quaternion.
+	 * @returns {Boolean} True if the vectors are equal, false otherwise.
+	 */
+	quat.exactEquals = vec4.exactEquals;
+
+	/**
+	 * Returns whether or not the quaternions have approximately the same elements in the same position.
+	 *
+	 * @param {quat} a The first vector.
+	 * @param {quat} b The second vector.
+	 * @returns {Boolean} True if the vectors are equal, false otherwise.
+	 */
+	quat.equals = vec4.equals;
 
 	module.exports = quat;
 
@@ -3817,6 +4796,34 @@ return /******/ (function(modules) { // webpackBootstrap
 	vec3.div = vec3.divide;
 
 	/**
+	 * Math.ceil the components of a vec3
+	 *
+	 * @param {vec3} out the receiving vector
+	 * @param {vec3} a vector to ceil
+	 * @returns {vec3} out
+	 */
+	vec3.ceil = function (out, a) {
+	    out[0] = Math.ceil(a[0]);
+	    out[1] = Math.ceil(a[1]);
+	    out[2] = Math.ceil(a[2]);
+	    return out;
+	};
+
+	/**
+	 * Math.floor the components of a vec3
+	 *
+	 * @param {vec3} out the receiving vector
+	 * @param {vec3} a vector to floor
+	 * @returns {vec3} out
+	 */
+	vec3.floor = function (out, a) {
+	    out[0] = Math.floor(a[0]);
+	    out[1] = Math.floor(a[1]);
+	    out[2] = Math.floor(a[2]);
+	    return out;
+	};
+
+	/**
 	 * Returns the minimum of two vec3's
 	 *
 	 * @param {vec3} out the receiving vector
@@ -3843,6 +4850,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	    out[0] = Math.max(a[0], b[0]);
 	    out[1] = Math.max(a[1], b[1]);
 	    out[2] = Math.max(a[2], b[2]);
+	    return out;
+	};
+
+	/**
+	 * Math.round the components of a vec3
+	 *
+	 * @param {vec3} out the receiving vector
+	 * @param {vec3} a vector to round
+	 * @returns {vec3} out
+	 */
+	vec3.round = function (out, a) {
+	    out[0] = Math.round(a[0]);
+	    out[1] = Math.round(a[1]);
+	    out[2] = Math.round(a[2]);
 	    return out;
 	};
 
@@ -4070,11 +5091,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      factor2 = factorTimes2 * (t - 2) + t,
 	      factor3 = factorTimes2 * (t - 1),
 	      factor4 = factorTimes2 * (3 - 2 * t);
-	  
+
 	  out[0] = a[0] * factor1 + b[0] * factor2 + c[0] * factor3 + d[0] * factor4;
 	  out[1] = a[1] * factor1 + b[1] * factor2 + c[1] * factor3 + d[1] * factor4;
 	  out[2] = a[2] * factor1 + b[2] * factor2 + c[2] * factor3 + d[2] * factor4;
-	  
+
 	  return out;
 	};
 
@@ -4097,11 +5118,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      factor2 = 3 * t * inverseFactorTimesTwo,
 	      factor3 = 3 * factorTimes2 * inverseFactor,
 	      factor4 = factorTimes2 * t;
-	  
+
 	  out[0] = a[0] * factor1 + b[0] * factor2 + c[0] * factor3 + d[0] * factor4;
 	  out[1] = a[1] * factor1 + b[1] * factor2 + c[1] * factor3 + d[1] * factor4;
 	  out[2] = a[2] * factor1 + b[2] * factor2 + c[2] * factor3 + d[2] * factor4;
-	  
+
 	  return out;
 	};
 
@@ -4229,17 +5250,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	  	p[0] = a[0] - b[0];
 	  	p[1] = a[1] - b[1];
 	  	p[2] = a[2] - b[2];
-	  
+
 	  	//perform rotation
 	  	r[0] = p[2]*Math.sin(c) + p[0]*Math.cos(c);
 	  	r[1] = p[1];
 	  	r[2] = p[2]*Math.cos(c) - p[0]*Math.sin(c);
-	  
+
 	  	//translate to correct position
 	  	out[0] = r[0] + b[0];
 	  	out[1] = r[1] + b[1];
 	  	out[2] = r[2] + b[2];
-	  
+
 	  	return out;
 	};
 
@@ -4257,17 +5278,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	  	p[0] = a[0] - b[0];
 	  	p[1] = a[1] - b[1];
 	  	p[2] = a[2] - b[2];
-	  
+
 	  	//perform rotation
 	  	r[0] = p[0]*Math.cos(c) - p[1]*Math.sin(c);
 	  	r[1] = p[0]*Math.sin(c) + p[1]*Math.cos(c);
 	  	r[2] = p[2];
-	  
+
 	  	//translate to correct position
 	  	out[0] = r[0] + b[0];
 	  	out[1] = r[1] + b[1];
 	  	out[2] = r[2] + b[2];
-	  
+
 	  	return out;
 	};
 
@@ -4295,7 +5316,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if(!offset) {
 	            offset = 0;
 	        }
-	        
+
 	        if(count) {
 	            l = Math.min((count * stride) + offset, a.length);
 	        } else {
@@ -4307,7 +5328,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            fn(vec, vec, arg);
 	            a[i] = vec[0]; a[i+1] = vec[1]; a[i+2] = vec[2];
 	        }
-	        
+
 	        return a;
 	    };
 	})();
@@ -4319,30 +5340,56 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @returns {Number} The angle in radians
 	 */
 	vec3.angle = function(a, b) {
-	   
+
 	    var tempA = vec3.fromValues(a[0], a[1], a[2]);
 	    var tempB = vec3.fromValues(b[0], b[1], b[2]);
-	 
+
 	    vec3.normalize(tempA, tempA);
 	    vec3.normalize(tempB, tempB);
-	 
+
 	    var cosine = vec3.dot(tempA, tempB);
 
 	    if(cosine > 1.0){
 	        return 0;
 	    } else {
 	        return Math.acos(cosine);
-	    }     
+	    }
 	};
 
 	/**
 	 * Returns a string representation of a vector
 	 *
-	 * @param {vec3} vec vector to represent as a string
+	 * @param {vec3} a vector to represent as a string
 	 * @returns {String} string representation of the vector
 	 */
 	vec3.str = function (a) {
 	    return 'vec3(' + a[0] + ', ' + a[1] + ', ' + a[2] + ')';
+	};
+
+	/**
+	 * Returns whether or not the vectors have exactly the same elements in the same position (when compared with ===)
+	 *
+	 * @param {vec3} a The first vector.
+	 * @param {vec3} b The second vector.
+	 * @returns {Boolean} True if the vectors are equal, false otherwise.
+	 */
+	vec3.exactEquals = function (a, b) {
+	    return a[0] === b[0] && a[1] === b[1] && a[2] === b[2];
+	};
+
+	/**
+	 * Returns whether or not the vectors have approximately the same elements in the same position.
+	 *
+	 * @param {vec3} a The first vector.
+	 * @param {vec3} b The second vector.
+	 * @returns {Boolean} True if the vectors are equal, false otherwise.
+	 */
+	vec3.equals = function (a, b) {
+	    var a0 = a[0], a1 = a[1], a2 = a[2];
+	    var b0 = b[0], b1 = b[1], b2 = b[2];
+	    return (Math.abs(a0 - b0) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a0), Math.abs(b0)) &&
+	            Math.abs(a1 - b1) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a1), Math.abs(b1)) &&
+	            Math.abs(a2 - b2) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a2), Math.abs(b2)));
 	};
 
 	module.exports = vec3;
@@ -4543,6 +5590,36 @@ return /******/ (function(modules) { // webpackBootstrap
 	vec4.div = vec4.divide;
 
 	/**
+	 * Math.ceil the components of a vec4
+	 *
+	 * @param {vec4} out the receiving vector
+	 * @param {vec4} a vector to ceil
+	 * @returns {vec4} out
+	 */
+	vec4.ceil = function (out, a) {
+	    out[0] = Math.ceil(a[0]);
+	    out[1] = Math.ceil(a[1]);
+	    out[2] = Math.ceil(a[2]);
+	    out[3] = Math.ceil(a[3]);
+	    return out;
+	};
+
+	/**
+	 * Math.floor the components of a vec4
+	 *
+	 * @param {vec4} out the receiving vector
+	 * @param {vec4} a vector to floor
+	 * @returns {vec4} out
+	 */
+	vec4.floor = function (out, a) {
+	    out[0] = Math.floor(a[0]);
+	    out[1] = Math.floor(a[1]);
+	    out[2] = Math.floor(a[2]);
+	    out[3] = Math.floor(a[3]);
+	    return out;
+	};
+
+	/**
 	 * Returns the minimum of two vec4's
 	 *
 	 * @param {vec4} out the receiving vector
@@ -4571,6 +5648,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	    out[1] = Math.max(a[1], b[1]);
 	    out[2] = Math.max(a[2], b[2]);
 	    out[3] = Math.max(a[3], b[3]);
+	    return out;
+	};
+
+	/**
+	 * Math.round the components of a vec4
+	 *
+	 * @param {vec4} out the receiving vector
+	 * @param {vec4} a vector to round
+	 * @returns {vec4} out
+	 */
+	vec4.round = function (out, a) {
+	    out[0] = Math.round(a[0]);
+	    out[1] = Math.round(a[1]);
+	    out[2] = Math.round(a[2]);
+	    out[3] = Math.round(a[3]);
 	    return out;
 	};
 
@@ -4861,7 +5953,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if(!offset) {
 	            offset = 0;
 	        }
-	        
+
 	        if(count) {
 	            l = Math.min((count * stride) + offset, a.length);
 	        } else {
@@ -4873,7 +5965,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            fn(vec, vec, arg);
 	            a[i] = vec[0]; a[i+1] = vec[1]; a[i+2] = vec[2]; a[i+3] = vec[3];
 	        }
-	        
+
 	        return a;
 	    };
 	})();
@@ -4881,11 +5973,38 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Returns a string representation of a vector
 	 *
-	 * @param {vec4} vec vector to represent as a string
+	 * @param {vec4} a vector to represent as a string
 	 * @returns {String} string representation of the vector
 	 */
 	vec4.str = function (a) {
 	    return 'vec4(' + a[0] + ', ' + a[1] + ', ' + a[2] + ', ' + a[3] + ')';
+	};
+
+	/**
+	 * Returns whether or not the vectors have exactly the same elements in the same position (when compared with ===)
+	 *
+	 * @param {vec4} a The first vector.
+	 * @param {vec4} b The second vector.
+	 * @returns {Boolean} True if the vectors are equal, false otherwise.
+	 */
+	vec4.exactEquals = function (a, b) {
+	    return a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3];
+	};
+
+	/**
+	 * Returns whether or not the vectors have approximately the same elements in the same position.
+	 *
+	 * @param {vec4} a The first vector.
+	 * @param {vec4} b The second vector.
+	 * @returns {Boolean} True if the vectors are equal, false otherwise.
+	 */
+	vec4.equals = function (a, b) {
+	    var a0 = a[0], a1 = a[1], a2 = a[2], a3 = a[3];
+	    var b0 = b[0], b1 = b[1], b2 = b[2], b3 = b[3];
+	    return (Math.abs(a0 - b0) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a0), Math.abs(b0)) &&
+	            Math.abs(a1 - b1) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a1), Math.abs(b1)) &&
+	            Math.abs(a2 - b2) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a2), Math.abs(b2)) &&
+	            Math.abs(a3 - b3) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a3), Math.abs(b3)));
 	};
 
 	module.exports = vec4;
@@ -5064,6 +6183,32 @@ return /******/ (function(modules) { // webpackBootstrap
 	vec2.div = vec2.divide;
 
 	/**
+	 * Math.ceil the components of a vec2
+	 *
+	 * @param {vec2} out the receiving vector
+	 * @param {vec2} a vector to ceil
+	 * @returns {vec2} out
+	 */
+	vec2.ceil = function (out, a) {
+	    out[0] = Math.ceil(a[0]);
+	    out[1] = Math.ceil(a[1]);
+	    return out;
+	};
+
+	/**
+	 * Math.floor the components of a vec2
+	 *
+	 * @param {vec2} out the receiving vector
+	 * @param {vec2} a vector to floor
+	 * @returns {vec2} out
+	 */
+	vec2.floor = function (out, a) {
+	    out[0] = Math.floor(a[0]);
+	    out[1] = Math.floor(a[1]);
+	    return out;
+	};
+
+	/**
 	 * Returns the minimum of two vec2's
 	 *
 	 * @param {vec2} out the receiving vector
@@ -5088,6 +6233,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	vec2.max = function(out, a, b) {
 	    out[0] = Math.max(a[0], b[0]);
 	    out[1] = Math.max(a[1], b[1]);
+	    return out;
+	};
+
+	/**
+	 * Math.round the components of a vec2
+	 *
+	 * @param {vec2} out the receiving vector
+	 * @param {vec2} a vector to round
+	 * @returns {vec2} out
+	 */
+	vec2.round = function (out, a) {
+	    out[0] = Math.round(a[0]);
+	    out[1] = Math.round(a[1]);
 	    return out;
 	};
 
@@ -5359,7 +6517,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @returns {vec2} out
 	 */
 	vec2.transformMat4 = function(out, a, m) {
-	    var x = a[0], 
+	    var x = a[0],
 	        y = a[1];
 	    out[0] = m[0] * x + m[4] * y + m[12];
 	    out[1] = m[1] * x + m[5] * y + m[13];
@@ -5390,7 +6548,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if(!offset) {
 	            offset = 0;
 	        }
-	        
+
 	        if(count) {
 	            l = Math.min((count * stride) + offset, a.length);
 	        } else {
@@ -5402,7 +6560,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            fn(vec, vec, arg);
 	            a[i] = vec[0]; a[i+1] = vec[1];
 	        }
-	        
+
 	        return a;
 	    };
 	})();
@@ -5410,11 +6568,36 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Returns a string representation of a vector
 	 *
-	 * @param {vec2} vec vector to represent as a string
+	 * @param {vec2} a vector to represent as a string
 	 * @returns {String} string representation of the vector
 	 */
 	vec2.str = function (a) {
 	    return 'vec2(' + a[0] + ', ' + a[1] + ')';
+	};
+
+	/**
+	 * Returns whether or not the vectors exactly have the same elements in the same position (when compared with ===)
+	 *
+	 * @param {vec2} a The first vector.
+	 * @param {vec2} b The second vector.
+	 * @returns {Boolean} True if the vectors are equal, false otherwise.
+	 */
+	vec2.exactEquals = function (a, b) {
+	    return a[0] === b[0] && a[1] === b[1];
+	};
+
+	/**
+	 * Returns whether or not the vectors have approximately the same elements in the same position.
+	 *
+	 * @param {vec2} a The first vector.
+	 * @param {vec2} b The second vector.
+	 * @returns {Boolean} True if the vectors are equal, false otherwise.
+	 */
+	vec2.equals = function (a, b) {
+	    var a0 = a[0], a1 = a[1];
+	    var b0 = b[0], b1 = b[1];
+	    return (Math.abs(a0 - b0) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a0), Math.abs(b0)) &&
+	            Math.abs(a1 - b1) <= glMatrix.EPSILON*Math.max(1.0, Math.abs(a1), Math.abs(b1)));
 	};
 
 	module.exports = vec2;
