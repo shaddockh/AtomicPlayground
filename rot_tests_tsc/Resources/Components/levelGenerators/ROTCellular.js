@@ -70,4 +70,5 @@ var ROTCellular = (function (_super) {
     };
     return ROTCellular;
 }(BaseLevelGenerator_1.default));
-module.exports = ROTCellular;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = ROTCellular;

@@ -77,4 +77,5 @@ var LevelGenerationChooser = (function (_super) {
     };
     return LevelGenerationChooser;
 }(Atomic.JSComponent));
-module.exports = LevelGenerationChooser;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = LevelGenerationChooser;

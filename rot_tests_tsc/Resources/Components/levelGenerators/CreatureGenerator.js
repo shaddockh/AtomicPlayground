@@ -34,4 +34,5 @@ var CreatureGenerator = (function (_super) {
     };
     return CreatureGenerator;
 }(CustomJSComponent_1.default));
-module.exports = CreatureGenerator;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = CreatureGenerator;

@@ -44,4 +44,5 @@ var ROTIceyMaze = (function (_super) {
     };
     return ROTIceyMaze;
 }(BaseLevelGenerator_1.default));
-module.exports = ROTIceyMaze;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = ROTIceyMaze;

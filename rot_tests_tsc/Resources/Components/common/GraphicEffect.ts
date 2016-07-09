@@ -4,7 +4,7 @@ import CustomJSComponent from 'CustomJSComponent';
 import gameState from '../../Modules/gameState';
 //import * as triggerEvent from 'atomicTriggerEvent';
 
-class GraphicEffect extends CustomJSComponent {
+export default class GraphicEffect extends CustomJSComponent {
     inspectorFields = {
         debug: false,
         duration: 1,
@@ -47,4 +47,3 @@ class GraphicEffect extends CustomJSComponent {
         }
     }
 }
-export = GraphicEffect;

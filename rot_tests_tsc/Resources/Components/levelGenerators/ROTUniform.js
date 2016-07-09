@@ -56,4 +56,5 @@ var ROTUniform = (function (_super) {
     };
     return ROTUniform;
 }(BaseLevelGenerator_1.default));
-module.exports = ROTUniform;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = ROTUniform;

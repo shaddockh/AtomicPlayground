@@ -20,4 +20,5 @@ var ActionLogger = (function (_super) {
     };
     return ActionLogger;
 }(CustomJSComponent_1.default));
-module.exports = ActionLogger;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = ActionLogger;

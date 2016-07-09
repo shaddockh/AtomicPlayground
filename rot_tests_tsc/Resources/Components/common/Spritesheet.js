@@ -32,4 +32,5 @@ var SpriteSheet = (function (_super) {
     };
     return SpriteSheet;
 }(CustomJSComponent_1.default));
-module.exports = SpriteSheet;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = SpriteSheet;

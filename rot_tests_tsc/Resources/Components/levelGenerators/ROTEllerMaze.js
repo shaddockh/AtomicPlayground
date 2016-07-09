@@ -40,4 +40,5 @@ var ROTEllerMaze = (function (_super) {
     };
     return ROTEllerMaze;
 }(BaseLevelGenerator_1.default));
-module.exports = ROTEllerMaze;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = ROTEllerMaze;

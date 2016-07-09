@@ -14,7 +14,7 @@ import CustomJSComponent from 'CustomJSComponent';
  *   onClose: 'Sounds/customsound2.ogg'
  * }
  */
-class EventSound extends CustomJSComponent {
+export default class EventSound extends CustomJSComponent {
     inspectorFields = {
         debug: false,
         eventMessage01: [Atomic.VAR_STRING],
@@ -62,4 +62,3 @@ class EventSound extends CustomJSComponent {
         }
     }
 }
-export = EventSound;

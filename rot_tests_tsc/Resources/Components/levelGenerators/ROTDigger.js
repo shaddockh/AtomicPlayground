@@ -60,4 +60,5 @@ var ROTDigger = (function (_super) {
     };
     return ROTDigger;
 }(BaseLevelGenerator_1.default));
-module.exports = ROTDigger;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = ROTDigger;

@@ -4,7 +4,7 @@ import MapData from '../../Modules/MapData';
 import * as utils from '../../Modules/utils';
 
 import CustomJSComponent from 'CustomJSComponent';
-class CreatureGenerator extends CustomJSComponent {
+export default class CreatureGenerator extends CustomJSComponent {
 
     inspectorFields = {
         debug: false,
@@ -30,4 +30,3 @@ class CreatureGenerator extends CustomJSComponent {
 
     onPlaceCreatures = this.buildCreatures;
 }
-export = CreatureGenerator;

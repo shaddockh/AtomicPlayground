@@ -52,4 +52,5 @@ var GraphicEffect = (function (_super) {
     };
     return GraphicEffect;
 }(CustomJSComponent_1.default));
-module.exports = GraphicEffect;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = GraphicEffect;

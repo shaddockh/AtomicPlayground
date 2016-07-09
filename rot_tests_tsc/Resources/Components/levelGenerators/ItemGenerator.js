@@ -34,4 +34,5 @@ var ItemGenerator = (function (_super) {
     };
     return ItemGenerator;
 }(CustomJSComponent_1.default));
-module.exports = ItemGenerator;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = ItemGenerator;

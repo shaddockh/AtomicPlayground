@@ -3,7 +3,7 @@ import * as blueprintlib from 'atomic-blueprintlib';
 import * as triggerEvent from 'atomicTriggerEvent';
 import { uiChannel, levelChannel } from '../../Modules/gameChannels';
 
-class LevelGenerationChooser extends Atomic.JSComponent {
+export default class LevelGenerationChooser extends Atomic.JSComponent {
 
     generatorNode: Atomic.Node = null;
     runNode: Atomic.Node = null;
@@ -76,4 +76,3 @@ class LevelGenerationChooser extends Atomic.JSComponent {
         }
     }
 }
-export = LevelGenerationChooser;

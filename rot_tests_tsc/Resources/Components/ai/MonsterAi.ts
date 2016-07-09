@@ -11,7 +11,7 @@ import * as metrics from 'metricsGatherer';
 import gameState from '../../Modules/gameState';
 import Entity = require('../common/Entity');
 
-class MonsterAi extends CustomJSComponent {
+export default class MonsterAi extends CustomJSComponent {
 
     inspectorFields = {
         debug: false,
@@ -190,4 +190,3 @@ class MonsterAi extends CustomJSComponent {
     }
 
 }
-export = MonsterAi;

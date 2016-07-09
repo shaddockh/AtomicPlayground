@@ -45,4 +45,5 @@ var Tile = (function (_super) {
     };
     return Tile;
 }(CustomJSComponent_1.default));
-module.exports = Tile;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = Tile;

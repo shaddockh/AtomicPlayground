@@ -40,4 +40,5 @@ var ROTDividedMaze = (function (_super) {
     };
     return ROTDividedMaze;
 }(BaseLevelGenerator_1.default));
-module.exports = ROTDividedMaze;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = ROTDividedMaze;

@@ -126,4 +126,5 @@ var HeroAi = (function (_super) {
     };
     return HeroAi;
 }(CustomJSComponent_1.default));
-module.exports = HeroAi;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = HeroAi;

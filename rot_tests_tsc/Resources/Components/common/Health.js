@@ -34,4 +34,5 @@ var Health = (function (_super) {
     };
     return Health;
 }(CustomJSComponent_1.default));
-module.exports = Health;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = Health;

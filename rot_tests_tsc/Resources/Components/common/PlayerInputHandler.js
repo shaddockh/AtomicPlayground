@@ -115,4 +115,5 @@ var PlayerInputHandler = (function (_super) {
     };
     return PlayerInputHandler;
 }(CustomJSComponent_1.default));
-module.exports = PlayerInputHandler;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = PlayerInputHandler;

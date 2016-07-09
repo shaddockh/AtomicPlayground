@@ -48,4 +48,5 @@ var ROTRogue = (function (_super) {
     };
     return ROTRogue;
 }(BaseLevelGenerator_1.default));
-module.exports = ROTRogue;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = ROTRogue;

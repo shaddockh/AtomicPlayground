@@ -58,4 +58,5 @@ var EventSound = (function (_super) {
     };
     return EventSound;
 }(CustomJSComponent_1.default));
-module.exports = EventSound;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = EventSound;

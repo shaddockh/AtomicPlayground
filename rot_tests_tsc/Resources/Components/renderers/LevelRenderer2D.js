@@ -177,4 +177,5 @@ var LevelRenderer2D = (function (_super) {
     };
     return LevelRenderer2D;
 }(CustomJSComponent_1.default));
-module.exports = LevelRenderer2D;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = LevelRenderer2D;

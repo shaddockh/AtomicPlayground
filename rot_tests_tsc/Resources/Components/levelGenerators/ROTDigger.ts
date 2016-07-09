@@ -4,7 +4,7 @@ import ROT = require('rot-js');
 import MapData from '../../Modules/MapData';
 import BaseLevelGenerator from './BaseLevelGenerator';
 
-class ROTDigger extends BaseLevelGenerator {
+export default class ROTDigger extends BaseLevelGenerator {
 
     inspectorFields = {
         debug: false,
@@ -59,4 +59,3 @@ class ROTDigger extends BaseLevelGenerator {
     }
 
 }
-export = ROTDigger;

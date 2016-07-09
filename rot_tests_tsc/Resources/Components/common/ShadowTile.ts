@@ -8,7 +8,7 @@ import gameState from '../../Modules/gameState';
  * is what is provided in the triggerPlatforms property.  Can also fire a message if the
  * platform does not match.
  */
-class ShadowTile extends CustomJSComponent {
+export default class ShadowTile extends CustomJSComponent {
     inspectorFields = {
         platformDisable: [Atomic.VAR_STRINGVECTOR, ['HTML5']],
         debug: false
@@ -30,4 +30,3 @@ class ShadowTile extends CustomJSComponent {
         }
     }
 }
-export = ShadowTile;

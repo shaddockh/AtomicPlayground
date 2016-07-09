@@ -39,4 +39,5 @@ var OverviewCameraController = (function (_super) {
     };
     return OverviewCameraController;
 }(Atomic.JSComponent));
-module.exports = OverviewCameraController;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = OverviewCameraController;

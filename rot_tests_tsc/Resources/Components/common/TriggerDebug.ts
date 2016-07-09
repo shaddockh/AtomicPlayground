@@ -5,7 +5,7 @@ import CustomJSComponent from 'CustomJSComponent';
 /**
  * Simple component that will listen for trigger messages and report on them
  */
-class TriggerDebug extends CustomJSComponent {
+export default class TriggerDebug extends CustomJSComponent {
     constructor() {
         super();
         this.debug = true;
@@ -15,5 +15,3 @@ class TriggerDebug extends CustomJSComponent {
         this.DEBUG(`Got a message: ${msg}`);
     }
 }
-
-export = TriggerDebug;

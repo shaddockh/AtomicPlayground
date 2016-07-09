@@ -48,4 +48,5 @@ var Potion = (function (_super) {
     };
     return Potion;
 }(CustomJSComponent_1.default));
-module.exports = Potion;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = Potion;

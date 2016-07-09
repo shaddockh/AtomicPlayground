@@ -3,7 +3,7 @@
 import * as triggerEvent from 'atomicTriggerEvent';
 
 import CustomJSComponent from 'CustomJSComponent';
-class Potion extends CustomJSComponent {
+export default class Potion extends CustomJSComponent {
 
     inspectorFields = {
         debug: false,
@@ -47,4 +47,3 @@ class Potion extends CustomJSComponent {
         }
     }
 }
-export = Potion;

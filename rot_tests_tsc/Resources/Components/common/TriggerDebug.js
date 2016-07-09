@@ -20,4 +20,5 @@ var TriggerDebug = (function (_super) {
     };
     return TriggerDebug;
 }(CustomJSComponent_1.default));
-module.exports = TriggerDebug;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = TriggerDebug;

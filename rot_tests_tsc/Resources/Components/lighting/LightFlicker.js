@@ -73,4 +73,5 @@ var LightFlicker = (function (_super) {
     LightFlicker.LIGHT = 2;
     return LightFlicker;
 }(Atomic.JSComponent));
-module.exports = LightFlicker;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = LightFlicker;

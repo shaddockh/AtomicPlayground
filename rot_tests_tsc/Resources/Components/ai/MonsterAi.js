@@ -152,4 +152,5 @@ var MonsterAi = (function (_super) {
     };
     return MonsterAi;
 }(CustomJSComponent_1.default));
-module.exports = MonsterAi;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = MonsterAi;

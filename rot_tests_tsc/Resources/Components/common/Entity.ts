@@ -3,7 +3,7 @@
 import CustomJSComponent from '../../Modules/CustomJSComponent';
 import gameState from '../../Modules/gameState';
 
-class Entity extends CustomJSComponent {
+export default class Entity extends CustomJSComponent {
     inspectorFields = {
         debug: false,
         blocksPath: false,
@@ -65,5 +65,3 @@ class Entity extends CustomJSComponent {
         gameState.getCurrentLevel().mapData.removeEntity(this.mapEntity);
     }
 }
-
-export = Entity;

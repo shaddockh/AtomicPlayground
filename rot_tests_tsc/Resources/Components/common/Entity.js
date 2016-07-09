@@ -64,4 +64,5 @@ var Entity = (function (_super) {
     };
     return Entity;
 }(CustomJSComponent_1.default));
-module.exports = Entity;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = Entity;

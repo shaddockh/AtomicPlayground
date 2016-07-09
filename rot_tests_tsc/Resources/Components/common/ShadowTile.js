@@ -37,4 +37,5 @@ var ShadowTile = (function (_super) {
     };
     return ShadowTile;
 }(CustomJSComponent_1.default));
-module.exports = ShadowTile;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = ShadowTile;

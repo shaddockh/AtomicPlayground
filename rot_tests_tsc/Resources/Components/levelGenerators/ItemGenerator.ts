@@ -4,7 +4,7 @@ import MapData from '../../Modules/MapData';
 import * as utils from '../../Modules/utils';
 
 import CustomJSComponent from 'CustomJSComponent';
-class ItemGenerator extends CustomJSComponent {
+export default class ItemGenerator extends CustomJSComponent {
 
     inspectorFields = {
         debug: false,
@@ -29,4 +29,3 @@ class ItemGenerator extends CustomJSComponent {
 
     onPlaceItems = this.buildItems;
 }
-export = ItemGenerator;

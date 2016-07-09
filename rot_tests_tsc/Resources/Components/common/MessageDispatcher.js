@@ -73,4 +73,5 @@ var MessageDispatcher = (function (_super) {
     };
     return MessageDispatcher;
 }(CustomJSComponent_1.default));
-module.exports = MessageDispatcher;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = MessageDispatcher;

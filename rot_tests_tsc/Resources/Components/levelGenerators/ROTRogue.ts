@@ -4,7 +4,7 @@ import ROT = require('rot-js');
 import MapData from '../../Modules/MapData';
 import BaseLevelGenerator from './BaseLevelGenerator';
 
-class ROTRogue extends BaseLevelGenerator {
+export default class ROTRogue extends BaseLevelGenerator {
 
     inspectorFields = {
         debug: false,
@@ -47,4 +47,3 @@ class ROTRogue extends BaseLevelGenerator {
         this.placeItems();
     }
 }
-export = ROTRogue;

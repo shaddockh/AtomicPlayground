@@ -4,7 +4,7 @@ import ROT = require('rot-js');
 import MapData from '../../Modules/MapData';
 import BaseLevelGenerator from './BaseLevelGenerator';
 
-class ROTUniform extends BaseLevelGenerator {
+export default class ROTUniform extends BaseLevelGenerator {
 
     inspectorFields = {
         debug: false,
@@ -53,4 +53,3 @@ class ROTUniform extends BaseLevelGenerator {
         this.placeItems(builder.getRooms());
     }
 }
-export = ROTUniform;

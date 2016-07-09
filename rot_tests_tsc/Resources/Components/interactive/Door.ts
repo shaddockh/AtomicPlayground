@@ -2,9 +2,9 @@
 'atomic component';
 import * as triggerEvent from 'atomicTriggerEvent';
 
-import Entity = require('../common/Entity');
+import Entity from '../common/Entity';
 import CustomJSComponent from '../../Modules/CustomJSComponent';
-class Door extends CustomJSComponent {
+export default class Door extends CustomJSComponent {
 
     inspectorFields = {
         debug: false,
@@ -81,4 +81,3 @@ class Door extends CustomJSComponent {
     }
 
 }
-export = Door;

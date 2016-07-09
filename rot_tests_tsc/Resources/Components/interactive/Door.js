@@ -78,4 +78,5 @@ var Door = (function (_super) {
     };
     return Door;
 }(CustomJSComponent_1.default));
-module.exports = Door;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = Door;

@@ -161,4 +161,5 @@ var LevelRunner = (function (_super) {
     };
     return LevelRunner;
 }(CustomJSComponent_1.default));
-module.exports = LevelRunner;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = LevelRunner;
