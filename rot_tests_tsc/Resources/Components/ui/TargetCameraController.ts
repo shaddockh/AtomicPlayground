@@ -1,14 +1,5 @@
 'use strict';
 'atomic component';
-class ClampedLog {
-    private lastLog: string;
-    log(value) {
-        if (value != this.lastLog) {
-            console.log(value);
-            this.lastLog = value;
-        }
-    }
-}
 
 class TargetCameraController extends Atomic.JSComponent {
     inspectorFields = {
@@ -27,8 +18,6 @@ class TargetCameraController extends Atomic.JSComponent {
     camera: Atomic.Camera = null;
     cameraNode: Atomic.Node = null;
 
-    logger = new ClampedLog();
-
     onSetCameraTarget(target: Atomic.Node) {
         this.cameraTargetNode = target;
         if (target) {
@@ -40,7 +29,7 @@ class TargetCameraController extends Atomic.JSComponent {
         }
     }
 
-    update(/*timestep*/) {
+    oldupdate(/*timestep*/) {
         if (this.cameraTargetNode) {
             this.camera.zoom = this.zoom;
 
@@ -79,6 +68,18 @@ class TargetCameraController extends Atomic.JSComponent {
             */
 
 
+            if (!this.autoFollow) {
+                this.cameraTargetNode = null;
+            }
+        }
+    }
+
+    update(/*timestep*/) {
+        if (this.cameraTargetNode) {
+            this.camera.zoom = this.zoom;
+
+            // Set the camera to the world position of the target since the target may be a child of another node
+            this.cameraNode.worldPosition = this.cameraTargetNode.worldPosition;
             if (!this.autoFollow) {
                 this.cameraTargetNode = null;
             }

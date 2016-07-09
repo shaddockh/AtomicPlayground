@@ -5,17 +5,6 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-var ClampedLog = (function () {
-    function ClampedLog() {
-    }
-    ClampedLog.prototype.log = function (value) {
-        if (value != this.lastLog) {
-            console.log(value);
-            this.lastLog = value;
-        }
-    };
-    return ClampedLog;
-}());
 var TargetCameraController = (function (_super) {
     __extends(TargetCameraController, _super);
     function TargetCameraController() {
@@ -32,7 +21,6 @@ var TargetCameraController = (function (_super) {
         this.cameraTargetNode = null;
         this.camera = null;
         this.cameraNode = null;
-        this.logger = new ClampedLog();
     }
     TargetCameraController.prototype.onSetCameraTarget = function (target) {
         this.cameraTargetNode = target;
@@ -45,7 +33,7 @@ var TargetCameraController = (function (_super) {
             this.camera = null;
         }
     };
-    TargetCameraController.prototype.update = function () {
+    TargetCameraController.prototype.oldupdate = function () {
         if (this.cameraTargetNode) {
             this.camera.zoom = this.zoom;
             var _a = this.cameraTargetNode.position, x = _a[0], y = _a[1], z = _a[2];
@@ -78,6 +66,16 @@ var TargetCameraController = (function (_super) {
             //this.cameraNode.position = [x - (this.camera.halfViewSize * this.camera.aspectRatio), y - this.camera.halfViewSize, z];
             //this.cameraNode.position = [x - (halfScreenWidth * this.camera.aspectRatio), y - halfScreenHeight, z];
             */
+            if (!this.autoFollow) {
+                this.cameraTargetNode = null;
+            }
+        }
+    };
+    TargetCameraController.prototype.update = function () {
+        if (this.cameraTargetNode) {
+            this.camera.zoom = this.zoom;
+            // Set the camera to the world position of the target since the target may be a child of another node
+            this.cameraNode.worldPosition = this.cameraTargetNode.worldPosition;
             if (!this.autoFollow) {
                 this.cameraTargetNode = null;
             }
