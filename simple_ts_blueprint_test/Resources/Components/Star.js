@@ -27,5 +27,6 @@ var Star = (function (_super) {
     ;
     return Star;
 }(Atomic.JSComponent));
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = Star;
 ;
-module.exports = Star;
