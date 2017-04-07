@@ -11,6 +11,8 @@ var AtomicBlueprintlibPlugin = (function () {
         this.description = "Support plugin for the Atomic Blueprint Library";
         this.serviceLocator = null;
         this.blueprintPath = "Modules/blueprints";
+        this.PREFABS_DIR = "Prefabs";
+        this.GENERATED_PREFABS_DIR = Atomic.addTrailingSlash(this.PREFABS_DIR) + "Generated";
     }
     AtomicBlueprintlibPlugin.prototype.log = function (message) {
         if (debug) {
@@ -81,7 +83,7 @@ var AtomicBlueprintlibPlugin = (function () {
         this.log("playerStarted");
         try {
             this.loadBlueprintCatalog();
-            blueprintLib.generatePrefabs();
+            this.generatePrefabs();
             ToolCore.assetDatabase.reimportAllAssets();
         }
         finally {
@@ -93,7 +95,7 @@ var AtomicBlueprintlibPlugin = (function () {
         if (refId === this.name + ".generate") {
             try {
                 this.loadBlueprintCatalog();
-                blueprintLib.generatePrefabs();
+                this.generatePrefabs();
             }
             finally {
                 blueprintLib.reset();
@@ -101,6 +103,52 @@ var AtomicBlueprintlibPlugin = (function () {
             return true;
         }
         return false;
+    };
+    /**
+     * Generate prefabs from the blueprints located in the blueprint catalog.  Any
+     * blueprints with the isPrefab value set to true will be generated.  Additionally, if the prefabDir
+     * value is specified, the prefab will be placed in that directory.  Default directory that prefabs
+     * are generated to is: Resources/Prefabs/Generated
+     */
+    AtomicBlueprintlibPlugin.prototype.generatePrefabs = function () {
+        // Let's create an edit-time scene..one that doesn't update or start the component
+        var projectRoot = Atomic.addTrailingSlash(ToolCore.toolSystem.project.projectPath);
+        var resourcePath = ToolCore.toolSystem.project.resourcePath;
+        var scene = new Atomic.Scene();
+        scene.setUpdateEnabled(false);
+        // Build the directory that our generated prefabs will go into
+        // TODO: Could be cleaner
+        var fs = Atomic.fileSystem;
+        var defaultPath = this.GENERATED_PREFABS_DIR;
+        if (fs.checkAccess(Atomic.addTrailingSlash(resourcePath) + defaultPath)) {
+            var blueprintNames = blueprintLib.catalog.getAllBlueprintNames();
+            for (var i = 0; i < blueprintNames.length; i++) {
+                var blueprint = blueprintLib.catalog.getBlueprint(blueprintNames[i]);
+                if (blueprint.isPrefab) {
+                    var path = defaultPath;
+                    if (blueprint.isPrefab) {
+                        path = blueprint.prefabDir;
+                    }
+                    fs.createDirs(resourcePath, path);
+                    this.generatePrefab(scene, blueprint, Atomic.addTrailingSlash(resourcePath) + Atomic.addTrailingSlash(path) + blueprintNames[i] + ".prefab");
+                }
+            }
+        }
+        else {
+            console.log("Access denied writing to: " + defaultPath);
+        }
+    };
+    AtomicBlueprintlibPlugin.prototype.generatePrefab = function (scene, blueprint, path) {
+        console.log("Generating prefab: " + blueprint.name + " at " + path);
+        // build the prefab
+        // TODO: Need to figure out how update an existing prefab if it exists
+        var node = blueprintLib.createChild(scene, blueprint, true);
+        var file = new Atomic.File(path, Atomic.FileMode.FILE_WRITE);
+        node.saveXML(file);
+        file.close();
+        // Delete the node
+        node.removeAllComponents();
+        node.remove();
     };
     return AtomicBlueprintlibPlugin;
 }());

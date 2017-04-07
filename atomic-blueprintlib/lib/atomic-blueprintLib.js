@@ -133,20 +133,6 @@ function getProjectRoot() {
         return pth;
     }
 }
-function generatePrefab(scene, blueprint, path) {
-    if (DEBUG) {
-        console.log("Generating prefab: " + blueprint.name + " at " + path);
-    }
-    // build the prefab
-    // TODO: Need to figure out how update an existing prefab if it exists
-    var node = createChild(scene, blueprint, true);
-    var file = new Atomic.File(path, Atomic.FileMode.FILE_WRITE);
-    node.saveXML(file);
-    file.close();
-    // Delete the node
-    node.removeAllComponents();
-    node.remove();
-}
 /**
  * Scans for component files in the workspace and generated an index of componentname=componentpath entries
  * This will be loaded up in order to resolve blueprint components at runtime
@@ -322,50 +308,6 @@ function resolveJSComponent(componentName) {
     }
     return comp;
 }
-/**
- * Generate prefabs from the blueprints located in the blueprint catalog.  Any
- * blueprints with the isPrefab value set to true will be generated.  Additionally, if the prefabDir
- * value is specified, the prefab will be placed in that directory.  Default directory that prefabs
- * are generated to is: Resources/Prefabs/Generated
- *
- * Note: This method really should only be called from an editor extension and not from the player
- */
-function generatePrefabs() {
-    // Let's create an edit-time scene..one that doesn't update or start the component
-    var projectRoot = getProjectRoot();
-    if (!projectRoot || projectRoot === "") {
-        console.log("Cannot generate prefabs without --project command line argument or outside the editor environment.");
-        return;
-    }
-    projectRoot = Atomic.addTrailingSlash(projectRoot);
-    var scene = new Atomic.Scene();
-    scene.setUpdateEnabled(false);
-    // Build the directory that our generated prefabs will go into
-    // TODO: Could be cleaner
-    var fs = Atomic.fileSystem;
-    var defaultPath = Atomic.addTrailingSlash(RESOURCES_DIR) + GENERATED_PREFABS_DIR;
-    if (fs.checkAccess(projectRoot + defaultPath)) {
-        var blueprintNames = exports.catalog.getAllBlueprintNames();
-        for (var i = 0; i < blueprintNames.length; i++) {
-            var blueprint = exports.catalog.getBlueprint(blueprintNames[i]);
-            if (blueprint.isPrefab) {
-                var path = defaultPath;
-                if (blueprint.prefabDir) {
-                    path = Atomic.addTrailingSlash(RESOURCES_DIR) + blueprint.prefabDir;
-                }
-                fs.createDirs(projectRoot, path);
-                debug("Generating prefab: " + Atomic.addTrailingSlash(path) + blueprintNames[i] + ".prefab");
-                generatePrefab(scene, blueprint, projectRoot + Atomic.addTrailingSlash(path) + blueprintNames[i] + ".prefab");
-            }
-        }
-    }
-    else {
-        if (DEBUG) {
-            console.log("Access denied writing to: " + defaultPath);
-        }
-    }
-}
-exports.generatePrefabs = generatePrefabs;
 /**
  * Returns a blueprint from the library with the specified name.  If the blueprint has
  * an 'inherits' property, it will walk up the inheritance and fill in the values of the blueprint

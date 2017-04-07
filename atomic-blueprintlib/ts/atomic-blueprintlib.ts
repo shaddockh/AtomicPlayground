@@ -14,7 +14,7 @@ export interface AtomicBlueprint extends Blueprint {
      * The directory that this blueprint and all of it's descendents should render their prefabs to.
      * If not specified, the prefabs will be generated to Resources/Prefabs/Generated.
      */
-    prefabDir?: boolean;
+    prefabDir?: string;
 }
 
 interface Builder {
@@ -164,25 +164,6 @@ function getProjectRoot(): string {
         }
         return pth;
     }
-}
-
-function generatePrefab(scene: Atomic.Scene, blueprint: AtomicBlueprint, path: string) {
-    if (DEBUG) {
-        console.log("Generating prefab: " + blueprint.name + " at " + path);
-    }
-
-
-    // build the prefab
-
-    // TODO: Need to figure out how update an existing prefab if it exists
-    const node = createChild(scene, blueprint, true);
-    const file = new Atomic.File(path, Atomic.FileMode.FILE_WRITE);
-    node.saveXML(file);
-    file.close();
-
-    // Delete the node
-    node.removeAllComponents();
-    node.remove();
 }
 
 /**
@@ -375,54 +356,6 @@ function resolveJSComponent(componentName: string): string {
     }
     return comp;
 }
-
-
-/**
- * Generate prefabs from the blueprints located in the blueprint catalog.  Any
- * blueprints with the isPrefab value set to true will be generated.  Additionally, if the prefabDir
- * value is specified, the prefab will be placed in that directory.  Default directory that prefabs
- * are generated to is: Resources/Prefabs/Generated
- *
- * Note: This method really should only be called from an editor extension and not from the player
- */
-export function generatePrefabs() {
-
-    // Let's create an edit-time scene..one that doesn't update or start the component
-    let projectRoot = getProjectRoot();
-    if (!projectRoot || projectRoot === "") {
-        console.log("Cannot generate prefabs without --project command line argument or outside the editor environment.");
-        return;
-    }
-    projectRoot = Atomic.addTrailingSlash(projectRoot);
-
-    const scene = new Atomic.Scene();
-    scene.setUpdateEnabled(false);
-
-    // Build the directory that our generated prefabs will go into
-    // TODO: Could be cleaner
-    const fs = Atomic.fileSystem;
-    let defaultPath = Atomic.addTrailingSlash(RESOURCES_DIR) + GENERATED_PREFABS_DIR;
-    if (fs.checkAccess(projectRoot + defaultPath)) {
-        let blueprintNames = catalog.getAllBlueprintNames();
-        for (let i = 0; i < blueprintNames.length; i++) {
-            let blueprint = <AtomicBlueprint>catalog.getBlueprint(blueprintNames[i]);
-            if (blueprint.isPrefab) {
-                let path = defaultPath;
-                if (blueprint.prefabDir) {
-                    path = Atomic.addTrailingSlash(RESOURCES_DIR) + blueprint.prefabDir;
-                }
-                fs.createDirs(projectRoot, path);
-                debug("Generating prefab: " + Atomic.addTrailingSlash(path) + blueprintNames[i] + ".prefab");
-                generatePrefab(scene, blueprint, projectRoot + Atomic.addTrailingSlash(path) + blueprintNames[i] + ".prefab");
-            }
-        }
-    } else {
-        if (DEBUG) {
-            console.log("Access denied writing to: " + defaultPath);
-        }
-    }
-}
-
 
 /**
  * Returns a blueprint from the library with the specified name.  If the blueprint has
