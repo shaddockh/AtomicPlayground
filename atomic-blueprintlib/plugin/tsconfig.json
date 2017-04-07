@@ -12,7 +12,11 @@
     "noLib": false,
     "preserveConstEnums": true,
     "suppressImplicitAnyIndexErrors": true,
-    "outDir": "./../dist/Resources/EditorData"
+    "outDir": "./../dist/Resources/EditorData",
+    "typeRoots": [
+      "../typings/ambient/atomicgameengine",
+      "../dist/Resources/typings"
+    ]
   },
   "filesGlob": [
     "./**/*.ts",
@@ -26,7 +30,7 @@
   },
   "files": [
     "./EditorData/AtomicBlueprintLib.Plugin.ts",
-    "../typings/Atomic/Atomic.d.ts",
+    "../typings/ambient/atomicgameengine/Atomic.d.ts",
     "../dist/Resources/typings/atomic-blueprintlib.d.ts"
   ]
 }

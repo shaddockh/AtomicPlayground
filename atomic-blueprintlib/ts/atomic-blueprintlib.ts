@@ -1,5 +1,5 @@
-import {BlueprintCatalog} from "entity-blueprint-manager";
-import {Blueprint} from "entity-blueprint-manager";
+import { BlueprintCatalog } from "entity-blueprint-manager";
+import { Blueprint } from "entity-blueprint-manager";
 
 /**
  * Definition of a blueprint structure that can be stored in the catalog
@@ -55,14 +55,14 @@ export const catalog: BlueprintCatalog = new BlueprintCatalog({
 const componentBuilders = {
     // Used for mapping the root attributes of a node from a blueprint
     rootNodeComponentBuilder: {
-        build: function(node: Atomic.Node, componentBlueprint: AtomicBlueprint, componentName: string, blueprint: AtomicBlueprint): void {
+        build: function (node: Atomic.Node, componentBlueprint: AtomicBlueprint, componentName: string, blueprint: AtomicBlueprint): void {
             mapBlueprintToComponent(node, blueprint, "Node");
         }
     },
 
     // used to create and map a native component
     nativeComponentBuilder: {
-        build: function(node: Atomic.Node, componentBlueprint: AtomicBlueprint, componentName: string): void {
+        build: function (node: Atomic.Node, componentBlueprint: AtomicBlueprint, componentName: string): void {
             if (DEBUG) {
                 console.log("Attaching Native Component: " + componentName + " to node.");
             }
@@ -74,7 +74,7 @@ const componentBuilders = {
 
     // Used to create and map a JSComponent
     jsComponentBuilder: {
-        build: function(node: Atomic.Node, componentBlueprint: AtomicBlueprint, componentName: string): void {
+        build: function (node: Atomic.Node, componentBlueprint: AtomicBlueprint, componentName: string): void {
             if (DEBUG) {
                 console.log("Attaching JSComponent: " + componentName + " to node.");
             }
@@ -116,24 +116,24 @@ function mapBlueprintToComponent(component: Atomic.Node | Atomic.Component, blue
         }
 
         switch (attribute.type) {
-            case Atomic.VAR_BOOL: // true or false
-            case Atomic.VAR_INT: // 0
-            case Atomic.VAR_FLOAT: // 0.0
-            case Atomic.VAR_STRING: // "string"
-            case Atomic.VAR_VECTOR2: // [0,0]
-            case Atomic.VAR_VECTOR3: // [0,0,0]
-            case Atomic.VAR_QUATERNION: // [0,0,0]
-            case Atomic.VAR_COLOR: // [0,0,0,0]
-            case Atomic.VAR_STRINGVECTOR: // ["a","b"]
-            case Atomic.VAR_INTVECTOR2: // [1, 2]
-            case Atomic.VAR_BUFFER: // [1, 2, 3, 4]
+            case Atomic.VariantType.VAR_BOOL: // true or false
+            case Atomic.VariantType.VAR_INT: // 0
+            case Atomic.VariantType.VAR_FLOAT: // 0.0
+            case Atomic.VariantType.VAR_STRING: // "string"
+            case Atomic.VariantType.VAR_VECTOR2: // [0,0]
+            case Atomic.VariantType.VAR_VECTOR3: // [0,0,0]
+            case Atomic.VariantType.VAR_QUATERNION: // [0,0,0]
+            case Atomic.VariantType.VAR_COLOR: // [0,0,0,0]
+            case Atomic.VariantType.VAR_STRINGVECTOR: // ["a","b"]
+            case Atomic.VariantType.VAR_INTVECTOR2: // [1, 2]
+            case Atomic.VariantType.VAR_BUFFER: // [1, 2, 3, 4]
                 // blueprint already has the value in the right format, so let's just set it
                 if (DEBUG) {
                     console.log("setting attribute: " + attribute.name + " to value: " + blueprint[prop]);
                 }
                 component.setAttribute(attribute.name, blueprint[prop]);
                 break;
-            case Atomic.VAR_RESOURCEREF:
+            case Atomic.VariantType.VAR_RESOURCEREF:
                 if (attribute.resourceTypeName) {
                     if (DEBUG) {
                         console.log("setting attribute: " + attribute.name + " to value: " + blueprint[prop] + ", resource type: " + attribute.resourceTypeName);
@@ -150,7 +150,7 @@ function mapBlueprintToComponent(component: Atomic.Node | Atomic.Component, blue
 
 // TODO: need to find a better way to get the project root
 function getProjectRoot(): string {
-    if (typeof(ToolCore) !== "undefined" && ToolCore.toolSystem && ToolCore.toolSystem.project) {
+    if (typeof (ToolCore) !== "undefined" && ToolCore.toolSystem && ToolCore.toolSystem.project) {
         // Are we runningin the editor?
         return ToolCore.toolSystem.project.projectPath;
     } else {
@@ -176,7 +176,7 @@ function generatePrefab(scene: Atomic.Scene, blueprint: AtomicBlueprint, path: s
 
     // TODO: Need to figure out how update an existing prefab if it exists
     const node = createChild(scene, blueprint, true);
-    const file = new Atomic.File(path, Atomic.FILE_WRITE);
+    const file = new Atomic.File(path, Atomic.FileMode.FILE_WRITE);
     node.saveXML(file);
     file.close();
 
@@ -244,7 +244,7 @@ function generateComponentIndex(projectRoot: string, componentXrefFn: string) {
     }
 
     const idxPath = Atomic.addTrailingSlash(projectRoot) + Atomic.addTrailingSlash(RESOURCES_DIR) + componentXrefFn;
-    const idxFile = new Atomic.File(idxPath, Atomic.FILE_WRITE);
+    const idxFile = new Atomic.File(idxPath, Atomic.FileMode.FILE_WRITE);
     try {
         if (DEBUG) {
             console.log("Writing component xref file to: " + idxPath);

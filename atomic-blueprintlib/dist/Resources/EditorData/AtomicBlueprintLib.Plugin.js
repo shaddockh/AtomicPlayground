@@ -1,6 +1,7 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 // plugin for generating prefabs from blueprints
-require("../Modules/atomic-blueprintlib.bundle");
+require("Modules/atomic-blueprintlib.bundle");
 var blueprintLib = require("atomic-blueprintlib");
 var ExamplePluginUILabel = "Atomic BlueprintLib";
 var debug = false;
@@ -9,7 +10,7 @@ var AtomicBlueprintlibPlugin = (function () {
         this.name = "AtomicBlueprintLibPlugin";
         this.description = "Support plugin for the Atomic Blueprint Library";
         this.serviceLocator = null;
-        this.blueprintPath = "../Modules/blueprints";
+        this.blueprintPath = "Modules/blueprints";
     }
     AtomicBlueprintlibPlugin.prototype.log = function (message) {
         if (debug) {
@@ -17,6 +18,8 @@ var AtomicBlueprintlibPlugin = (function () {
         }
     };
     AtomicBlueprintlibPlugin.prototype.loadBlueprintCatalog = function () {
+        var _this = this;
+        console.log("Loading blueprints from " + this.blueprintPath);
         var blueprints;
         try {
             var blueprintFile = require(this.blueprintPath);
@@ -31,11 +34,27 @@ var AtomicBlueprintlibPlugin = (function () {
             else {
                 blueprints = blueprintFile;
             }
+            // now delete the blueprint file from the cache so if we modify
+            // it, it is reflected.  This will also delete everything
+            // under a directory named the same as the main
+            // bluepring lib entry point.  ie:
+            // Modules/blueprints.js
+            // Modules/blueprints/*
+            var toDelete = [];
+            for (var path in Duktape.modLoaded) {
+                if (path.indexOf(this.blueprintPath) == 0) {
+                    toDelete.push(path);
+                }
+            }
+            toDelete.forEach(function (p) {
+                _this.log("Deleting require: " + p);
+                delete Duktape.modLoaded[p];
+            });
         }
         catch (e) {
             throw new Error("Could not load blueprints.  Ensure that 'Resources/Modules/blueprints.js' exists");
         }
-        blueprintLib.catalog.loadBlueprints(blueprints);
+        blueprintLib.catalog.loadBlueprints(blueprints, function (name) { return _this.log("Loading blueprint: " + name); });
     };
     AtomicBlueprintlibPlugin.prototype.initialize = function (serviceLoader) {
         this.log("initialize");
@@ -56,13 +75,14 @@ var AtomicBlueprintlibPlugin = (function () {
     };
     AtomicBlueprintlibPlugin.prototype.projectLoaded = function (ev) {
         this.log("projectLoaded");
-        this.serviceLocator.uiServices.createPluginMenuItemSource(ExamplePluginUILabel, { "Generate Prefabs from Blueprints": [(this.name + ".generate")] });
+        this.serviceLocator.uiServices.createPluginMenuItemSource(ExamplePluginUILabel, { "Generate Prefabs from Blueprints": [this.name + ".generate"] });
     };
     AtomicBlueprintlibPlugin.prototype.playerStarted = function () {
         this.log("playerStarted");
         try {
             this.loadBlueprintCatalog();
             blueprintLib.generatePrefabs();
+            ToolCore.assetDatabase.reimportAllAssets();
         }
         finally {
             blueprintLib.reset();
@@ -84,5 +104,4 @@ var AtomicBlueprintlibPlugin = (function () {
     };
     return AtomicBlueprintlibPlugin;
 }());
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = new AtomicBlueprintlibPlugin();

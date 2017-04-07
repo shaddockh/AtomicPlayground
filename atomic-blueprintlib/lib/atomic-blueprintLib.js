@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var entity_blueprint_manager_1 = require("entity-blueprint-manager");
 var componentCrossref = null;
 var RESOURCES_DIR = "Resources";
@@ -84,24 +85,24 @@ function mapBlueprintToComponent(component, blueprint, componentName) {
             continue;
         }
         switch (attribute.type) {
-            case Atomic.VAR_BOOL: // true or false
-            case Atomic.VAR_INT: // 0
-            case Atomic.VAR_FLOAT: // 0.0
-            case Atomic.VAR_STRING: // "string"
-            case Atomic.VAR_VECTOR2: // [0,0]
-            case Atomic.VAR_VECTOR3: // [0,0,0]
-            case Atomic.VAR_QUATERNION: // [0,0,0]
-            case Atomic.VAR_COLOR: // [0,0,0,0]
-            case Atomic.VAR_STRINGVECTOR: // ["a","b"]
-            case Atomic.VAR_INTVECTOR2: // [1, 2]
-            case Atomic.VAR_BUFFER:
+            case Atomic.VariantType.VAR_BOOL: // true or false
+            case Atomic.VariantType.VAR_INT: // 0
+            case Atomic.VariantType.VAR_FLOAT: // 0.0
+            case Atomic.VariantType.VAR_STRING: // "string"
+            case Atomic.VariantType.VAR_VECTOR2: // [0,0]
+            case Atomic.VariantType.VAR_VECTOR3: // [0,0,0]
+            case Atomic.VariantType.VAR_QUATERNION: // [0,0,0]
+            case Atomic.VariantType.VAR_COLOR: // [0,0,0,0]
+            case Atomic.VariantType.VAR_STRINGVECTOR: // ["a","b"]
+            case Atomic.VariantType.VAR_INTVECTOR2: // [1, 2]
+            case Atomic.VariantType.VAR_BUFFER:
                 // blueprint already has the value in the right format, so let's just set it
                 if (DEBUG) {
                     console.log("setting attribute: " + attribute.name + " to value: " + blueprint[prop]);
                 }
                 component.setAttribute(attribute.name, blueprint[prop]);
                 break;
-            case Atomic.VAR_RESOURCEREF:
+            case Atomic.VariantType.VAR_RESOURCEREF:
                 if (attribute.resourceTypeName) {
                     if (DEBUG) {
                         console.log("setting attribute: " + attribute.name + " to value: " + blueprint[prop] + ", resource type: " + attribute.resourceTypeName);
@@ -139,7 +140,7 @@ function generatePrefab(scene, blueprint, path) {
     // build the prefab
     // TODO: Need to figure out how update an existing prefab if it exists
     var node = createChild(scene, blueprint, true);
-    var file = new Atomic.File(path, Atomic.FILE_WRITE);
+    var file = new Atomic.File(path, Atomic.FileMode.FILE_WRITE);
     node.saveXML(file);
     file.close();
     // Delete the node
@@ -195,7 +196,7 @@ function generateComponentIndex(projectRoot, componentXrefFn) {
         }
     }
     var idxPath = Atomic.addTrailingSlash(projectRoot) + Atomic.addTrailingSlash(RESOURCES_DIR) + componentXrefFn;
-    var idxFile = new Atomic.File(idxPath, Atomic.FILE_WRITE);
+    var idxFile = new Atomic.File(idxPath, Atomic.FileMode.FILE_WRITE);
     try {
         if (DEBUG) {
             console.log("Writing component xref file to: " + idxPath);
