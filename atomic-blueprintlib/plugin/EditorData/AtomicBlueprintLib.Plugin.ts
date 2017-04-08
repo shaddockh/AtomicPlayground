@@ -11,8 +11,7 @@ class AtomicBlueprintlibPlugin implements Editor.HostExtensions.HostEditorServic
 
     private serviceLocator: Editor.HostExtensions.HostServiceLocator = null;
     private blueprintPath = "Modules/blueprints";
-    private PREFABS_DIR = "Prefabs";
-    private GENERATED_PREFABS_DIR = Atomic.addTrailingSlash(this.PREFABS_DIR) + "Generated";
+    private generatedPrefabsDirectory = "Prefabs/Generated";
     private log(message: string) {
         if (debug) {
             console.log(`${this.name}: ${message}`);
@@ -54,7 +53,7 @@ class AtomicBlueprintlibPlugin implements Editor.HostExtensions.HostEditorServic
             });
 
         } catch (e) {
-            throw new Error("Could not load blueprints.  Ensure that 'Resources/Modules/blueprints.js' exists");
+            throw new Error(`Could not load blueprints.  Ensure that '${this.blueprintPath}.js' exists`);
         }
 
         blueprintLib.catalog.loadBlueprints(blueprints, (name) => this.log(`Loading blueprint: ${name}`));
@@ -67,6 +66,9 @@ class AtomicBlueprintlibPlugin implements Editor.HostExtensions.HostEditorServic
         if (this.serviceLocator) {
             this.serviceLocator.projectServices.register(this);
             this.serviceLocator.uiServices.register(this);
+
+            this.generatedPrefabsDirectory = this.serviceLocator.projectServices.getUserPreference(this.name, "GeneratedPrefabsDirectory", this.generatedPrefabsDirectory);
+            this.blueprintPath = this.serviceLocator.projectServices.getUserPreference(this.name, "BlueprintPath", this.blueprintPath);
         }
     }
 
@@ -89,6 +91,7 @@ class AtomicBlueprintlibPlugin implements Editor.HostExtensions.HostEditorServic
     playerStarted() {
         this.log("playerStarted");
         try {
+            this.generateComponentIndex();
             this.loadBlueprintCatalog();
             this.generatePrefabs();
             ToolCore.assetDatabase.reimportAllAssets();
@@ -102,6 +105,7 @@ class AtomicBlueprintlibPlugin implements Editor.HostExtensions.HostEditorServic
 
         if (refId === `${this.name}.generate`) {
             try {
+                this.generateComponentIndex();
                 this.loadBlueprintCatalog();
                 this.generatePrefabs();
             } finally {
@@ -120,7 +124,6 @@ class AtomicBlueprintlibPlugin implements Editor.HostExtensions.HostEditorServic
      */
     generatePrefabs() {
         // Let's create an edit-time scene..one that doesn't update or start the component
-        let projectRoot = Atomic.addTrailingSlash(ToolCore.toolSystem.project.projectPath);
         let resourcePath = ToolCore.toolSystem.project.resourcePath;
 
         const scene = new Atomic.Scene();
@@ -129,7 +132,7 @@ class AtomicBlueprintlibPlugin implements Editor.HostExtensions.HostEditorServic
         // Build the directory that our generated prefabs will go into
         // TODO: Could be cleaner
         const fs = Atomic.fileSystem;
-        let defaultPath = this.GENERATED_PREFABS_DIR;
+        let defaultPath = this.generatedPrefabsDirectory;
         if (fs.checkAccess(Atomic.addTrailingSlash(resourcePath) + defaultPath)) {
             let blueprintNames = blueprintLib.catalog.getAllBlueprintNames();
             for (let i = 0; i < blueprintNames.length; i++) {
@@ -163,6 +166,73 @@ class AtomicBlueprintlibPlugin implements Editor.HostExtensions.HostEditorServic
         // Delete the node
         node.removeAllComponents();
         node.remove();
+    }
+    /**
+     * Scans for component files in the workspace and generated an index of componentname=componentpath entries
+     * This will be loaded up in order to resolve blueprint components at runtime
+     */
+    private generateComponentIndex(componentXrefFn = "componentCrossref.json") {
+        const resourcesDir = ToolCore.toolSystem.project.resourcePath;
+        const fs = Atomic.fileSystem;
+        const xref = {};
+        let componentsFound = 0;
+        const slash = Atomic.addTrailingSlash("1")[1];
+        for (let i = 0, iEnd = Atomic.cache.resourceDirs.length; i < iEnd; i++) {
+            const pth = Atomic.addTrailingSlash(Atomic.cache.resourceDirs[i]);
+
+            if (fs.checkAccess(pth) && fs.dirExists(pth)) {
+                console.log("Searching for components in: " + pth);
+
+                const componentFiles = fs.scanDir(pth, "*.js", Atomic.SCAN_FILES, true);
+                for (let f = 0, fEnd = componentFiles.length; f < fEnd; f++) {
+                    // check to see if this is a component
+                    // TODO: for now, we just want to try and load components under a Components/ directory
+                    if (componentFiles[f].toLowerCase().indexOf("components" + slash) === -1) {
+                        // skip it.
+                        continue;
+                    }
+
+                    const resource = Atomic.cache.getTempResource("JSComponentFile", componentFiles[f], false);
+
+                    if (resource) {
+                        let internalComponentPath = componentFiles[f];
+
+                        // if the path to the component starts with Resources/, then we need to peel that part off of it
+                        if (internalComponentPath.indexOf(Atomic.addTrailingSlash(resourcesDir)) === 0) {
+                            internalComponentPath = internalComponentPath.replace(Atomic.addTrailingSlash(resourcesDir), "");
+                        }
+
+                        let componentName = internalComponentPath.replace(".js", "");
+
+                        // Grabbing just the filename part
+                        if (componentName.indexOf(slash) >= 0) {
+                            componentName = componentName.split(slash).pop();
+                        }
+
+                        // See if we have already registered this component
+                        const oldComponent = xref[componentName];
+                        if (oldComponent && oldComponent !== internalComponentPath && oldComponent.indexOf(internalComponentPath) === -1 && internalComponentPath.indexOf(oldComponent) === -1) {
+                            throw new Error("Component names must be unique.  Component: " + componentName + " already registered as " + xref[componentName] + "; trying to re-register as " + internalComponentPath);
+                        }
+                        if (!oldComponent || (oldComponent.indexOf(internalComponentPath) === -1 && internalComponentPath.indexOf(oldComponent) === -1)) {
+                            xref[componentName] = internalComponentPath;
+                            componentsFound++;
+                        }
+                    }
+                }
+            }
+        }
+
+        const idxPath = Atomic.addTrailingSlash(ToolCore.toolSystem.project.projectPath) + componentXrefFn;
+        const idxFile = new Atomic.File(idxPath, Atomic.FileMode.FILE_WRITE);
+        try {
+            console.log("Writing component xref file to: " + idxPath);
+
+            idxFile.writeString(JSON.stringify(xref, null, 2));
+        } finally {
+            idxFile.flush();
+            idxFile.close();
+        }
     }
 }
 

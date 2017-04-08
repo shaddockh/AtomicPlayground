@@ -148,103 +148,13 @@ function mapBlueprintToComponent(component: Atomic.Node | Atomic.Component, blue
 
 }
 
-// TODO: need to find a better way to get the project root
-function getProjectRoot(): string {
-    if (typeof (ToolCore) !== "undefined" && ToolCore.toolSystem && ToolCore.toolSystem.project) {
-        // Are we runningin the editor?
-        return ToolCore.toolSystem.project.projectPath;
-    } else {
-        let pth = "";
-        const cl = Atomic.getArguments().join(",").split(",");
-        for (let i = 0; i < cl.length; i++) {
-            if (cl[i] === "--project") {
-                pth = cl[i + 1];
-                break;
-            }
-        }
-        return pth;
-    }
-}
-
-/**
- * Scans for component files in the workspace and generated an index of componentname=componentpath entries
- * This will be loaded up in order to resolve blueprint components at runtime
- */
-function generateComponentIndex(projectRoot: string, componentXrefFn: string) {
-
-    const fs = Atomic.fileSystem;
-    const xref = {};
-    let componentsFound = 0;
-    const slash = Atomic.addTrailingSlash("1")[1];
-    for (let i = 0, iEnd = Atomic.cache.resourceDirs.length; i < iEnd; i++) {
-        const pth = Atomic.addTrailingSlash(Atomic.cache.resourceDirs[i]);
-
-        if (fs.checkAccess(pth) && fs.dirExists(pth)) {
-            if (DEBUG) {
-                console.log("Searching for components in: " + pth);
-            }
-
-            const componentFiles = fs.scanDir(pth, "*.js", Atomic.SCAN_FILES, true);
-            for (let f = 0, fEnd = componentFiles.length; f < fEnd; f++) {
-                // check to see if this is a component
-                // TODO: for now, we just want to try and load components under a Components/ directory
-                if (componentFiles[f].toLowerCase().indexOf("components" + slash) === -1) {
-                    // skip it.
-                    continue;
-                }
-
-                const resource = Atomic.cache.getTempResource("JSComponentFile", componentFiles[f], false);
-
-                if (resource) {
-                    let internalComponentPath = componentFiles[f];
-
-                    // if the path to the component starts with Resources/, then we need to peel that part off of it
-                    if (internalComponentPath.indexOf(Atomic.addTrailingSlash(RESOURCES_DIR)) === 0) {
-                        internalComponentPath = internalComponentPath.replace(Atomic.addTrailingSlash(RESOURCES_DIR), "");
-                    }
-
-                    let componentName = internalComponentPath.replace(".js", "");
-
-                    // Grabbing just the filename part
-                    if (componentName.indexOf(slash) >= 0) {
-                        componentName = componentName.split(slash).pop();
-                    }
-
-                    // See if we have already registered this component
-                    const oldComponent = xref[componentName];
-                    if (oldComponent && oldComponent !== internalComponentPath && oldComponent.indexOf(internalComponentPath) === -1 && internalComponentPath.indexOf(oldComponent) === -1) {
-                        throw new Error("Component names must be unique.  Component: " + componentName + " already registered as " + xref[componentName] + "; trying to re-register as " + internalComponentPath);
-                    }
-                    if (!oldComponent || (oldComponent.indexOf(internalComponentPath) === -1 && internalComponentPath.indexOf(oldComponent) === -1)) {
-                        xref[componentName] = internalComponentPath;
-                        componentsFound++;
-                    }
-                }
-            }
-        }
-    }
-
-    const idxPath = Atomic.addTrailingSlash(projectRoot) + Atomic.addTrailingSlash(RESOURCES_DIR) + componentXrefFn;
-    const idxFile = new Atomic.File(idxPath, Atomic.FileMode.FILE_WRITE);
-    try {
-        if (DEBUG) {
-            console.log("Writing component xref file to: " + idxPath);
-        }
-
-        idxFile.writeString(JSON.stringify(xref, null, 2));
-    } finally {
-        idxFile.flush();
-        idxFile.close();
-    }
-}
-
 /**
  * Utility function that will scan the Components directory for components and build a cross reference so that
  * when the blueprint system tries to attach a component, it knows where the component file is.
  * Note, that this will be cached so that it only builds the cross reference on game startup.
  * @returns object Component cross reference file.
  */
-function buildComponentCrossref(): { [key: string]: string } {
+function getComponentXref(componentXrefFn = "componentCrossRef.json"): { [key: string]: string } {
     // TODO: look at having a way of registering js components.  There may be a scenario where these components don't live in the Components folder and may be supplied by a library.
     // Cached
     if (componentCrossref) {
@@ -252,15 +162,6 @@ function buildComponentCrossref(): { [key: string]: string } {
     }
 
     componentCrossref = {};
-    let componentXrefFn = "componentCrossRef.json";
-    const projectRoot = getProjectRoot();
-    if (projectRoot !== "") {
-        // We have a project root, which means the --project command line param was passed.
-        // this indicates that we are not running as a packaged build so we should
-        // re-build the component index.
-        generateComponentIndex(projectRoot, componentXrefFn);
-    }
-
     const xrefFile = Atomic.cache.getFile(componentXrefFn);
     try {
         componentCrossref = JSON.parse(xrefFile.readText());
@@ -345,7 +246,7 @@ function getRootComponentBuilder(): Builder {
  * @returns {string} the absolute path to the component
  */
 function resolveJSComponent(componentName: string): string {
-    buildComponentCrossref();
+    getComponentXref();
     let comp: string;
     if (new RegExp("\\ | \/", "g").test(componentName)) {
         // We have an absolute path to the component.  Let's assume the blueprint writer knows what they are doing and just return it.
