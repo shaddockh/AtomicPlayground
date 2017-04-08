@@ -1,5 +1,6 @@
 "use strict";
-var gameChannels_1 = require('../Modules/gameChannels');
+Object.defineProperty(exports, "__esModule", { value: true });
+var gameChannels_1 = require("../Modules/gameChannels");
 /**
  * wrapper to be used for ui windows.  Will handle loading up the layout and
  * setting some properties.
@@ -25,7 +26,7 @@ var CustomUIWindow = (function () {
     }
     CustomUIWindow.prototype.openWindow = function (options) {
         if (options === void 0) { options = {
-            windowSettings: Atomic.UI_WINDOW_SETTINGS_TITLEBAR
+            windowSettings: Atomic.UI_WINDOW_SETTINGS.UI_WINDOW_SETTINGS_TITLEBAR
         }; }
         var window = this.window = new Atomic.UIWindow();
         window.settings = options.windowSettings;
@@ -42,5 +43,4 @@ var CustomUIWindow = (function () {
     };
     return CustomUIWindow;
 }());
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = CustomUIWindow;

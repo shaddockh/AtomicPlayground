@@ -1,13 +1,14 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 // This script is the main entry point of the game
 // Add the vendor scripts to the global namespace
-require('AtomicEventLoop');
-require('vendor.bundle');
-require('atomic-blueprintlib.bundle');
-var blueprintlib = require('atomic-blueprintlib');
-var blueprints_1 = require('../Modules/blueprints'); // Load all the blueprints into the catalog
-require('Ui/ui'); // Let the ui system register itself
-var gameChannels_1 = require('../Modules/gameChannels');
+require("AtomicEventLoop");
+require("vendor.bundle");
+require("atomic-blueprintlib.bundle");
+var blueprintlib = require("atomic-blueprintlib");
+var blueprints_1 = require("../Modules/blueprints"); // Load all the blueprints into the catalog
+require("Ui/ui"); // Let the ui system register itself
+var gameChannels_1 = require("../Modules/gameChannels");
 blueprintlib.catalog.loadBlueprints(blueprints_1.blueprints, function (bp) {
     console.log("Loading blueprint: " + bp);
 });
@@ -23,7 +24,7 @@ camera.orthoSize = Atomic.graphics.height * Atomic.PIXEL_SIZE;
 var viewport = null;
 viewport = new Atomic.Viewport(scene, camera);
 Atomic.renderer.setViewport(0, viewport);
-Atomic.renderer.textureFilterMode = Atomic.FILTER_NEAREST;
+Atomic.renderer.textureFilterMode = Atomic.TextureFilterMode.FILTER_NEAREST;
 // set up lighting zone
 var zone = scene.createComponent('Zone');
 zone.ambientColor = [.1, .1, .1, 0];

@@ -1,23 +1,30 @@
 'use strict';
 'atomic component';
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var triggerEvent = require('atomicTriggerEvent');
-var CustomJSComponent_1 = require('CustomJSComponent');
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var triggerEvent = require("atomicTriggerEvent");
+var CustomJSComponent_1 = require("CustomJSComponent");
 var Potion = (function (_super) {
     __extends(Potion, _super);
     function Potion() {
-        _super.apply(this, arguments);
-        this.inspectorFields = {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.inspectorFields = {
             debug: false,
             addHealth: 0,
             drinkSound: ['Sound'],
             drinkMessage: 'You feel healthier!'
         };
-        this.addHealth = 0;
+        _this.addHealth = 0;
+        return _this;
     }
     Potion.prototype.onBump = function (bumperComponent, bumperNode) {
         this.DEBUG("Bumped by: " + bumperComponent.node.name + " ");
@@ -31,7 +38,7 @@ var Potion = (function (_super) {
             soundSource.gain = 0.75;
             var sound = this.drinkSound;
             soundSource.play(sound);
-            soundSource.setAutoRemove(true);
+            soundSource.autoRemoveMode = Atomic.AutoRemoveMode.REMOVE_COMPONENT;
         }
         // Not sure how to make a sprite invisible, so just make it too small to see
         this.node.scale2D = [0, 0];
@@ -48,4 +55,4 @@ var Potion = (function (_super) {
     };
     return Potion;
 }(CustomJSComponent_1.default));
-module.exports = Potion;
+exports.default = Potion;

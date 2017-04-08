@@ -1,11 +1,11 @@
 'use strict';
 'atomic component';
 import CustomJSComponent from 'CustomJSComponent';
-import Entity = require('../common/Entity');
+import Entity from '../common/Entity';
 import MapData from '../../Modules/MapData';
 import gameState from '../../Modules/gameState';
 import * as triggerEvent from 'atomicTriggerEvent';
-import {vec2} from 'gl-matrix';
+import { vec2 } from 'gl-matrix';
 
 class MoveTimer {
     elapsed = 0;

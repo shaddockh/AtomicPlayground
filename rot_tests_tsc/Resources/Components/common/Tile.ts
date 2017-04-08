@@ -2,7 +2,7 @@
 'atomic component';
 import CustomJSComponent from 'CustomJSComponent';
 
-class Tile extends CustomJSComponent {
+export default class Tile extends CustomJSComponent {
     inspectorFields = {
         debug: false
     };
@@ -42,4 +42,3 @@ class Tile extends CustomJSComponent {
         this.mapEntity.tileComponent = null;
     }
 }
-export = Tile;

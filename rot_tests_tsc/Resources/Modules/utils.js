@@ -1,4 +1,5 @@
 'use strict';
+Object.defineProperty(exports, "__esModule", { value: true });
 function randomNumber(min, max) {
     if (min === void 0) { min = 0; }
     if (max === void 0) { max = -1; }

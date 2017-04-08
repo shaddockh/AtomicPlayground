@@ -2,11 +2,11 @@
 'atomic component';
 
 import CustomJSComponent from 'CustomJSComponent';
-class SpriteSheet extends CustomJSComponent {
+export default class SpriteSheet extends CustomJSComponent {
     inspectorFields = {
         debug: false,
-        spriteSheet: [Atomic.VAR_STRING],
-        spriteName: [Atomic.VAR_STRING]
+        spriteSheet: [Atomic.VariantType.VAR_STRING],
+        spriteName: [Atomic.VariantType.VAR_STRING]
     };
     spriteSheet: string = null;
     spriteName: string = null;
@@ -24,4 +24,3 @@ class SpriteSheet extends CustomJSComponent {
         }
     }
 }
-export = SpriteSheet;

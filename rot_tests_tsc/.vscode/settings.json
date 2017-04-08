@@ -1,0 +1,10 @@
+{
+    "files.exclude": {
+        // exclude .js and .js.map files, when in a TypeScript project.  Also .asset files.
+        "**/*.js": {
+            "when": "$(basename).ts"
+        },
+        "**/*.js.map": true,
+        "**/*.asset": true
+    }
+}

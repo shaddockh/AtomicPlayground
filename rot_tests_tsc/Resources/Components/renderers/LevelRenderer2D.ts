@@ -6,10 +6,10 @@ import MapData from '../../Modules/MapData';
 import * as triggerEvent from 'atomicTriggerEvent';
 import CustomJSComponent from 'CustomJSComponent';
 import gameState from '../../Modules/gameState';
-import Entity = require('../common/Entity'); // Need to use 'require' when pulling in a component because they are exported differently
-import Tile = require('../common/Tile'); // Need to use 'require' when pulling in a component because they are exported differently
+import Entity from '../common/Entity';
+import Tile from '../common/Tile';
 
-class LevelRenderer2D extends CustomJSComponent {
+export default class LevelRenderer2D extends CustomJSComponent {
 
     inspectorFields = {
         debug: true,
@@ -198,4 +198,3 @@ class LevelRenderer2D extends CustomJSComponent {
         //node.scale2D = [zoom, zoom];
     }
 }
-export = LevelRenderer2D;

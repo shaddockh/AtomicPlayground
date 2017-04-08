@@ -1,15 +1,21 @@
 'use strict';
 'atomic component';
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var CustomJSComponent_1 = require('CustomJSComponent');
-var MapData_1 = require('../../Modules/MapData');
-var gameState_1 = require('../../Modules/gameState');
-var triggerEvent = require('atomicTriggerEvent');
-var gl_matrix_1 = require('gl-matrix');
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var CustomJSComponent_1 = require("CustomJSComponent");
+var MapData_1 = require("../../Modules/MapData");
+var gameState_1 = require("../../Modules/gameState");
+var triggerEvent = require("atomicTriggerEvent");
+var gl_matrix_1 = require("gl-matrix");
 var MoveTimer = (function () {
     function MoveTimer() {
         this.elapsed = 0;
@@ -29,20 +35,21 @@ var MoveTimer = (function () {
 var GridMover = (function (_super) {
     __extends(GridMover, _super);
     function GridMover() {
-        _super.apply(this, arguments);
-        this.inspectorFields = {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.inspectorFields = {
             debug: false,
             // need speed to be 1 tile per speed per second.
             speed: 1,
             smoothMovement: true // jump from tile to tile or smoothly move between them
         };
-        this.speed = 1;
-        this.smoothMovement = true;
-        this.moveTimer = new MoveTimer();
-        this.postMoveActions = [];
-        this.moving = false;
-        this.blocked = false;
-        this.bumping = false;
+        _this.speed = 1;
+        _this.smoothMovement = true;
+        _this.moveTimer = new MoveTimer();
+        _this.postMoveActions = [];
+        _this.moving = false;
+        _this.blocked = false;
+        _this.bumping = false;
+        return _this;
     }
     GridMover.prototype.queuePostMoveAction = function (action) {
         this.postMoveActions.push(action);
@@ -183,5 +190,4 @@ var GridMover = (function (_super) {
     };
     return GridMover;
 }(CustomJSComponent_1.default));
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = GridMover;

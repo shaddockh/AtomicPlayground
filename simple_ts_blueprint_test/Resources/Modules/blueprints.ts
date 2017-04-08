@@ -9,7 +9,7 @@ export const star = {
     isPrefab: true,
     StaticSprite2D: {
         sprite: "Sprites/star.png",
-        blendMode: Atomic.BLEND_ALPHA
+        blendMode: Atomic.BlendMode.BLEND_ALPHA
     }
 };
 

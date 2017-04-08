@@ -14,16 +14,16 @@ import CustomJSComponent from 'CustomJSComponent';
  *   onClose: 'Sounds/customsound2.ogg'
  * }
  */
-class EventSound extends CustomJSComponent {
+export default class EventSound extends CustomJSComponent {
     inspectorFields = {
         debug: false,
-        eventMessage01: [Atomic.VAR_STRING],
+        eventMessage01: [Atomic.VariantType.VAR_STRING],
         eventSound01: ['Sound'],
-        eventMessage02: [Atomic.VAR_STRING],
+        eventMessage02: [Atomic.VariantType.VAR_STRING],
         eventSound02: ['Sound'],
-        eventMessage03: [Atomic.VAR_STRING],
+        eventMessage03: [Atomic.VariantType.VAR_STRING],
         eventSound03: ['Sound'],
-        eventMessage04: [Atomic.VAR_STRING],
+        eventMessage04: [Atomic.VariantType.VAR_STRING],
         eventSound04: ['Sound'],
     };
 
@@ -62,4 +62,3 @@ class EventSound extends CustomJSComponent {
         }
     }
 }
-export = EventSound;

@@ -2,9 +2,9 @@
 'atomic component';
 import * as triggerEvent from 'atomicTriggerEvent';
 
-import Entity = require('../common/Entity');
+import Entity from '../common/Entity';
 import CustomJSComponent from '../../Modules/CustomJSComponent';
-class Door extends CustomJSComponent {
+export default class Door extends CustomJSComponent {
 
     inspectorFields = {
         debug: false,
@@ -75,10 +75,9 @@ class Door extends CustomJSComponent {
                 soundSource.gain = 0.75;
                 let sound = this.openSound; //Atomic.cache.getResource<Atomic.Sound>('Sound', this.openSound);
                 soundSource.play(sound);
-                soundSource.setAutoRemove(true);
+                soundSource.autoRemoveMode = Atomic.AutoRemoveMode.REMOVE_COMPONENT;
             }
         }
     }
 
 }
-export = Door;

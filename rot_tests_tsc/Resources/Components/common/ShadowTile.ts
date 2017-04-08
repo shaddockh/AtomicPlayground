@@ -8,9 +8,9 @@ import gameState from '../../Modules/gameState';
  * is what is provided in the triggerPlatforms property.  Can also fire a message if the
  * platform does not match.
  */
-class ShadowTile extends CustomJSComponent {
+export default class ShadowTile extends CustomJSComponent {
     inspectorFields = {
-        platformDisable: [Atomic.VAR_STRINGVECTOR, ['HTML5']],
+        platformDisable: [Atomic.VariantType.VAR_STRINGVECTOR, ['HTML5']],
         debug: false
     };
 
@@ -20,7 +20,7 @@ class ShadowTile extends CustomJSComponent {
         if (this.platformDisable.indexOf(Atomic.platform) === -1) {
             this.DEBUG('Enabling shadow tile for current platform.');
             const body = this.node.getOrCreateComponent<Atomic.RigidBody2D>('RigidBody2D');
-            body.bodyType = Atomic.BT_STATIC;
+            body.bodyType = Atomic.BodyType2D.BT_STATIC;
             body.castShadows = true;
 
             const box = this.node.getOrCreateComponent<Atomic.CollisionBox2D>('CollisionBox2D');
@@ -30,4 +30,3 @@ class ShadowTile extends CustomJSComponent {
         }
     }
 }
-export = ShadowTile;

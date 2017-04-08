@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.tiles = {
     tile_base: {
         prefabDir: 'Prefabs/autogen/tiles',
@@ -8,7 +9,7 @@ exports.tiles = {
         },
         MessageDispatcher: {},
         StaticSprite2D: {
-            blendMode: Atomic.BLEND_ALPHA,
+            blendMode: Atomic.BlendMode.BLEND_ALPHA,
             orderInLayer: 0,
             color: [1, 1, 1, 1]
         }

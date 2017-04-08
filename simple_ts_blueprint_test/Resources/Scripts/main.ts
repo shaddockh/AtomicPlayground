@@ -10,6 +10,7 @@ import * as blueprintLib from "atomic-blueprintlib";
 const scene = new Atomic.Scene();
 scene.createComponent("Octree");
 
+
 const cameraNode = scene.createChild("Camera");
 cameraNode.position = [0.0, 0.0, -10.0];
 
@@ -43,7 +44,8 @@ starOverride.Star.speed = 1000;
 
 let spaceNode4 = blueprintLib.createChildAtPosition(scene, starOverride, [1, 1]);
 
-// called per frame
+
+/** called per frame */
 export function update(timeStep) {
     // console.log('update');
 }

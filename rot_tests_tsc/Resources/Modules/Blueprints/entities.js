@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.entities = {
     entity_base: {
         prefabDir: 'Prefabs/autogen/entities',
@@ -73,7 +74,7 @@ exports.entities = {
         },
         RigidBody2D: {
             allowSleep: true,
-            bodyType: Atomic.BT_STATIC,
+            bodyType: Atomic.BodyType2D.BT_STATIC,
             bullet: false,
             castShadows: false,
             fixedRotation: true,
@@ -143,7 +144,7 @@ exports.entities = {
             orderInLayer: 10
         },
         RigidBody2D: {
-            bodyType: Atomic.BT_STATIC,
+            bodyType: Atomic.BodyType2D.BT_STATIC,
             castShadows: true
         },
         CollisionBox2D: {
@@ -153,6 +154,12 @@ exports.entities = {
             debug: false,
             openSound: 'Sounds/doorOpen_1.ogg'
         }
+        // works, but it's too dynamic :p ... not good for editing in the editor
+        //EventSound: {
+        //    eventMap: {
+        //        'onOpen': 'Sounds/doorOpen_1.ogg'
+        //    }
+        //}
     },
     door_ns: {
         inherits: 'door',

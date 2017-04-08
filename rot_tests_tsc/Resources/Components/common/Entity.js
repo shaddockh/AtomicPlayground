@@ -1,17 +1,23 @@
 'use strict';
 'atomic component';
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var CustomJSComponent_1 = require('../../Modules/CustomJSComponent');
-var gameState_1 = require('../../Modules/gameState');
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var CustomJSComponent_1 = require("../../Modules/CustomJSComponent");
+var gameState_1 = require("../../Modules/gameState");
 var Entity = (function (_super) {
     __extends(Entity, _super);
     function Entity() {
-        _super.apply(this, arguments);
-        this.inspectorFields = {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.inspectorFields = {
             debug: false,
             blocksPath: false,
             blocksLight: false,
@@ -20,17 +26,18 @@ var Entity = (function (_super) {
             fovRemember: false,
             screenName: 'entity'
         };
-        this.blocksPath = false;
-        this.blocksLight = false;
-        this.bumpable = false;
-        this.attackable = false;
+        _this.blocksPath = false;
+        _this.blocksLight = false;
+        _this.bumpable = false;
+        _this.attackable = false;
         /** The displayable name of this entity */
-        this.screenName = 'entity';
+        _this.screenName = 'entity';
         /** once seen, don't hide when leaving field of view */
-        this.fovRemember = false;
-        this.mapEntity = null;
+        _this.fovRemember = false;
+        _this.mapEntity = null;
         /** has this entity been seen by the player yet? */
-        this.seen = false;
+        _this.seen = false;
+        return _this;
     }
     Entity.prototype.getPosition = function () {
         return [this.mapEntity.x, this.mapEntity.y];
@@ -64,4 +71,4 @@ var Entity = (function (_super) {
     };
     return Entity;
 }(CustomJSComponent_1.default));
-module.exports = Entity;
+exports.default = Entity;

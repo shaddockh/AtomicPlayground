@@ -1,23 +1,30 @@
 'atomic component';
 "use strict";
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var blueprintlib = require('atomic-blueprintlib');
-var triggerEvent = require('atomicTriggerEvent');
-var gameChannels_1 = require('../../Modules/gameChannels');
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var blueprintlib = require("atomic-blueprintlib");
+var triggerEvent = require("atomicTriggerEvent");
+var gameChannels_1 = require("../../Modules/gameChannels");
 var LevelGenerationChooser = (function (_super) {
     __extends(LevelGenerationChooser, _super);
     function LevelGenerationChooser() {
-        _super.call(this);
-        this.generatorNode = null;
-        this.runNode = null;
-        this.runButton = null;
-        this.generatorNode = null;
-        this.runNode = null;
-        this.runButton = null;
+        var _this = _super.call(this) || this;
+        _this.generatorNode = null;
+        _this.runNode = null;
+        _this.runButton = null;
+        _this.generatorNode = null;
+        _this.runNode = null;
+        _this.runButton = null;
+        return _this;
     }
     LevelGenerationChooser.prototype.start = function () {
         // NOTE: the fat arrow function doesn't work quite in the same way as babel, so need to capture 'this'
@@ -77,4 +84,4 @@ var LevelGenerationChooser = (function (_super) {
     };
     return LevelGenerationChooser;
 }(Atomic.JSComponent));
-module.exports = LevelGenerationChooser;
+exports.default = LevelGenerationChooser;

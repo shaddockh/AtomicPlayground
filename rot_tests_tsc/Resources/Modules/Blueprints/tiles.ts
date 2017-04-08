@@ -8,7 +8,7 @@ export const tiles = {
         },
         MessageDispatcher: {},
         StaticSprite2D: {
-            blendMode: Atomic.BLEND_ALPHA,
+            blendMode: Atomic.BlendMode.BLEND_ALPHA,
             orderInLayer: 0,
             color: [1, 1, 1, 1]
         }

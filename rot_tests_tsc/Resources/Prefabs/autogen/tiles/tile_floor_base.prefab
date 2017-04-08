@@ -2,6 +2,7 @@
 <node id="4">
 	<attribute name="Is Enabled" value="true" />
 	<attribute name="Name" value="tile_floor_base" />
+	<attribute name="Tags" />
 	<attribute name="Position" value="0 0 0" />
 	<attribute name="Rotation" value="1 0 0 0" />
 	<attribute name="Scale" value="1 1 1" />
@@ -9,7 +10,7 @@
 	<component type="JSComponent" id="16777220">
 		<attribute name="ComponentFile" value="JSComponentFile;Components/common/Tile.js" />
 		<attribute name="FieldValues">
-			<variant hash="339510355" type="Bool" value="false" />
+			<variant name="debug" type="Bool" value="false" />
 		</attribute>
 	</component>
 	<component type="JSComponent" id="16777221">
@@ -19,8 +20,8 @@
 	<component type="JSComponent" id="16777222">
 		<attribute name="ComponentFile" value="JSComponentFile;Components/common/Spritesheet.js" />
 		<attribute name="FieldValues">
-			<variant hash="4150063834" type="String" value="Sprites/floor.xml" />
-			<variant hash="339510355" type="Bool" value="false" />
+			<variant name="spriteSheet" type="String" value="Sprites/floor.xml" />
+			<variant name="debug" type="Bool" value="false" />
 		</attribute>
 	</component>
 </node>

@@ -3,7 +3,7 @@
 import * as triggerEvent from 'atomicTriggerEvent';
 
 import CustomJSComponent from 'CustomJSComponent';
-class Potion extends CustomJSComponent {
+export default class Potion extends CustomJSComponent {
 
     inspectorFields = {
         debug: false,
@@ -29,7 +29,7 @@ class Potion extends CustomJSComponent {
             soundSource.gain = 0.75;
             let sound = this.drinkSound;
             soundSource.play(sound);
-            soundSource.setAutoRemove(true);
+            soundSource.autoRemoveMode = Atomic.AutoRemoveMode.REMOVE_COMPONENT;
         }
 
         // Not sure how to make a sprite invisible, so just make it too small to see
@@ -47,4 +47,3 @@ class Potion extends CustomJSComponent {
         }
     }
 }
-export = Potion;

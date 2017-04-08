@@ -77,7 +77,7 @@ export const entities = {
         },
         RigidBody2D: {
             allowSleep: true,
-            bodyType: Atomic.BT_STATIC,
+            bodyType: Atomic.BodyType2D.BT_STATIC,
             bullet: false,
             castShadows: false,
             fixedRotation: true,
@@ -151,7 +151,7 @@ export const entities = {
             orderInLayer: 10
         },
         RigidBody2D: {
-            bodyType: Atomic.BT_STATIC,
+            bodyType: Atomic.BodyType2D.BT_STATIC,
             castShadows: true
         },
         CollisionBox2D: {

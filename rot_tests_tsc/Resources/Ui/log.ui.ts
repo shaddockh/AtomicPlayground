@@ -14,7 +14,7 @@ export default class Hud extends CustomUIWindow {
 
     openWindow() {
         super.openWindow({
-            windowSettings: Atomic.UI_WINDOW_SETTINGS_NONE
+            windowSettings: Atomic.UI_WINDOW_SETTINGS.UI_WINDOW_SETTINGS_NONE
         });
 
         const wnd = this.window;

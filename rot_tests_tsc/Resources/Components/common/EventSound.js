@@ -1,11 +1,17 @@
 'use strict';
 'atomic component';
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var CustomJSComponent_1 = require('CustomJSComponent');
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var CustomJSComponent_1 = require("CustomJSComponent");
 //import * as triggerEvent from 'atomicTriggerEvent';
 /*
  * This component will listen for an event and play the mapped sound.  You must
@@ -21,19 +27,20 @@ var CustomJSComponent_1 = require('CustomJSComponent');
 var EventSound = (function (_super) {
     __extends(EventSound, _super);
     function EventSound() {
-        _super.apply(this, arguments);
-        this.inspectorFields = {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.inspectorFields = {
             debug: false,
-            eventMessage01: [Atomic.VAR_STRING],
+            eventMessage01: [Atomic.VariantType.VAR_STRING],
             eventSound01: ['Sound'],
-            eventMessage02: [Atomic.VAR_STRING],
+            eventMessage02: [Atomic.VariantType.VAR_STRING],
             eventSound02: ['Sound'],
-            eventMessage03: [Atomic.VAR_STRING],
+            eventMessage03: [Atomic.VariantType.VAR_STRING],
             eventSound03: ['Sound'],
-            eventMessage04: [Atomic.VAR_STRING],
+            eventMessage04: [Atomic.VariantType.VAR_STRING],
             eventSound04: ['Sound'],
         };
-        this.eventMap = {};
+        _this.eventMap = {};
+        return _this;
     }
     EventSound.prototype.mapEventToMap = function (eventMessage, eventSound) {
         if (eventMessage) {
@@ -58,4 +65,4 @@ var EventSound = (function (_super) {
     };
     return EventSound;
 }(CustomJSComponent_1.default));
-module.exports = EventSound;
+exports.default = EventSound;

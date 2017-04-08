@@ -164,6 +164,7 @@ Full examples can be found in the AtomicPlayground (http://www.github.com/shaddo
 * [simple_es6_blueprint_test](https://github.com/shaddockh/AtomicPlayground/tree/master/simple_es6_blueprint_test)
 * [space_shooter_blueprint](https://github.com/shaddockh/AtomicPlayground/tree/master/space_shooter_blueprint) (in progress)
 * [space_shooter_es6_blueprint](https://github.com/shaddockh/AtomicPlayground/tree/master/space_shooter_es6_blueprint)
+* [rot_tests_tsc](https://github.com/shaddockh/AtomicPlayground/tree/master/rot_tests_tsc)
 
 # Blueprint Library plugin (Pre-Alpha)
 There is an editor plugin that is in the really early stages of development that can be used.  It is located in ```dist/Resources/EditorData``` and can be placed in the ```Resources/EditorData``` folder of your project.  At this point the only thing it does is autogenerate prefabs for any blueprints found in the file:

@@ -2,7 +2,6 @@
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
-    "moduleResolution": "node",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "declaration": false,
@@ -12,7 +11,11 @@
     "noLib": false,
     "preserveConstEnums": true,
     "suppressImplicitAnyIndexErrors": true,
-    "outDir": "./lib/"
+    "outDir": "./lib/",
+    "typeRoots": [
+      "./typings/ambient/atomicgameengine",
+      "./typings/entity-blueprint-manager"
+    ]
   },
   "filesGlob": [
     "./ts/**/*.ts",
@@ -26,7 +29,7 @@
   },
   "files": [
     "./ts/atomic-blueprintlib.ts",
-    "./typings/Atomic/Atomic.d.ts",
+    "./typings/ambient/atomicgameengine/Atomic.d.ts",
     "./typings/entity-blueprint-manager/entity-blueprint-manager.d.ts"
   ]
 }

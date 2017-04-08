@@ -3,7 +3,7 @@ import CustomUIWindow from './CustomUIWindow';
 
 export default class LevelGenSelector extends CustomUIWindow {
 
-    runButton:Atomic.UIButton = null;
+    runButton: Atomic.UIButton = null;
 
     channelTopics = {
         'hide:levelGen': this.closeWindow
@@ -29,21 +29,21 @@ export default class LevelGenSelector extends CustomUIWindow {
 
         this.runButton = wnd.getWidget<Atomic.UIButton>('btnRun');
         this.runButton.subscribeToEvent(this.runButton, 'WidgetEvent', (eventData) => {
-            if (eventData.type !== Atomic.UI_EVENT_TYPE_CLICK) {
+            if (eventData.type !== Atomic.UI_EVENT_TYPE.UI_EVENT_TYPE_CLICK) {
                 return;
             }
             levelChannel.sendMessage('run:level', selectList.selectedItemID);
-            this.runButton.setState(Atomic.UI_WIDGET_STATE_DISABLED, true);
+            this.runButton.setState(Atomic.UI_WIDGET_STATE.UI_WIDGET_STATE_DISABLED, true);
             this.closeWindow();
         });
 
         let button = wnd.getWidget<Atomic.UIButton>('btnGenerate');
         button.subscribeToEvent(button, 'WidgetEvent', (eventData) => {
-            if (eventData.type !== Atomic.UI_EVENT_TYPE_CLICK) {
+            if (eventData.type !== Atomic.UI_EVENT_TYPE.UI_EVENT_TYPE_CLICK) {
                 return;
             }
             levelChannel.sendMessage('preview:level', selectList.selectedItemID);
-            this.runButton.setState(Atomic.UI_WIDGET_STATE_DISABLED, false);
+            this.runButton.setState(Atomic.UI_WIDGET_STATE.UI_WIDGET_STATE_DISABLED, false);
         });
     }
 }

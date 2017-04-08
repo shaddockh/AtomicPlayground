@@ -5,13 +5,13 @@ import { uiChannel } from '../Modules/gameChannels';
  * setting some properties.
  */
 export default class CustomUIWindow {
-    window:Atomic.UIWindow = null;
+    window: Atomic.UIWindow = null;
 
     channelTopics = {};
 
-    layoutFilename:string = null;
-    uiView:Atomic.UIView = null;
-    private channelId:number;
+    layoutFilename: string = null;
+    uiView: Atomic.UIView = null;
+    private channelId: number;
 
     constructor(uiView, layoutFilename) {
         this.layoutFilename = layoutFilename;
@@ -24,7 +24,7 @@ export default class CustomUIWindow {
     }
 
     openWindow(options = {
-      windowSettings: Atomic.UI_WINDOW_SETTINGS_TITLEBAR
+        windowSettings: Atomic.UI_WINDOW_SETTINGS.UI_WINDOW_SETTINGS_TITLEBAR
     }) {
 
         const window = this.window = new Atomic.UIWindow();

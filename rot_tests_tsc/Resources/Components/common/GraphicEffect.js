@@ -1,18 +1,24 @@
 'use strict';
 'atomic component';
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var CustomJSComponent_1 = require('CustomJSComponent');
-var gameState_1 = require('../../Modules/gameState');
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var CustomJSComponent_1 = require("CustomJSComponent");
+var gameState_1 = require("../../Modules/gameState");
 //import * as triggerEvent from 'atomicTriggerEvent';
 var GraphicEffect = (function (_super) {
     __extends(GraphicEffect, _super);
     function GraphicEffect() {
-        _super.apply(this, arguments);
-        this.inspectorFields = {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.inspectorFields = {
             debug: false,
             duration: 1,
             speed: 1,
@@ -20,12 +26,13 @@ var GraphicEffect = (function (_super) {
             zoomTo: 1,
             fadeOut: true
         };
-        this.t = 0;
-        this.duration = 1;
-        this.zoom = true;
-        this.zoomTo = 1;
-        this.fadeOut = true;
-        this.speed = 1;
+        _this.t = 0;
+        _this.duration = 1;
+        _this.zoom = true;
+        _this.zoomTo = 1;
+        _this.fadeOut = true;
+        _this.speed = 1;
+        return _this;
     }
     GraphicEffect.prototype.start = function () {
         this.t = 0;
@@ -52,4 +59,4 @@ var GraphicEffect = (function (_super) {
     };
     return GraphicEffect;
 }(CustomJSComponent_1.default));
-module.exports = GraphicEffect;
+exports.default = GraphicEffect;

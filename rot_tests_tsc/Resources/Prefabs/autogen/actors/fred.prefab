@@ -2,6 +2,7 @@
 <node id="36">
 	<attribute name="Is Enabled" value="true" />
 	<attribute name="Name" value="fred" />
+	<attribute name="Tags" />
 	<attribute name="Position" value="0 0 0" />
 	<attribute name="Rotation" value="1 0 0 0" />
 	<attribute name="Scale" value="1 1 1" />
@@ -9,11 +10,11 @@
 	<component type="JSComponent" id="16777331">
 		<attribute name="ComponentFile" value="JSComponentFile;Components/common/Entity.js" />
 		<attribute name="FieldValues">
-			<variant hash="3427235179" type="Bool" value="true" />
-			<variant hash="421471792" type="Bool" value="false" />
-			<variant hash="1215768336" type="Bool" value="true" />
-			<variant hash="2894794562" type="Bool" value="true" />
-			<variant hash="2263931415" type="String" value="a rat" />
+			<variant name="blocksPath" type="Bool" value="true" />
+			<variant name="blocksLight" type="Bool" value="false" />
+			<variant name="bumpable" type="Bool" value="true" />
+			<variant name="attackable" type="Bool" value="true" />
+			<variant name="screenName" type="String" value="a rat" />
 		</attribute>
 	</component>
 	<component type="JSComponent" id="16777332">
@@ -22,7 +23,7 @@
 	<component type="JSComponent" id="16777333">
 		<attribute name="ComponentFile" value="JSComponentFile;Components/actionHandlers/GridMover.js" />
 		<attribute name="FieldValues">
-			<variant hash="273365031" type="Float" value="1.5" />
+			<variant name="speed" type="Float" value="1.5" />
 		</attribute>
 	</component>
 	<component type="StaticSprite2D" id="28">
@@ -32,20 +33,20 @@
 	<component type="JSComponent" id="16777334">
 		<attribute name="ComponentFile" value="JSComponentFile;Components/ai/MonsterAi.js" />
 		<attribute name="FieldValues">
-			<variant hash="339510355" type="Bool" value="false" />
+			<variant name="debug" type="Bool" value="false" />
 		</attribute>
 	</component>
 	<component type="JSComponent" id="16777335">
 		<attribute name="ComponentFile" value="JSComponentFile;Components/common/Health.js" />
 		<attribute name="FieldValues">
-			<variant hash="3573188092" type="Float" value="5" />
+			<variant name="life" type="Float" value="5" />
 		</attribute>
 	</component>
 	<component type="JSComponent" id="16777336">
 		<attribute name="ComponentFile" value="JSComponentFile;Components/common/EventSound.js" />
 		<attribute name="FieldValues">
-			<variant hash="436764110" type="String" value="onAttack" />
-			<variant hash="327743190" type="ResourceRef" value="Sound;Sounds/bite-small2.ogg" />
+			<variant name="eventMessage01" type="String" value="onAttack" />
+			<variant name="eventSound01" type="ResourceRef" value="Sound;Sounds/bite-small2.ogg" />
 		</attribute>
 	</component>
 </node>

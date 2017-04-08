@@ -1,6 +1,7 @@
 'use strict';
-var utils = require('./utils');
-var metrics = require('./metricsGatherer');
+Object.defineProperty(exports, "__esModule", { value: true });
+var utils = require("./utils");
+var metrics = require("./metricsGatherer");
 var MapData = (function () {
     function MapData(width, height, defaultValue) {
         if (defaultValue === void 0) { defaultValue = {
@@ -170,12 +171,11 @@ var MapData = (function () {
             blueprint: blueprintArr[utils.randomNumber(blueprintArr.length)]
         };
     };
-    MapData.TILE_NONE = 0;
-    MapData.TILE_WALL = 1;
-    MapData.TILE_FLOOR = 2;
     return MapData;
 }());
-Object.defineProperty(exports, "__esModule", { value: true });
+MapData.TILE_NONE = 0;
+MapData.TILE_WALL = 1;
+MapData.TILE_FLOOR = 2;
 exports.default = MapData;
 function createEmptyMap(width, height, defaultValue) {
     if (defaultValue === void 0) { defaultValue = {

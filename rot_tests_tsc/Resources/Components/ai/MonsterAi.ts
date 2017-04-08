@@ -9,9 +9,9 @@ import ROT = require('rot-js');
 import {vec2} from 'gl-matrix';
 import * as metrics from 'metricsGatherer';
 import gameState from '../../Modules/gameState';
-import Entity = require('../common/Entity');
+import Entity from '../common/Entity';
 
-class MonsterAi extends CustomJSComponent {
+export default class MonsterAi extends CustomJSComponent {
 
     inspectorFields = {
         debug: false,
@@ -190,4 +190,3 @@ class MonsterAi extends CustomJSComponent {
     }
 
 }
-export = MonsterAi;

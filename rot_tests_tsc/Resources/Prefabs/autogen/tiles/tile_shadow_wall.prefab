@@ -2,6 +2,7 @@
 <node id="20">
 	<attribute name="Is Enabled" value="true" />
 	<attribute name="Name" value="tile_shadow_wall" />
+	<attribute name="Tags" />
 	<attribute name="Position" value="0 0 0" />
 	<attribute name="Rotation" value="1 0 0 0" />
 	<attribute name="Scale" value="1 1 1" />
@@ -9,7 +10,7 @@
 	<component type="JSComponent" id="16777268">
 		<attribute name="ComponentFile" value="JSComponentFile;Components/common/Tile.js" />
 		<attribute name="FieldValues">
-			<variant hash="339510355" type="Bool" value="false" />
+			<variant name="debug" type="Bool" value="false" />
 		</attribute>
 	</component>
 	<component type="JSComponent" id="16777269">
@@ -19,7 +20,7 @@
 	<component type="JSComponent" id="16777270">
 		<attribute name="ComponentFile" value="JSComponentFile;Components/common/ShadowTile.js" />
 		<attribute name="FieldValues">
-			<variant hash="1625691605" type="Vector2" value="nan nan" />
+			<variant name="platformDisable" type="Vector2" value="nan nan" />
 		</attribute>
 	</component>
 </node>
