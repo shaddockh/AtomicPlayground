@@ -1,16 +1,22 @@
 'use strict';
 'atomic component';
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var CustomJSComponent_1 = require('../../Modules/CustomJSComponent');
-var triggerEvent = require('atomicTriggerEvent');
-var MapData_1 = require('../../Modules/MapData');
-var ROT = require('rot-js');
-var gameChannels_1 = require('../../Modules/gameChannels');
-var gameState_1 = require('../../Modules/gameState');
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var CustomJSComponent_1 = require("../../Modules/CustomJSComponent");
+var triggerEvent = require("atomicTriggerEvent");
+var MapData_1 = require("../../Modules/MapData");
+var ROT = require("rot-js");
+var gameChannels_1 = require("../../Modules/gameChannels");
+var gameState_1 = require("../../Modules/gameState");
 /**
  * Level runner component. This component is in charge of running a particular
  * level and making sure actors act, etc.  It is also the interface that entities
@@ -21,8 +27,8 @@ var gameState_1 = require('../../Modules/gameState');
 var LevelRunner = (function (_super) {
     __extends(LevelRunner, _super);
     function LevelRunner() {
-        _super.call(this);
-        this.inspectorFields = {
+        var _this = _super.call(this) || this;
+        _this.inspectorFields = {
             debug: false,
             mapData: null,
             turnBased: true,
@@ -30,25 +36,26 @@ var LevelRunner = (function (_super) {
             fovRadius: 15
         };
         /** The hero node */
-        this.hero = null;
+        _this.hero = null;
         /** ROT scheduler */
-        this.scheduler = null;
+        _this.scheduler = null;
         /** ROT engine */
-        this.engine = null;
+        _this.engine = null;
         /** # of turns elapsed */
-        this.turns = 0;
+        _this.turns = 0;
         /** The map data for this level */
-        this.mapData = null;
+        _this.mapData = null;
         /** use field of view calcs */
-        this.useFov = true;
+        _this.useFov = true;
         /** radius to run field of view calcs on.  You may want to tweak this if you have more or less tiles on the screen at once. */
-        this.fovRadius = 50;
+        _this.fovRadius = 50;
         /** # of enemies remaining in level */
-        this.enemiesRemaining = 99;
+        _this.enemiesRemaining = 99;
         /** Indicates whether the game is over or not */
-        this.isGameOver = false;
-        this.scheduler = new ROT.Scheduler.Simple();
-        this.engine = new ROT.Engine(this.scheduler);
+        _this.isGameOver = false;
+        _this.scheduler = new ROT.Scheduler.Simple();
+        _this.engine = new ROT.Engine(_this.scheduler);
+        return _this;
     }
     LevelRunner.prototype.start = function () {
         var _this = this;
@@ -161,5 +168,4 @@ var LevelRunner = (function (_super) {
     };
     return LevelRunner;
 }(CustomJSComponent_1.default));
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = LevelRunner;

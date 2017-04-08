@@ -12,9 +12,9 @@ export default class ROTUniform extends BaseLevelGenerator {
         height: 25, // copied from BaseLevelGenerator
 
         // options
-        roomWidth: [Atomic.VAR_VECTOR2, [3, 9]],
+        roomWidth: [Atomic.VariantType.VAR_VECTOR2, [3, 9]],
         /* room minimum and maximum width */
-        roomHeight: [Atomic.VAR_VECTOR2, [3, 5]],
+        roomHeight: [Atomic.VariantType.VAR_VECTOR2, [3, 5]],
         /* we stop after this percentage of level area has been dug out */
         roomDugPercentage: 0.1,
         /* we stop after this much time has passed (msec) */

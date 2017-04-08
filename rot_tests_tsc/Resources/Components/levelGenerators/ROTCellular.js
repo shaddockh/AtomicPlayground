@@ -1,18 +1,24 @@
 'use strict';
 'atomic component';
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var ROT = require('rot-js');
-var MapData_1 = require('../../Modules/MapData');
-var BaseLevelGenerator_1 = require('./BaseLevelGenerator');
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var ROT = require("rot-js");
+var MapData_1 = require("../../Modules/MapData");
+var BaseLevelGenerator_1 = require("./BaseLevelGenerator");
 var ROTCellular = (function (_super) {
     __extends(ROTCellular, _super);
     function ROTCellular() {
-        _super.apply(this, arguments);
-        this.inspectorFields = {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.inspectorFields = {
             debug: false,
             width: 80,
             height: 25,
@@ -20,20 +26,21 @@ var ROTCellular = (function (_super) {
             randomization: 0.9,
             /*List of neighbor counts for a new cell to be born in empty space*/
             // TODO: currently limited to an array of 4 here
-            born: [Atomic.VAR_BUFFER, [5, 6, 7, 8]],
+            born: [Atomic.VariantType.VAR_BUFFER, [5, 6, 7, 8]],
             /*List of neighbor counts for an existing  cell to survive*/
             // TODO: currently limited to an array of 4 here
-            survive: [Atomic.VAR_BUFFER, [4, 5, 6, 7 /*, 8*/]],
+            survive: [Atomic.VariantType.VAR_BUFFER, [4, 5, 6, 7 /*, 8*/]],
             /*Topology 4 or 6 or 8*/
             topology: 8,
             connected: false
         };
-        this.iterations = 3;
-        this.born = [5, 6, 7, 8];
-        this.randomization = 0.9;
-        this.survive = [4, 5, 6, 7];
-        this.topology = 8;
-        this.connected = false;
+        _this.iterations = 3;
+        _this.born = [5, 6, 7, 8];
+        _this.randomization = 0.9;
+        _this.survive = [4, 5, 6, 7];
+        _this.topology = 8;
+        _this.connected = false;
+        return _this;
     }
     /** @override */
     ROTCellular.prototype.buildMapData = function () {
@@ -70,5 +77,4 @@ var ROTCellular = (function (_super) {
     };
     return ROTCellular;
 }(BaseLevelGenerator_1.default));
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ROTCellular;

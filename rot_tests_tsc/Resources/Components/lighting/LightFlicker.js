@@ -1,27 +1,34 @@
 // a flickering light component
 'use strict';
 'atomic component';
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
 var LightFlicker = (function (_super) {
     __extends(LightFlicker, _super);
     function LightFlicker() {
-        _super.apply(this, arguments);
-        this.inspectorFields = {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.inspectorFields = {
             baseRange: 45,
             // make sure first update catches.  Can also be used to offset different lights
             time: 100,
             flicker: 'mmmaaaammmaaaabcdefgabcdefg',
             speed: 0.05
         };
-        this.light = null;
-        this.lightType = 0;
-        this.baseRange = 45;
-        this.time = 100;
-        this.speed = 0.05;
+        _this.light = null;
+        _this.lightType = 0;
+        _this.baseRange = 45;
+        _this.time = 100;
+        _this.speed = 0.05;
+        return _this;
     }
     LightFlicker.prototype.start = function () {
         this.light = this.node.getComponent('Light');
@@ -69,9 +76,8 @@ var LightFlicker = (function (_super) {
             }
         }
     };
-    LightFlicker.POINT_LIGHT_2D = 1;
-    LightFlicker.LIGHT = 2;
     return LightFlicker;
 }(Atomic.JSComponent));
-Object.defineProperty(exports, "__esModule", { value: true });
+LightFlicker.POINT_LIGHT_2D = 1;
+LightFlicker.LIGHT = 2;
 exports.default = LightFlicker;

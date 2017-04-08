@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 // all blueprints should be defined here
 // This is the base star blueprint that defines the texture, etc.
 exports.star = {
@@ -10,7 +11,7 @@ exports.star = {
     isPrefab: true,
     StaticSprite2D: {
         sprite: "Sprites/star.png",
-        blendMode: Atomic.BLEND_ALPHA
+        blendMode: Atomic.BlendMode.BLEND_ALPHA
     }
 };
 // this descends from the base star and overrides the spawn position and speed

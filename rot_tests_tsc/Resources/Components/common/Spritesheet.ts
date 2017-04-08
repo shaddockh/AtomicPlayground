@@ -5,8 +5,8 @@ import CustomJSComponent from 'CustomJSComponent';
 export default class SpriteSheet extends CustomJSComponent {
     inspectorFields = {
         debug: false,
-        spriteSheet: [Atomic.VAR_STRING],
-        spriteName: [Atomic.VAR_STRING]
+        spriteSheet: [Atomic.VariantType.VAR_STRING],
+        spriteName: [Atomic.VariantType.VAR_STRING]
     };
     spriteSheet: string = null;
     spriteName: string = null;

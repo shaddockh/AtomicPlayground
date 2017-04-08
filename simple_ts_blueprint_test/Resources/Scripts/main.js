@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 require("atomic-blueprintlib.bundle"); // need to initialize the library bundle so we can access the contents
 var blueprintLib = require("atomic-blueprintlib");
 // This script is the main entry point of the game
@@ -30,7 +31,7 @@ var spaceNode3 = blueprintLib.createChildAtPosition(scene, "star2", [2, 2]);
 var starOverride = blueprintLib.getBlueprint("star2");
 starOverride.Star.speed = 1000;
 var spaceNode4 = blueprintLib.createChildAtPosition(scene, starOverride, [1, 1]);
-// called per frame
+/** called per frame */
 function update(timeStep) {
     // console.log('update');
 }

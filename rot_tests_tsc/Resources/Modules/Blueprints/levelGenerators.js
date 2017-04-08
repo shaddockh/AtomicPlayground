@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.levelGenerators = {
     baseLevelGenerator: {
         prefabDir: 'Prefabs/autogen/designer',

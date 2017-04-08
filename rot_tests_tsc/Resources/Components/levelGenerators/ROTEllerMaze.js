@@ -1,22 +1,29 @@
 'use strict';
 'atomic component';
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var ROT = require('rot-js');
-var MapData_1 = require('../../Modules/MapData');
-var BaseLevelGenerator_1 = require('./BaseLevelGenerator');
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var ROT = require("rot-js");
+var MapData_1 = require("../../Modules/MapData");
+var BaseLevelGenerator_1 = require("./BaseLevelGenerator");
 var ROTEllerMaze = (function (_super) {
     __extends(ROTEllerMaze, _super);
     function ROTEllerMaze() {
-        _super.apply(this, arguments);
-        this.inspectorFields = {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.inspectorFields = {
             debug: false,
             width: 80,
             height: 25 // copied from BaseLevelGenerator
         };
+        return _this;
     }
     /** @override */
     ROTEllerMaze.prototype.buildMapData = function () {
@@ -40,5 +47,4 @@ var ROTEllerMaze = (function (_super) {
     };
     return ROTEllerMaze;
 }(BaseLevelGenerator_1.default));
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ROTEllerMaze;

@@ -75,7 +75,7 @@ export default class Door extends CustomJSComponent {
                 soundSource.gain = 0.75;
                 let sound = this.openSound; //Atomic.cache.getResource<Atomic.Sound>('Sound', this.openSound);
                 soundSource.play(sound);
-                soundSource.setAutoRemove(true);
+                soundSource.autoRemoveMode = Atomic.AutoRemoveMode.REMOVE_COMPONENT;
             }
         }
     }

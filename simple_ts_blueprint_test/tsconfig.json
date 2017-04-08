@@ -1,24 +1,18 @@
 {
     "compilerOptions": {
+        "noEmitOnError": true,
         "noImplicitAny": false,
-        "target": "ES5",
+        "target": "es5",
         "module": "commonjs",
         "declaration": false,
         "inlineSourceMap": false,
-        "removeComments": false
-    },
-    "filesGlob": [
-        "./**/*.ts"
-    ],
-    "files": [
-        "./Resources/Components/Star.ts",
-        "./Resources/Modules/blueprints.ts",
-        "./Resources/Scripts/main.ts",
-        "./Resources/typings/atomic-blueprintlib/atomic-blueprintlib.d.ts",
-        "./Resources/typings/atomic-blueprintlib/typings/atomic-blueprintlib.d.ts",
-        "./Resources/typings/Atomic/Atomic.d.ts"
-    ],
-    "atom": {
-        "rewriteTsconfig": true
+        "removeComments": false,
+        "noLib": false,
+        "forceConsistentCasingInFileNames": true,
+        "allowJs": false,
+        "lib": [
+            "es5"
+        ],
+        "baseUrl": "./Resources"
     }
 }

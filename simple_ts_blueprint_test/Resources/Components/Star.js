@@ -1,32 +1,42 @@
 "atomic component";
 "use strict";
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
 var Star = (function (_super) {
     __extends(Star, _super);
     function Star() {
-        _super.apply(this, arguments);
+        var _this = _super !== null && _super.apply(this, arguments) || this;
         // Inspector fields will show up in the Atomic Editor scene view to allow editing
-        this.inspectorFields = {
+        _this.inspectorFields = {
             speed: 100,
         };
-        this.speed = 100;
+        _this.speed = 100;
+        return _this;
     }
-    // Start will be called when component is instantiated
+    /* Start will be called when component is instantiated */
     Star.prototype.start = function () {
         console.log(this.speed);
     };
     ;
     // Update will be called every cycle
+    /**
+     * My work
+     */
     Star.prototype.update = function (timeStep) {
         this.node.roll(timeStep * this.speed);
+        this.start;
     };
     ;
     return Star;
 }(Atomic.JSComponent));
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Star;
 ;

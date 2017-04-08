@@ -1,34 +1,41 @@
 'use strict';
 'atomic component';
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var ROT = require('rot-js');
-var MapData_1 = require('../../Modules/MapData');
-var BaseLevelGenerator_1 = require('./BaseLevelGenerator');
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var ROT = require("rot-js");
+var MapData_1 = require("../../Modules/MapData");
+var BaseLevelGenerator_1 = require("./BaseLevelGenerator");
 var ROTUniform = (function (_super) {
     __extends(ROTUniform, _super);
     function ROTUniform() {
-        _super.apply(this, arguments);
-        this.inspectorFields = {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.inspectorFields = {
             debug: false,
             width: 80,
             height: 25,
             // options
-            roomWidth: [Atomic.VAR_VECTOR2, [3, 9]],
+            roomWidth: [Atomic.VariantType.VAR_VECTOR2, [3, 9]],
             /* room minimum and maximum width */
-            roomHeight: [Atomic.VAR_VECTOR2, [3, 5]],
+            roomHeight: [Atomic.VariantType.VAR_VECTOR2, [3, 5]],
             /* we stop after this percentage of level area has been dug out */
             roomDugPercentage: 0.1,
             /* we stop after this much time has passed (msec) */
             timeLimit: 1000
         };
-        this.roomWidth = [3, 9];
-        this.roomHeight = [3, 5];
-        this.roomDugPercentage = 0.1;
-        this.timeLimit = 1000;
+        _this.roomWidth = [3, 9];
+        _this.roomHeight = [3, 5];
+        _this.roomDugPercentage = 0.1;
+        _this.timeLimit = 1000;
+        return _this;
     }
     /** @override */
     ROTUniform.prototype.buildMapData = function () {
@@ -56,5 +63,4 @@ var ROTUniform = (function (_super) {
     };
     return ROTUniform;
 }(BaseLevelGenerator_1.default));
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ROTUniform;

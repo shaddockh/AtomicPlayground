@@ -2,6 +2,7 @@
 <node id="34">
 	<attribute name="Is Enabled" value="true" />
 	<attribute name="Name" value="hero" />
+	<attribute name="Tags" />
 	<attribute name="Position" value="0 0 0" />
 	<attribute name="Rotation" value="1 0 0 0" />
 	<attribute name="Scale" value="1 1 1" />
@@ -9,11 +10,11 @@
 	<component type="JSComponent" id="16777315">
 		<attribute name="ComponentFile" value="JSComponentFile;Components/common/Entity.js" />
 		<attribute name="FieldValues">
-			<variant hash="3427235179" type="Bool" value="true" />
-			<variant hash="421471792" type="Bool" value="false" />
-			<variant hash="1215768336" type="Bool" value="true" />
-			<variant hash="2894794562" type="Bool" value="true" />
-			<variant hash="2263931415" type="String" value="Hero" />
+			<variant name="blocksPath" type="Bool" value="true" />
+			<variant name="blocksLight" type="Bool" value="false" />
+			<variant name="bumpable" type="Bool" value="true" />
+			<variant name="attackable" type="Bool" value="true" />
+			<variant name="screenName" type="String" value="Hero" />
 		</attribute>
 	</component>
 	<component type="JSComponent" id="16777316">
@@ -26,7 +27,7 @@
 	<component type="JSComponent" id="16777317">
 		<attribute name="ComponentFile" value="JSComponentFile;Components/common/PlayerInputHandler.js" />
 		<attribute name="FieldValues">
-			<variant hash="339510355" type="Bool" value="false" />
+			<variant name="debug" type="Bool" value="false" />
 		</attribute>
 	</component>
 	<component type="PointLight2D" id="22">
@@ -39,8 +40,8 @@
 	<component type="JSComponent" id="16777318">
 		<attribute name="ComponentFile" value="JSComponentFile;Components/actionHandlers/GridMover.js" />
 		<attribute name="FieldValues">
-			<variant hash="339510355" type="Bool" value="true" />
-			<variant hash="273365031" type="Float" value="1.5" />
+			<variant name="debug" type="Bool" value="true" />
+			<variant name="speed" type="Float" value="1.5" />
 		</attribute>
 	</component>
 	<component type="JSComponent" id="16777319">
@@ -49,22 +50,22 @@
 	<component type="JSComponent" id="16777320">
 		<attribute name="ComponentFile" value="JSComponentFile;Components/common/EventSound.js" />
 		<attribute name="FieldValues">
-			<variant hash="436764110" type="String" value="onMoveStart" />
-			<variant hash="327743190" type="ResourceRef" value="Sound;Sounds/footstep02.ogg" />
-			<variant hash="436764111" type="String" value="onAttack" />
-			<variant hash="327743191" type="ResourceRef" value="Sound;Sounds/knifeSlice.ogg" />
+			<variant name="eventMessage01" type="String" value="onMoveStart" />
+			<variant name="eventSound01" type="ResourceRef" value="Sound;Sounds/footstep02.ogg" />
+			<variant name="eventMessage02" type="String" value="onAttack" />
+			<variant name="eventSound02" type="ResourceRef" value="Sound;Sounds/knifeSlice.ogg" />
 		</attribute>
 	</component>
 	<component type="JSComponent" id="16777321">
 		<attribute name="ComponentFile" value="JSComponentFile;Components/ai/HeroAi.js" />
 		<attribute name="FieldValues">
-			<variant hash="339510355" type="Bool" value="false" />
+			<variant name="debug" type="Bool" value="false" />
 		</attribute>
 	</component>
 	<component type="JSComponent" id="16777322">
 		<attribute name="ComponentFile" value="JSComponentFile;Components/common/Health.js" />
 		<attribute name="FieldValues">
-			<variant hash="3573188092" type="Float" value="10" />
+			<variant name="life" type="Float" value="10" />
 		</attribute>
 	</component>
 </node>

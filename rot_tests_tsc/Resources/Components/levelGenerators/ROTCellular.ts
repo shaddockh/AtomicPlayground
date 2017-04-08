@@ -15,11 +15,11 @@ export default class ROTCellular extends BaseLevelGenerator {
 
         /*List of neighbor counts for a new cell to be born in empty space*/
         // TODO: currently limited to an array of 4 here
-        born: [Atomic.VAR_BUFFER, [5, 6, 7, 8]],
+        born: [Atomic.VariantType.VAR_BUFFER, [5, 6, 7, 8]],
 
         /*List of neighbor counts for an existing  cell to survive*/
         // TODO: currently limited to an array of 4 here
-        survive: [Atomic.VAR_BUFFER, [4, 5, 6, 7/*, 8*/]],
+        survive: [Atomic.VariantType.VAR_BUFFER, [4, 5, 6, 7/*, 8*/]],
 
         /*Topology 4 or 6 or 8*/
         topology: 8,
@@ -27,11 +27,11 @@ export default class ROTCellular extends BaseLevelGenerator {
     };
 
     iterations: number = 3;
-    born:  Array<number> = [5 ,  6,  7, 8];
-    randomization:  number = 0.9;
-    survive:  Array<number> = [4 ,  5,  6, 7];
-    topology:number = 8;
-    connected:boolean = false;
+    born: Array<number> = [5, 6, 7, 8];
+    randomization: number = 0.9;
+    survive: Array<number> = [4, 5, 6, 7];
+    topology: number = 8;
+    connected: boolean = false;
 
     /** @override */
     buildMapData() {

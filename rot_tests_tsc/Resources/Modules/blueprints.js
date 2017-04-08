@@ -1,8 +1,9 @@
 "use strict";
-var tiles_1 = require('./Blueprints/tiles');
-var ui_1 = require('./Blueprints/ui');
-var levelGenerators_1 = require('./Blueprints/levelGenerators');
-var entities_1 = require('./Blueprints/entities');
+Object.defineProperty(exports, "__esModule", { value: true });
+var tiles_1 = require("./Blueprints/tiles");
+var ui_1 = require("./Blueprints/ui");
+var levelGenerators_1 = require("./Blueprints/levelGenerators");
+var entities_1 = require("./Blueprints/entities");
 // put together all of the combined blueprints
 function combine(target) {
     var source = [];

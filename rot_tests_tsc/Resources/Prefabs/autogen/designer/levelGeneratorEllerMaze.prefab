@@ -2,6 +2,7 @@
 <node id="28">
 	<attribute name="Is Enabled" value="true" />
 	<attribute name="Name" value="levelGeneratorEllerMaze" />
+	<attribute name="Tags" />
 	<attribute name="Position" value="0 0 0" />
 	<attribute name="Rotation" value="1 0 0 0" />
 	<attribute name="Scale" value="1 1 1" />
@@ -9,15 +10,15 @@
 	<component type="JSComponent" id="16777295">
 		<attribute name="ComponentFile" value="JSComponentFile;Components/levelGenerators/CreatureGenerator.js" />
 		<attribute name="FieldValues">
-			<variant hash="2472318960" type="Vector2" value="3 5" />
-			<variant hash="4234199741" type="String" value="fred" />
+			<variant name="creatureCount" type="Vector2" value="3 5" />
+			<variant name="creatureList" type="String" value="fred" />
 		</attribute>
 	</component>
 	<component type="JSComponent" id="16777296">
 		<attribute name="ComponentFile" value="JSComponentFile;Components/levelGenerators/ItemGenerator.js" />
 		<attribute name="FieldValues">
-			<variant hash="340880220" type="Vector2" value="3 5" />
-			<variant hash="1843680337" type="String" value="health_potion" />
+			<variant name="itemCount" type="Vector2" value="3 5" />
+			<variant name="itemList" type="String" value="health_potion" />
 		</attribute>
 	</component>
 	<component type="JSComponent" id="16777297">

@@ -8,15 +8,20 @@ export default class Star extends Atomic.JSComponent {
     };
 
     speed = 100;
-    
 
-    // Start will be called when component is instantiated
+    
+    /* Start will be called when component is instantiated */
     start() {
         console.log(this.speed);
     };
 
     // Update will be called every cycle
+    /**
+     * My work
+     */
     update(timeStep) {
         this.node.roll(timeStep * this.speed);
+
+        this.start
     };
 };

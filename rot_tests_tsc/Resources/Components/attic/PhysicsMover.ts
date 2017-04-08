@@ -5,7 +5,7 @@ import MapData from '../../Modules/MapData';
 import * as triggerEvent from 'atomicTriggerEvent';
 import { vec2, GLM } from 'gl-matrix';
 import gameState from '../../Modules/gameState';
-import Entity = require('../common/Entity');
+import Entity from '../common/Entity';
 
 /* NOTE! THIS IS BROKEN! -- just here for reference */
 class PhysicsMover extends CustomJSComponent {
@@ -16,8 +16,8 @@ class PhysicsMover extends CustomJSComponent {
 
     private targetPos;
     private startPos;
-    private moving:boolean;
-    private body:Atomic.RigidBody2D;
+    private moving: boolean;
+    private body: Atomic.RigidBody2D;
     private queuedVector;
     private t;
     private adjustedSpeed;

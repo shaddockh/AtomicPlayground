@@ -8,11 +8,11 @@ export default class ItemGenerator extends CustomJSComponent {
 
     inspectorFields = {
         debug: false,
-        itemCount: [Atomic.VAR_VECTOR2, [0, 0]],
+        itemCount: [Atomic.VariantType.VAR_VECTOR2, [0, 0]],
         itemList: ''
     };
 
-    itemCount: Array<number> = [0,  0];
+    itemCount: Array<number> = [0, 0];
     itemList: string = '';
 
     buildItems(mapData /*, roomData*/) {
@@ -22,7 +22,7 @@ export default class ItemGenerator extends CustomJSComponent {
             // TODO 2 maybe the map generator should place spawn points and then the item generator can just use those
             let [x, y] = mapData.getRandomEmptyPosition();
             let entity = MapData.buildRandomEntity(items);
-            this.DEBUG(`Adding ${entity.blueprint} at ${x, y}`);
+            this.DEBUG(`Adding ${entity.blueprint} at ${x},${y}`);
             mapData.addEntityAtPosition(x, y, entity);
         }
     }

@@ -12,11 +12,11 @@ export default class ROTDigger extends BaseLevelGenerator {
         height: 25, // copied from BaseLevelGenerator
 
         // Digger options
-        roomWidth: [Atomic.VAR_VECTOR2, [3, 9]],
+        roomWidth: [Atomic.VariantType.VAR_VECTOR2, [3, 9]],
         /* room minimum and maximum width */
-        roomHeight: [Atomic.VAR_VECTOR2, [3, 5]],
+        roomHeight: [Atomic.VariantType.VAR_VECTOR2, [3, 5]],
         /* room minimum and maximum height */
-        corridorLength: [Atomic.VAR_VECTOR2, [3, 10]],
+        corridorLength: [Atomic.VariantType.VAR_VECTOR2, [3, 10]],
         /* corridor minimum and maximum length */
         dugPercentage: 0.2,
         /* we stop after this percentage of level area has been dug out */

@@ -29,7 +29,7 @@ export default class Potion extends CustomJSComponent {
             soundSource.gain = 0.75;
             let sound = this.drinkSound;
             soundSource.play(sound);
-            soundSource.setAutoRemove(true);
+            soundSource.autoRemoveMode = Atomic.AutoRemoveMode.REMOVE_COMPONENT;
         }
 
         // Not sure how to make a sprite invisible, so just make it too small to see

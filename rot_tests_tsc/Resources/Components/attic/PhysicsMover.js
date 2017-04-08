@@ -1,25 +1,31 @@
 'use strict';
 'atomic component';
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var CustomJSComponent_1 = require('CustomJSComponent');
-var MapData_1 = require('../../Modules/MapData');
-var triggerEvent = require('atomicTriggerEvent');
-var gl_matrix_1 = require('gl-matrix');
-var gameState_1 = require('../../Modules/gameState');
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var CustomJSComponent_1 = require("CustomJSComponent");
+var MapData_1 = require("../../Modules/MapData");
+var triggerEvent = require("atomicTriggerEvent");
+var gl_matrix_1 = require("gl-matrix");
+var gameState_1 = require("../../Modules/gameState");
 /* NOTE! THIS IS BROKEN! -- just here for reference */
 var PhysicsMover = (function (_super) {
     __extends(PhysicsMover, _super);
     function PhysicsMover() {
-        _super.apply(this, arguments);
-        this.inspectorFields = {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.inspectorFields = {
             speed: 1,
             debug: false
         };
-        this.speed = 1;
+        _this.speed = 1;
+        return _this;
     }
     PhysicsMover.prototype.start = function () {
         this.targetPos = this.node.position2D;

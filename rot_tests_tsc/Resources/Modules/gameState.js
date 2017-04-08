@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var GameState = (function () {
     function GameState() {
     }
@@ -18,5 +19,4 @@ var GameState = (function () {
 }());
 exports.GameState = GameState;
 var gameState = new GameState();
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = gameState;

@@ -1,5 +1,7 @@
 {
 	"version": 1,
 	"guid": "e4ba2c55c703c760b8867ac04c1d60c7",
-	"TextureImporter": {}
+	"TextureImporter": {
+		"compressionSize": 0
+	}
 }

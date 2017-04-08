@@ -1,17 +1,23 @@
 'use strict';
 'atomic component';
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var triggerEvent = require('atomicTriggerEvent');
-var CustomJSComponent_1 = require('../../Modules/CustomJSComponent');
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var triggerEvent = require("atomicTriggerEvent");
+var CustomJSComponent_1 = require("../../Modules/CustomJSComponent");
 var Door = (function (_super) {
     __extends(Door, _super);
     function Door() {
-        _super.apply(this, arguments);
-        this.inspectorFields = {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.inspectorFields = {
             debug: false,
             open: false,
             openSprite: ['Sprite2D', 'Sprites/door_ns_o.png'],
@@ -19,12 +25,13 @@ var Door = (function (_super) {
             openSound: ['Sound', 'Sounds/doorOpen_1.ogg'],
             closeSound: ['Sound', '']
         };
-        this.entity = null;
-        this.open = false;
-        this.openSprite = null;
-        this.closedSprite = null;
-        this.openSound = null;
-        this.closeSound = null;
+        _this.entity = null;
+        _this.open = false;
+        _this.openSprite = null;
+        _this.closedSprite = null;
+        _this.openSound = null;
+        _this.closeSound = null;
+        return _this;
     }
     Door.prototype.start = function () {
         this.sprite2D = this.node.getComponent('StaticSprite2D');
@@ -72,11 +79,10 @@ var Door = (function (_super) {
                 soundSource.gain = 0.75;
                 var sound = this.openSound; //Atomic.cache.getResource<Atomic.Sound>('Sound', this.openSound);
                 soundSource.play(sound);
-                soundSource.setAutoRemove(true);
+                soundSource.autoRemoveMode = Atomic.AutoRemoveMode.REMOVE_COMPONENT;
             }
         }
     };
     return Door;
 }(CustomJSComponent_1.default));
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Door;

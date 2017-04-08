@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Attach",
+            "type": "duk",
+            "request": "attach",
+            "address": "localhost",
+            "port": 9091,
+            "localRoot": "${workspaceRoot}/Resources",
+            "sourceMaps": false,
+            "outDir": "${workspaceRoot}/Resources",
+            "stopOnEntry": false,
+            "debugLog": true
+        }
+    ]
+}

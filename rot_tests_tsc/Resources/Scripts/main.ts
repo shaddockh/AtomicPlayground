@@ -5,7 +5,7 @@ import 'vendor.bundle';
 import 'atomic-blueprintlib.bundle';
 
 import * as blueprintlib from 'atomic-blueprintlib';
-import {blueprints} from '../Modules/blueprints'; // Load all the blueprints into the catalog
+import { blueprints } from '../Modules/blueprints'; // Load all the blueprints into the catalog
 import 'Ui/ui'; // Let the ui system register itself
 import { gameChannel } from '../Modules/gameChannels';
 
@@ -32,7 +32,7 @@ let viewport = null;
 viewport = new Atomic.Viewport(scene, camera);
 Atomic.renderer.setViewport(0, viewport);
 
-Atomic.renderer.textureFilterMode = Atomic.FILTER_NEAREST;
+Atomic.renderer.textureFilterMode = Atomic.TextureFilterMode.FILTER_NEAREST;
 
 // set up lighting zone
 let zone = scene.createComponent<Atomic.Zone>('Zone');

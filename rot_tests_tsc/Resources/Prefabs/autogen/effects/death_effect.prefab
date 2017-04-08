@@ -2,6 +2,7 @@
 <node id="42">
 	<attribute name="Is Enabled" value="true" />
 	<attribute name="Name" value="death_effect" />
+	<attribute name="Tags" />
 	<attribute name="Position" value="0 0 0" />
 	<attribute name="Rotation" value="1 0 0 0" />
 	<attribute name="Scale" value="1 1 1" />
@@ -13,10 +14,10 @@
 	<component type="JSComponent" id="16777351">
 		<attribute name="ComponentFile" value="JSComponentFile;Components/common/GraphicEffect.js" />
 		<attribute name="FieldValues">
-			<variant hash="339510355" type="Bool" value="false" />
-			<variant hash="2048248628" type="Float" value="3" />
-			<variant hash="1731773230" type="Float" value="10" />
-			<variant hash="3599707698" type="Bool" value="true" />
+			<variant name="debug" type="Bool" value="false" />
+			<variant name="duration" type="Float" value="3" />
+			<variant name="zoomTo" type="Float" value="10" />
+			<variant name="fadeOut" type="Bool" value="true" />
 		</attribute>
 	</component>
 </node>

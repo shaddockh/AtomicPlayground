@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var statContainer = {};
 var metricsChain = [];
 function start(name) {
